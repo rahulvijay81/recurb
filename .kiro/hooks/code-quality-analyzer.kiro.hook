@@ -1,0 +1,27 @@
+{
+  "enabled": true,
+  "name": "Code Quality Analyzer",
+  "description": "Analyzes modified code for potential improvements, including code smells, design patterns, and best practices to enhance readability, maintainability, and performance.",
+  "version": "1",
+  "when": {
+    "type": "fileEdited",
+    "patterns": [
+      "src/**/*.{ts",
+      "tsx",
+      "js",
+      "jsx}",
+      "components/**/*.{ts",
+      "tsx",
+      "js",
+      "jsx}",
+      "lib/**/*.{ts",
+      "tsx",
+      "js",
+      "jsx}"
+    ]
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "You are a code quality expert reviewing changes to a Next.js/TypeScript project. Analyze the modified code and suggest improvements for:\n\n1. Code smells and anti-patterns\n2. Opportunities to apply design patterns\n3. Performance optimizations\n4. TypeScript best practices\n5. React/Next.js best practices\n6. Readability and maintainability improvements\n\nFor each suggestion:\n- Explain the issue clearly\n- Provide a specific code example showing the improvement\n- Explain the benefit of making the change\n\nFocus on practical improvements that maintain existing functionality while enhancing code quality. Consider the project's tech stack: Next.js, TypeScript, React, Tailwind CSS, Shadcn UI, Supabase, and Zustand.\n\nBe concise but thorough in your analysis."
+  }
+}
