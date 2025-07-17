@@ -35,7 +35,7 @@ export async function GET(request: Request) {
     query = query.ilike('name', `%${search}%`);
   }
   
-  const { data, error, count } = await query.select('*', { count: 'exact' });
+  const { data, error, count } = await query;
   
   if (error) {
     return NextResponse.json({ error: { code: '500', message: error.message } }, { status: 500 });

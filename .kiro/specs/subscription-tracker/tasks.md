@@ -7,8 +7,6 @@
     - _Requirements: 11.1, 11.2_
   
   - [ ] 1.2 Set up Tailwind CSS and Shadcn UI
-    - Install and configure Tailwind CSS
-    - Set up Shadcn UI components
     - Configure theme based on design specifications
     - _Requirements: 11.1_
   
