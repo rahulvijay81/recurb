@@ -9,6 +9,10 @@ export const userSchema = z.object({
   updatedAt: z.date(),
   teamId: z.string().optional(),
   role: z.enum(["owner", "admin", "member"]).optional(),
+  company: z.string().optional(),
+  phone: z.string().optional(),
+  timezone: z.string().optional(),
+  currency: z.string().default("USD"),
 });
 
 export const loginSchema = z.object({

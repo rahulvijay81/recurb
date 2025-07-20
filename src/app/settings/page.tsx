@@ -5,15 +5,14 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { 
-  User, 
   CreditCard, 
   Bell, 
-  Users, 
   Webhook, 
   ClipboardList,
   ArrowRight,
 } from "lucide-react";
 import Link from "next/link";
+
 
 export default function SettingsPage() {
   const { user, plan, canAccessFeature } = useAuthStore();
@@ -27,12 +26,8 @@ export default function SettingsPage() {
         </p>
       </div>
       
-      <Tabs defaultValue="profile" className="space-y-6">
-        <TabsList className="grid grid-cols-2 md:grid-cols-6 h-auto">
-          <TabsTrigger value="profile" className="flex items-center gap-2">
-            <User className="h-4 w-4" />
-            <span className="hidden md:inline">Profile</span>
-          </TabsTrigger>
+      <Tabs defaultValue="subscription" className="space-y-6">
+        <TabsList className="grid grid-cols-2 md:grid-cols-4 h-auto">
           <TabsTrigger value="subscription" className="flex items-center gap-2">
             <CreditCard className="h-4 w-4" />
             <span className="hidden md:inline">Subscription</span>
@@ -41,12 +36,6 @@ export default function SettingsPage() {
             <Bell className="h-4 w-4" />
             <span className="hidden md:inline">Notifications</span>
           </TabsTrigger>
-          {canAccessFeature("team_management") && (
-            <TabsTrigger value="team" className="flex items-center gap-2">
-              <Users className="h-4 w-4" />
-              <span className="hidden md:inline">Team</span>
-            </TabsTrigger>
-          )}
           {canAccessFeature("webhooks") && (
             <TabsTrigger value="webhooks" className="flex items-center gap-2">
               <Webhook className="h-4 w-4" />
@@ -61,30 +50,6 @@ export default function SettingsPage() {
           )}
         </TabsList>
         
-        <TabsContent value="profile">
-          <Card>
-            <CardHeader>
-              <CardTitle>Profile</CardTitle>
-              <CardDescription>
-                Manage your account information.
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label className="text-sm font-medium">Name</label>
-                  <p className="text-muted-foreground">{user?.name || "Not set"}</p>
-                </div>
-                <div>
-                  <label className="text-sm font-medium">Email</label>
-                  <p className="text-muted-foreground">{user?.email}</p>
-                </div>
-              </div>
-              
-              <Button variant="outline">Edit Profile</Button>
-            </CardContent>
-          </Card>
-        </TabsContent>
         
         <TabsContent value="subscription">
           <Card>
@@ -130,23 +95,7 @@ export default function SettingsPage() {
           </Card>
         </TabsContent>
         
-        {canAccessFeature("team_management") && (
-          <TabsContent value="team">
-            <Card>
-              <CardHeader>
-                <CardTitle>Team Management</CardTitle>
-                <CardDescription>
-                  Manage your team members and their permissions.
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <p className="text-muted-foreground">
-                  Team management settings will be displayed here.
-                </p>
-              </CardContent>
-            </Card>
-          </TabsContent>
-        )}
+
         
         {canAccessFeature("webhooks") && (
           <TabsContent value="webhooks">

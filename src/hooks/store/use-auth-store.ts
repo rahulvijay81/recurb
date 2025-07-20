@@ -13,6 +13,7 @@ interface AuthState {
   // Actions
   setUser: (user: User | null) => void;
   setLoading: (isLoading: boolean) => void;
+  updateProfile: (data: { name: string; email: string; company?: string; phone?: string; timezone?: string; currency?: string }) => Promise<void>;
   logout: () => void;
   
   // Feature access based on plan
@@ -79,11 +80,23 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   
   setLoading: (isLoading) => set({ isLoading }),
   
-  logout: () => set({ 
-    user: null, 
-    isAuthenticated: false,
-    plan: "basic",
-  }),
+  updateProfile: async (data) => {
+    const { user } = get();
+    if (user) {
+      const updatedUser = { ...user, ...data };
+      set({ user: updatedUser });
+    }
+  },
+  
+  logout: () => {
+    document.cookie = "auth-token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    set({ 
+      user: null, 
+      isAuthenticated: false,
+      plan: "basic",
+    });
+    window.location.href = "/auth/login";
+  },
   
   canAccessFeature: (feature) => {
     const { plan } = get();

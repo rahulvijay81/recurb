@@ -18,6 +18,7 @@ import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/hooks/store/use-auth-store";
 import Link from "next/link";
+import { SignJWT } from "jose";
 
 export function LoginForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -78,8 +79,19 @@ export function LoginForm() {
         // Set user in auth store
         setUser(user);
         
-        // Set mock cookie (in a real app, this would be done by the server)
-        document.cookie = "auth-token=mock-token; path=/; max-age=86400";
+        // Create a proper JWT token for the middleware
+        const secret = new TextEncoder().encode("fallback_secret_for_development_only");
+        const token = await new SignJWT({ 
+          id: user.id, 
+          email: user.email, 
+          plan: user.plan 
+        })
+          .setProtectedHeader({ alg: "HS256" })
+          .setExpirationTime("24h")
+          .sign(secret);
+        
+        // Set the JWT cookie
+        document.cookie = `auth-token=${token}; path=/; max-age=86400`;
         
         toast.success("Login successful");
         router.push("/dashboard");
