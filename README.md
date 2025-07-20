@@ -1,8 +1,58 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Recurb - Subscription Management Dashboard
+
+Recurb is a full-stack Next.js application for managing and visualizing recurring expenses across three service tiers.
+
+## Features
+
+### Basic Plan
+- Manual CRUD operations for subscriptions
+- CSV import/export
+- Auto-renewal flags
+- Tags and categories
+- MRR/YRR display
+
+### Pro Plan
+- All Basic features
+- Monthly breakdowns
+- Category-wise trends
+- Expense forecasting
+- Duplicate detection
+- PDF/IMG invoice uploads and linkage
+- Enhanced exports
+- Calendar view
+- Vendor summaries
+- Custom reminder scheduling and email renewals
+
+### Team Plan
+- All Pro features
+- User management with roles
+- Shared notes/comments
+- Audit logs
+- Slack/Discord webhook alerts
+
+## Tech Stack
+
+- **Frontend**: Next.js (App Router), TypeScript, Tailwind CSS, shadcn/ui
+- **State Management**: Zustand
+- **Form Handling**: React Hook Form, Zod
+- **Authentication**: JWT
+- **Data Visualization**: Chart.js
 
 ## Getting Started
 
-First, run the development server:
+First, install the dependencies:
+
+```bash
+npm install
+# or
+yarn install
+# or
+pnpm install
+# or
+bun install
+```
+
+Then, run the development server:
 
 ```bash
 npm run dev
@@ -16,21 +66,39 @@ bun dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Demo Accounts
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+For demonstration purposes, you can use the following accounts:
 
-## Learn More
+- **Basic Plan**: basic@example.com / password
+- **Pro Plan**: pro@example.com / password
+- **Team Plan**: team@example.com / password
 
-To learn more about Next.js, take a look at the following resources:
+## Project Structure
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- `src/app`: Next.js App Router pages
+- `src/components`: React components
+  - `ui`: shadcn/ui components
+  - `common`: Shared components
+  - `subscriptions`: Subscription-related components
+  - `analytics`: Analytics and chart components
+  - `auth`: Authentication components
+- `src/hooks`: Custom React hooks
+  - `store`: Zustand stores
+- `src/lib`: Utility functions and shared code
+  - `schemas`: Zod schemas
+  - `types`: TypeScript types
+  - `auth`: Authentication utilities
+  - `api`: API utilities
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Feature Implementation
 
-## Deploy on Vercel
+- **Plan-based Access Control**: Implemented via middleware and Zustand store
+- **Subscription CRUD**: Form-based UI with validation
+- **CSV Import/Export**: File upload with validation
+- **Analytics**: Interactive charts with Chart.js
+- **Team Collaboration**: Role-based access control
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## License
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+This project is licensed under the MIT License.
