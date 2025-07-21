@@ -2,7 +2,7 @@ import { z } from "zod";
 
 export const userSchema = z.object({
   id: z.string(),
-  email: z.string().email(),
+  email: z.string().email("Please enter a valid email address"),
   name: z.string().optional(),
   plan: z.enum(["basic", "pro", "team"]).default("basic"),
   createdAt: z.date(),
@@ -16,7 +16,7 @@ export const userSchema = z.object({
 });
 
 export const loginSchema = z.object({
-  email: z.string().email("Valid email is required"),
+  email: z.string().email("Please enter a valid email address"),
   password: z.string().min(8, "Password must be at least 8 characters"),
 });
 
@@ -41,7 +41,7 @@ export const changePasswordSchema = z.object({
 
 export const teamMemberSchema = z.object({
   id: z.string(),
-  email: z.string().email(),
+  email: z.string().email("Please enter a valid email address"),
   name: z.string().optional(),
   role: z.enum(["owner", "admin", "member"]),
   invitedAt: z.date().optional(),

@@ -9,10 +9,9 @@ import { TrendsChart } from "@/components/analytics/trends-chart";
 import { ForecastingChart } from "@/components/analytics/forecasting-chart";
 import { VendorSummary } from "@/components/subscriptions/vendor-summary";
 import { EnhancedExport } from "@/components/subscriptions/enhanced-export";
-import { CalendarView } from "@/components/subscriptions/calendar-view";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { PieChart, BarChart3, CalendarDays, TrendingUp } from "lucide-react";
+import { PieChart, BarChart3, TrendingUp } from "lucide-react";
 
 export default function AnalyticsPage() {
   const { canAccessFeature } = useAuthStore();
@@ -163,10 +162,6 @@ export default function AnalyticsPage() {
             <TrendingUp className="h-4 w-4 mr-2" />
             Trends
           </TabsTrigger>
-          <TabsTrigger value="calendar">
-            <CalendarDays className="h-4 w-4 mr-2" />
-            Calendar
-          </TabsTrigger>
         </TabsList>
         
         <TabsContent value="overview" className="space-y-6">
@@ -196,10 +191,6 @@ export default function AnalyticsPage() {
         
         <TabsContent value="trends">
           <TrendsChart subscriptions={subscriptions} />
-        </TabsContent>
-        
-        <TabsContent value="calendar">
-          <CalendarView subscriptions={subscriptions} />
         </TabsContent>
       </Tabs>
     </div>
