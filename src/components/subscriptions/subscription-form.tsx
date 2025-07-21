@@ -6,6 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { subscriptionFormSchema, type SubscriptionFormValues } from "@/lib/schemas/subscription";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
+import { LoadingButton } from "@/components/common/loading-button";
 import {
   Form,
   FormControl,
@@ -337,16 +338,13 @@ export function SubscriptionForm({ initialData, isEditing = false }: Subscriptio
           >
             Cancel
           </Button>
-          <Button type="submit" disabled={isSubmitting}>
-            {isSubmitting ? (
-              <>
-                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                {isEditing ? "Updating..." : "Creating..."}
-              </>
-            ) : (
-              <>{isEditing ? "Update" : "Create"} Subscription</>
-            )}
-          </Button>
+          <LoadingButton 
+            type="submit" 
+            isLoading={isSubmitting}
+            loadingText={isEditing ? "Updating..." : "Creating..."}
+          >
+            {isEditing ? "Update" : "Create"} Subscription
+          </LoadingButton>
         </div>
       </form>
     </Form>

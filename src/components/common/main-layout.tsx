@@ -27,16 +27,9 @@ import {
   Users,
 } from "lucide-react";
 import Link from "next/link";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { 
-  DropdownMenu, 
-  DropdownMenuContent, 
-  DropdownMenuItem, 
-  DropdownMenuLabel, 
-  DropdownMenuSeparator, 
-  DropdownMenuTrigger 
-} from "@/components/ui/dropdown-menu";
 import { Header } from "@/components/common/header";
+import { UserDropdown } from "@/components/common/user-dropdown";
+import { UserAvatar } from "@/components/common/user-avatar";
 
 interface MainLayoutProps {
   children: React.ReactNode;
@@ -118,45 +111,7 @@ export function MainLayout({ children }: MainLayoutProps) {
           </SidebarMenu>
         </SidebarContent>
         <SidebarFooter className="p-2">
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="w-full justify-start p-2">
-                <div className="flex items-center gap-2 w-full">
-                  <Avatar className="h-8 w-8">
-                    <AvatarImage src="" />
-                    <AvatarFallback>
-                      {user?.name?.charAt(0) || user?.email?.charAt(0) || "U"}
-                    </AvatarFallback>
-                  </Avatar>
-                  <div className="flex flex-col text-left min-w-0 flex-1">
-                    <span className="text-sm font-medium truncate">{user?.name || user?.email}</span>
-                    <span className="text-xs text-muted-foreground capitalize">{plan} Plan</span>
-                  </div>
-                </div>
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="start" className="w-56">
-              <DropdownMenuLabel>My Account</DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem asChild>
-                <Link href="/settings/profile" className="cursor-pointer">
-                  <UserIcon className="mr-2 h-4 w-4" />
-                  Profile
-                </Link>
-              </DropdownMenuItem>
-              <DropdownMenuItem asChild>
-                <Link href="/settings/plans" className="cursor-pointer">
-                  <Repeat className="mr-2 h-4 w-4" />
-                  Subscription
-                </Link>
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={() => logout()} className="cursor-pointer">
-                <LogOut className="mr-2 h-4 w-4" />
-                Log out
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <UserDropdown variant="sidebar" showPlan />
         </SidebarFooter>
       </Sidebar>
       
@@ -217,12 +172,7 @@ export function MainLayout({ children }: MainLayoutProps) {
               </nav>
               <div className="pt-4 border-t">
                 <div className="flex items-center gap-2 p-2">
-                  <Avatar className="h-8 w-8">
-                    <AvatarImage src="" />
-                    <AvatarFallback>
-                      {user?.name?.charAt(0) || user?.email?.charAt(0) || "U"}
-                    </AvatarFallback>
-                  </Avatar>
+                  <UserAvatar user={user} />
                   <div className="flex flex-col text-left min-w-0 flex-1">
                     <span className="text-sm font-medium truncate">{user?.name || user?.email}</span>
                     <span className="text-xs text-muted-foreground capitalize">{plan} Plan</span>

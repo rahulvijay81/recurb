@@ -6,13 +6,13 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import { MoreHorizontal, Plus, UserPlus } from "lucide-react";
 import { InviteTeamMemberDialog } from "./invite-team-member-dialog";
 import { EditTeamMemberDialog } from "./edit-team-member-dialog";
 import { TeamMember } from "@/lib/schemas/user";
+import { UserAvatar } from "@/components/common/user-avatar";
 
 export function TeamManagement() {
   const { members, isLoading, removeMember } = useTeamStore();
@@ -71,11 +71,7 @@ export function TeamManagement() {
                 {members.map((member) => (
                   <TableRow key={member.id}>
                     <TableCell className="flex items-center gap-3">
-                      <Avatar className="h-8 w-8">
-                        <AvatarFallback>
-                          {member.name?.charAt(0) || member.email.charAt(0).toUpperCase()}
-                        </AvatarFallback>
-                      </Avatar>
+                      <UserAvatar user={member} />
                       <div>
                         <p className="font-medium">{member.name || member.email}</p>
                         <p className="text-sm text-muted-foreground">{member.email}</p>

@@ -4,6 +4,7 @@ import { useState, useCallback } from "react";
 import { useDropzone } from "react-dropzone";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { LoadingButton } from "@/components/common/loading-button";
 import { toast } from "sonner";
 import { Upload, FileText, CheckCircle, AlertCircle } from "lucide-react";
 import { useSubscriptionStore } from "@/hooks/store/use-subscription-store";
@@ -132,19 +133,13 @@ export function CsvImport() {
                   </p>
                 </div>
               </div>
-              <Button
+              <LoadingButton
                 onClick={handleImport}
-                disabled={isUploading}
+                isLoading={isUploading}
+                loadingText="Importing..."
               >
-                {isUploading ? (
-                  <>
-                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                    Importing...
-                  </>
-                ) : (
-                  "Import"
-                )}
-              </Button>
+                Import
+              </LoadingButton>
             </div>
           </CardContent>
         </Card>
