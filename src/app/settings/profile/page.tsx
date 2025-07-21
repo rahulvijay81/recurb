@@ -6,6 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { ChangePassword } from "@/components/settings/change-password";
 import currencies from "@/data/currencies.json";
 
 import { useState } from "react";
@@ -161,6 +162,10 @@ export default function ProfilePage() {
           </div>
         </CardContent>
       </Card>
+
+      <div className="mt-6">
+        <ChangePassword />
+      </div>
     </div>
   );
 }
