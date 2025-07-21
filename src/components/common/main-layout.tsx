@@ -31,6 +31,7 @@ import Link from "next/link";
 import { Header } from "@/components/common/header";
 import { UserDropdown } from "@/components/common/user-dropdown";
 import { UserAvatar } from "@/components/common/user-avatar";
+import { PageBreadcrumb } from "@/components/common/page-breadcrumb";
 
 interface MainLayoutProps {
   children: React.ReactNode;
@@ -221,6 +222,7 @@ export function MainLayout({ children }: MainLayoutProps) {
         <div className="lg:hidden h-14" />
         <Header />
         <main className="flex-1 p-4">
+          <PageBreadcrumb />
           {children}
         </main>
       </SidebarInset>
