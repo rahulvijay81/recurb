@@ -37,7 +37,7 @@ export function InviteTeamMemberDialog({ open, onOpenChange }: InviteTeamMemberD
       const newMember = {
         id: Math.random().toString(36).substr(2, 9),
         email: values.email,
-        role: values.role as "admin" | "member",
+        role: values.role as "admin" | "member" | "viewer",
         invitedAt: new Date(),
       };
       
@@ -100,6 +100,7 @@ export function InviteTeamMemberDialog({ open, onOpenChange }: InviteTeamMemberD
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
+                    <SelectItem value="viewer">Viewer</SelectItem>
                     <SelectItem value="member">Member</SelectItem>
                     <SelectItem value="admin">Admin</SelectItem>
                   </SelectContent>

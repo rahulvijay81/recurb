@@ -8,7 +8,7 @@ export const userSchema = z.object({
   createdAt: z.date(),
   updatedAt: z.date(),
   teamId: z.string().optional(),
-  role: z.enum(["owner", "admin", "member"]).optional(),
+  role: z.enum(["owner", "admin", "member", "viewer"]).optional(),
   company: z.string().optional(),
   phone: z.string().optional(),
   timezone: z.string().optional(),
@@ -43,7 +43,7 @@ export const teamMemberSchema = z.object({
   id: z.string(),
   email: z.string().email("Please enter a valid email address"),
   name: z.string().optional(),
-  role: z.enum(["owner", "admin", "member"]),
+  role: z.enum(["owner", "admin", "member", "viewer"]),
   invitedAt: z.date().optional(),
   joinedAt: z.date().optional(),
 });

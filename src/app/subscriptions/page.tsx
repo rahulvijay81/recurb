@@ -72,7 +72,7 @@ export default function SubscriptionsPage() {
     deleteSubscription,
   } = useSubscriptionStore();
   
-  const { canAccessFeature } = useAuthStore();
+  const { canAccessFeature, canEdit, canDelete } = useAuthStore();
   const [searchTerm, setSearchTerm] = useState("");
   const [subscriptionToDelete, setSubscriptionToDelete] = useState<string | null>(null);
   
@@ -255,12 +255,14 @@ export default function SubscriptionsPage() {
             </DropdownMenuContent>
           </DropdownMenu>
           
-          <Button asChild>
-            <Link href="/subscriptions/new">
-              <Plus className="h-4 w-4 mr-2" />
-              Add New
-            </Link>
-          </Button>
+          {canEdit() && (
+            <Button asChild>
+              <Link href="/subscriptions/new">
+                <Plus className="h-4 w-4 mr-2" />
+                Add New
+              </Link>
+            </Button>
+          )}
           
           {canAccessFeature("auto_email_detection") && (
             <div className="flex gap-2">
@@ -394,18 +396,24 @@ export default function SubscriptionsPage() {
                             View Details
                           </Link>
                         </DropdownMenuItem>
-                        <DropdownMenuItem asChild>
-                          <Link href={`/subscriptions/${subscription.id}/edit`}>
-                            Edit
-                          </Link>
-                        </DropdownMenuItem>
-                        <DropdownMenuSeparator />
-                        <DropdownMenuItem 
-                          className="text-red-600"
-                          onClick={() => setSubscriptionToDelete(subscription.id || null)}
-                        >
-                          Delete
-                        </DropdownMenuItem>
+                        {canEdit() && (
+                          <DropdownMenuItem asChild>
+                            <Link href={`/subscriptions/${subscription.id}/edit`}>
+                              Edit
+                            </Link>
+                          </DropdownMenuItem>
+                        )}
+                        {canDelete() && (
+                          <>
+                            <DropdownMenuSeparator />
+                            <DropdownMenuItem 
+                              className="text-red-600"
+                              onClick={() => setSubscriptionToDelete(subscription.id || null)}
+                            >
+                              Delete
+                            </DropdownMenuItem>
+                          </>
+                        )}
                       </DropdownMenuContent>
                     </DropdownMenu>
                   </TableCell>

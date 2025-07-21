@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useTeamStore } from "@/hooks/store/use-team-store";
+import { useAuthStore } from "@/hooks/store/use-auth-store";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -17,6 +18,7 @@ import { toast } from "@/lib/utils/toast";
 
 export function TeamManagement() {
   const { members, isLoading, removeMember } = useTeamStore();
+  const { canManageTeam } = useAuthStore();
   const [inviteDialogOpen, setInviteDialogOpen] = useState(false);
   const [editingMember, setEditingMember] = useState<TeamMember | null>(null);
   const [memberToRemove, setMemberToRemove] = useState<TeamMember | null>(null);
@@ -26,6 +28,7 @@ export function TeamManagement() {
       case "owner": return "default";
       case "admin": return "secondary";
       case "member": return "outline";
+      case "viewer": return "destructive";
       default: return "outline";
     }
   };
@@ -40,10 +43,12 @@ export function TeamManagement() {
               Manage your team members and their permissions.
             </CardDescription>
           </div>
-          <Button onClick={() => setInviteDialogOpen(true)}>
-            <UserPlus className="h-4 w-4 mr-2" />
-            Invite Member
-          </Button>
+          {canManageTeam() && (
+            <Button onClick={() => setInviteDialogOpen(true)}>
+              <UserPlus className="h-4 w-4 mr-2" />
+              Invite Member
+            </Button>
+          )}
         </CardHeader>
         <CardContent>
           {members.length === 0 ? (
@@ -53,10 +58,12 @@ export function TeamManagement() {
               <p className="text-muted-foreground mb-4">
                 Start collaborating by inviting team members to your workspace.
               </p>
-              <Button onClick={() => setInviteDialogOpen(true)}>
-                <Plus className="h-4 w-4 mr-2" />
-                Invite Your First Member
-              </Button>
+              {canManageTeam() && (
+                <Button onClick={() => setInviteDialogOpen(true)}>
+                  <Plus className="h-4 w-4 mr-2" />
+                  Invite Your First Member
+                </Button>
+              )}
             </div>
           ) : (
             <Table>
@@ -89,7 +96,7 @@ export function TeamManagement() {
                       </Badge>
                     </TableCell>
                     <TableCell>
-                      {member.role !== "owner" && (
+                      {canManageTeam() && member.role !== "owner" && (
                         <DropdownMenu>
                           <DropdownMenuTrigger asChild>
                             <Button variant="ghost" size="sm">

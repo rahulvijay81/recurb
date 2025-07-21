@@ -18,6 +18,10 @@ interface AuthState {
   
   // Feature access based on plan
   canAccessFeature: (feature: string) => boolean;
+  // Role-based permissions
+  canEdit: () => boolean;
+  canDelete: () => boolean;
+  canManageTeam: () => boolean;
 }
 
 const PLAN_FEATURES = {
@@ -108,5 +112,20 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   canAccessFeature: (feature) => {
     const { plan } = get();
     return PLAN_FEATURES[plan].includes(feature);
+  },
+  
+  canEdit: () => {
+    const { user } = get();
+    return user?.role !== "viewer";
+  },
+  
+  canDelete: () => {
+    const { user } = get();
+    return user?.role !== "viewer";
+  },
+  
+  canManageTeam: () => {
+    const { user } = get();
+    return user?.role === "owner" || user?.role === "admin";
   },
 }));

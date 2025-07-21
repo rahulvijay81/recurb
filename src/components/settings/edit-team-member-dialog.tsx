@@ -44,7 +44,7 @@ export function EditTeamMemberDialog({ member, open, onOpenChange }: EditTeamMem
       // Simulate API call
       await new Promise(resolve => setTimeout(resolve, 1000));
       
-      updateMember(member.id, { role: values.role as "admin" | "member" });
+      updateMember(member.id, { role: values.role as "admin" | "member" | "viewer" });
       toast.success("Team member updated successfully");
       onOpenChange(false);
     } catch (error) {
@@ -96,6 +96,7 @@ export function EditTeamMemberDialog({ member, open, onOpenChange }: EditTeamMem
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
+                    <SelectItem value="viewer">Viewer</SelectItem>
                     <SelectItem value="member">Member</SelectItem>
                     <SelectItem value="admin">Admin</SelectItem>
                   </SelectContent>
