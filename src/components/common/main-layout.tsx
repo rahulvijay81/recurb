@@ -25,6 +25,7 @@ import {
   LogOut,
   User as UserIcon,
   Users,
+  Calendar,
 } from "lucide-react";
 import Link from "next/link";
 import { Header } from "@/components/common/header";
@@ -68,6 +69,13 @@ export function MainLayout({ children }: MainLayoutProps) {
       plan: "pro",
     },
     {
+      name: "Calendar",
+      href: "/calendar",
+      icon: Calendar,
+      active: pathname.startsWith("/calendar"),
+      plan: "pro",
+    },
+    {
       name: "Team",
       href: "/team",
       icon: Users,
@@ -94,7 +102,7 @@ export function MainLayout({ children }: MainLayoutProps) {
         <SidebarContent className="px-2">
           <SidebarMenu>
             {navigation.map((item) => {
-              const isAccessible = item.plan === "basic" || canAccessFeature(item.plan === "team" ? "team_management" : item.plan);
+              const isAccessible = item.plan === "basic" || canAccessFeature(item.plan === "team" ? "team_management" : item.name.toLowerCase());
               if (!isAccessible) return null;
               
               return (
@@ -149,7 +157,7 @@ export function MainLayout({ children }: MainLayoutProps) {
               </div>
               <nav className="flex-1 space-y-1">
                 {navigation.map((item) => {
-                  const isAccessible = item.plan === "basic" || canAccessFeature(item.plan === "team" ? "team_management" : item.plan);
+                  const isAccessible = item.plan === "basic" || canAccessFeature(item.plan === "team" ? "team_management" : item.name.toLowerCase());
                   
                   if (!isAccessible) return null;
                   

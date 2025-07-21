@@ -17,7 +17,7 @@ import {
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { FinancialOverview } from "@/components/dashboard/financial-overview";
-import { CalendarView } from "@/components/subscriptions/calendar-view";
+
 import { DuplicateDetector } from "@/components/subscriptions/duplicate-detector";
 
 export default function DashboardPage() {
@@ -209,9 +209,7 @@ export default function DashboardPage() {
       
       <FinancialOverview subscriptions={subscriptions} />
       
-      {canAccessFeature("calendar") && (
-        <CalendarView subscriptions={subscriptions} />
-      )}
+
       
       {canAccessFeature("duplicate_detection") && (
         <DuplicateDetector subscriptions={subscriptions} />
