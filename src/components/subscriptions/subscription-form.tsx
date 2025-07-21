@@ -74,7 +74,7 @@ export function SubscriptionForm({ initialData, isEditing = false }: Subscriptio
       const subscription = {
         id: initialData?.id || Math.random().toString(36).substring(2, 9),
         name: data.name,
-        amount: parseFloat(data.amount.toString()),
+        amount: parseFloat(data.amount),
         currency: data.currency,
         billingCycle: data.billingCycle,
         nextBillingDate: new Date(data.nextBillingDate),

@@ -54,7 +54,8 @@ export function LoginForm() {
       
       setUser(googleUser);
       
-      const secret = new TextEncoder().encode("fallback_secret_for_development_only");
+      const jwtSecret = process.env.NEXT_PUBLIC_JWT_SECRET || "recurb_super_secret_jwt_key_2024_development_only_change_in_production";
+      const secret = new TextEncoder().encode(jwtSecret);
       const token = await new SignJWT({ 
         id: googleUser.id, 
         email: googleUser.email, 
@@ -118,7 +119,8 @@ export function LoginForm() {
       if (user) {
         setUser(user);
         
-        const secret = new TextEncoder().encode("fallback_secret_for_development_only");
+        const jwtSecret = process.env.NEXT_PUBLIC_JWT_SECRET || "recurb_super_secret_jwt_key_2024_development_only_change_in_production";
+        const secret = new TextEncoder().encode(jwtSecret);
         const token = await new SignJWT({ 
           id: user.id, 
           email: user.email, 

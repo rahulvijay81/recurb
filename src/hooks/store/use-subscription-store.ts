@@ -4,6 +4,16 @@ import { create } from "zustand";
 import { Subscription } from "@/lib/schemas/subscription";
 import { logActivity } from "@/lib/utils/audit";
 
+// Memoization cache for expensive operations
+let categoriesCache: string[] | null = null;
+let tagsCache: string[] | null = null;
+let vendorsCache: string[] | null = null;
+let lastSubscriptionsHash: string | null = null;
+
+function hashSubscriptions(subscriptions: Subscription[]): string {
+  return JSON.stringify(subscriptions.map(s => ({ id: s.id, category: s.category, tags: s.tags, vendor: s.vendor })));
+}
+
 interface SubscriptionState {
   subscriptions: Subscription[];
   isLoading: boolean;
@@ -78,10 +88,22 @@ export const useSubscriptionStore = create<SubscriptionState>((set, get) => ({
   vendorFilter: null,
   searchQuery: "",
   
-  setSubscriptions: (subscriptions) => set({ subscriptions }),
+  setSubscriptions: (subscriptions) => {
+    // Clear cache when subscriptions change
+    categoriesCache = null;
+    tagsCache = null;
+    vendorsCache = null;
+    lastSubscriptionsHash = null;
+    set({ subscriptions });
+  },
   
   addSubscription: (subscription) => {
     logActivity("create", "subscription", subscription.id, `Created subscription: ${subscription.name}`);
+    // Clear cache when subscriptions change
+    categoriesCache = null;
+    tagsCache = null;
+    vendorsCache = null;
+    lastSubscriptionsHash = null;
     set((state) => ({
       subscriptions: [...state.subscriptions, subscription],
     }));
@@ -92,6 +114,11 @@ export const useSubscriptionStore = create<SubscriptionState>((set, get) => ({
     if (subscription) {
       logActivity("update", "subscription", id, `Updated subscription: ${subscription.name}`);
     }
+    // Clear cache when subscriptions change
+    categoriesCache = null;
+    tagsCache = null;
+    vendorsCache = null;
+    lastSubscriptionsHash = null;
     set((state) => ({
       subscriptions: state.subscriptions.map((sub) =>
         sub.id === id ? { ...sub, ...updatedSubscription } : sub
@@ -104,6 +131,11 @@ export const useSubscriptionStore = create<SubscriptionState>((set, get) => ({
     if (subscription) {
       logActivity("delete", "subscription", id, `Deleted subscription: ${subscription.name}`);
     }
+    // Clear cache when subscriptions change
+    categoriesCache = null;
+    tagsCache = null;
+    vendorsCache = null;
+    lastSubscriptionsHash = null;
     set((state) => ({
       subscriptions: state.subscriptions.filter((sub) => sub.id !== id),
     }));
@@ -172,26 +204,53 @@ export const useSubscriptionStore = create<SubscriptionState>((set, get) => ({
   },
   
   getCategories: () => {
-    const categories = get().subscriptions
+    const subscriptions = get().subscriptions;
+    const currentHash = hashSubscriptions(subscriptions);
+    
+    if (categoriesCache && lastSubscriptionsHash === currentHash) {
+      return categoriesCache;
+    }
+    
+    const categories = subscriptions
       .map((sub) => sub.category)
       .filter((category): category is string => !!category);
     
-    return [...new Set(categories)];
+    categoriesCache = [...new Set(categories)];
+    lastSubscriptionsHash = currentHash;
+    return categoriesCache;
   },
   
   getTags: () => {
-    const tags = get().subscriptions
+    const subscriptions = get().subscriptions;
+    const currentHash = hashSubscriptions(subscriptions);
+    
+    if (tagsCache && lastSubscriptionsHash === currentHash) {
+      return tagsCache;
+    }
+    
+    const tags = subscriptions
       .flatMap((sub) => sub.tags || [])
       .filter((tag) => !!tag);
     
-    return [...new Set(tags)];
+    tagsCache = [...new Set(tags)];
+    lastSubscriptionsHash = currentHash;
+    return tagsCache;
   },
   
   getVendors: () => {
-    const vendors = get().subscriptions
+    const subscriptions = get().subscriptions;
+    const currentHash = hashSubscriptions(subscriptions);
+    
+    if (vendorsCache && lastSubscriptionsHash === currentHash) {
+      return vendorsCache;
+    }
+    
+    const vendors = subscriptions
       .map((sub) => sub.vendor)
       .filter((vendor): vendor is string => !!vendor);
     
-    return [...new Set(vendors)];
+    vendorsCache = [...new Set(vendors)];
+    lastSubscriptionsHash = currentHash;
+    return vendorsCache;
   },
 }));

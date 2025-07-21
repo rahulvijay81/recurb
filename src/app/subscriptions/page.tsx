@@ -1,9 +1,10 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
 import { useSubscriptionStore } from "@/hooks/store/use-subscription-store";
 import { useAuthStore } from "@/hooks/store/use-auth-store";
 import { toast } from "@/lib/utils/toast";
+import { ErrorBoundary } from "@/components/common/error-boundary";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -76,6 +77,25 @@ export default function SubscriptionsPage() {
   const { canAccessFeature, canEdit, canDelete } = useAuthStore();
   const [searchTerm, setSearchTerm] = useState("");
   const [subscriptionToDelete, setSubscriptionToDelete] = useState<string | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize] = useState(10);
+  
+  const handleSearch = useCallback((e: React.FormEvent) => {
+    e.preventDefault();
+    setSearchQuery(searchTerm);
+    setCurrentPage(1); // Reset to first page on search
+  }, [searchTerm, setSearchQuery]);
+  
+  const filteredSubscriptions = useMemo(() => getFilteredSubscriptions(), [getFilteredSubscriptions]);
+  const categories = useMemo(() => getCategories(), [getCategories]);
+  const vendors = useMemo(() => getVendors(), [getVendors]);
+  
+  // Pagination logic
+  const totalPages = Math.ceil(filteredSubscriptions.length / pageSize);
+  const paginatedSubscriptions = useMemo(() => {
+    const startIndex = (currentPage - 1) * pageSize;
+    return filteredSubscriptions.slice(startIndex, startIndex + pageSize);
+  }, [filteredSubscriptions, currentPage, pageSize]);
   
   // Simulate fetching subscriptions
   useEffect(() => {
@@ -158,14 +178,7 @@ export default function SubscriptionsPage() {
     fetchSubscriptions();
   }, [setLoading, setSubscriptions]);
   
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    setSearchQuery(searchTerm);
-  };
-  
-  const filteredSubscriptions = getFilteredSubscriptions();
-  const categories = getCategories();
-  const vendors = getVendors();
+
   
   if (isLoading) {
     return (
@@ -181,7 +194,8 @@ export default function SubscriptionsPage() {
   }
   
   return (
-    <div className="p-6">
+    <ErrorBoundary>
+      <div className="p-6">
       <div className="flex flex-col gap-2 mb-6">
         <h1 className="text-3xl font-bold tracking-tight">Subscriptions</h1>
         <p className="text-muted-foreground">
@@ -347,8 +361,20 @@ export default function SubscriptionsPage() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {filteredSubscriptions.length > 0 ? (
-              filteredSubscriptions.map((subscription) => (
+            {isLoading ? (
+              Array.from({ length: pageSize }).map((_, index) => (
+                <TableRow key={index}>
+                  <TableCell><div className="h-4 bg-muted animate-pulse rounded" /></TableCell>
+                  <TableCell><div className="h-4 bg-muted animate-pulse rounded" /></TableCell>
+                  <TableCell className="hidden md:table-cell"><div className="h-4 bg-muted animate-pulse rounded" /></TableCell>
+                  <TableCell className="hidden md:table-cell"><div className="h-4 bg-muted animate-pulse rounded" /></TableCell>
+                  <TableCell className="hidden lg:table-cell"><div className="h-4 bg-muted animate-pulse rounded" /></TableCell>
+                  <TableCell className="hidden lg:table-cell"><div className="h-4 bg-muted animate-pulse rounded" /></TableCell>
+                  <TableCell><div className="h-4 bg-muted animate-pulse rounded" /></TableCell>
+                </TableRow>
+              ))
+            ) : paginatedSubscriptions.length > 0 ? (
+              paginatedSubscriptions.map((subscription) => (
                 <TableRow key={subscription.id}>
                   <TableCell className="font-medium">
                     <div className="flex flex-col">
@@ -440,6 +466,36 @@ export default function SubscriptionsPage() {
         </Table>
       </div>
       
+      {/* Pagination */}
+      {totalPages > 1 && (
+        <div className="flex items-center justify-between mt-4">
+          <p className="text-sm text-muted-foreground">
+            Showing {((currentPage - 1) * pageSize) + 1} to {Math.min(currentPage * pageSize, filteredSubscriptions.length)} of {filteredSubscriptions.length} subscriptions
+          </p>
+          <div className="flex items-center gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+              disabled={currentPage === 1}
+            >
+              Previous
+            </Button>
+            <span className="text-sm">
+              Page {currentPage} of {totalPages}
+            </span>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
+              disabled={currentPage === totalPages}
+            >
+              Next
+            </Button>
+          </div>
+        </div>
+      )}
+      
       <AlertDialog open={!!subscriptionToDelete} onOpenChange={(open) => !open && setSubscriptionToDelete(null)}>
         <AlertDialogContent>
           <AlertDialogHeader>
@@ -466,6 +522,7 @@ export default function SubscriptionsPage() {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-    </div>
+      </div>
+    </ErrorBoundary>
   );
 }

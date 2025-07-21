@@ -31,7 +31,10 @@ export async function middleware(request: NextRequest) {
   
   try {
     // Verify the token
-    const secret = new TextEncoder().encode(process.env.JWT_SECRET || "fallback_secret_for_development_only");
+    if (!process.env.JWT_SECRET) {
+      throw new Error("JWT_SECRET environment variable is required");
+    }
+    const secret = new TextEncoder().encode(process.env.JWT_SECRET);
     const { payload } = await jwtVerify(token, secret);
     
     // Check if user has access to the requested path
