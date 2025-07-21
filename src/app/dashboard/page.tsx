@@ -207,55 +207,55 @@ export default function DashboardPage() {
         </Card>
       </div>
       
-      <FinancialOverview subscriptions={subscriptions} />
-      
-
+      <div className="mb-6">
+        <FinancialOverview subscriptions={subscriptions} />
+      </div>
       
       {canAccessFeature("duplicate_detection") && (
-        <DuplicateDetector subscriptions={subscriptions} />
+        <div className="mb-6">
+          <DuplicateDetector subscriptions={subscriptions} />
+        </div>
       )}
       
-      <div className="grid gap-4 md:grid-cols-2">
-        <Card className="md:col-span-1">
-          <CardHeader>
-            <CardTitle>Quick Actions</CardTitle>
-            <CardDescription>Common tasks and features</CardDescription>
-          </CardHeader>
-          <CardContent className="grid gap-2">
-            <Button asChild className="w-full justify-start">
-              <Link href="/subscriptions/new">
-                <CreditCard className="mr-2 h-4 w-4" />
-                Add New Subscription
-              </Link>
-            </Button>
-            
+      <Card>
+        <CardHeader>
+          <CardTitle>Quick Actions</CardTitle>
+          <CardDescription>Common tasks and features</CardDescription>
+        </CardHeader>
+        <CardContent className="grid gap-2">
+          <Button asChild className="w-full justify-start">
+            <Link href="/subscriptions/new">
+              <CreditCard className="mr-2 h-4 w-4" />
+              Add New Subscription
+            </Link>
+          </Button>
+          
+          <Button asChild variant="outline" className="w-full justify-start">
+            <Link href="/subscriptions">
+              <CreditCard className="mr-2 h-4 w-4" />
+              View All Subscriptions
+            </Link>
+          </Button>
+          
+          {canAccessFeature("csv_import_export") && (
             <Button asChild variant="outline" className="w-full justify-start">
-              <Link href="/subscriptions">
-                <CreditCard className="mr-2 h-4 w-4" />
-                View All Subscriptions
+              <Link href="/subscriptions/import">
+                <ArrowUpRight className="mr-2 h-4 w-4" />
+                Import Subscriptions
               </Link>
             </Button>
-            
-            {canAccessFeature("csv_import_export") && (
-              <Button asChild variant="outline" className="w-full justify-start">
-                <Link href="/subscriptions/import">
-                  <ArrowUpRight className="mr-2 h-4 w-4" />
-                  Import Subscriptions
-                </Link>
-              </Button>
-            )}
-            
-            {canAccessFeature("monthly_breakdowns") && (
-              <Button asChild variant="outline" className="w-full justify-start">
-                <Link href="/analytics">
-                  <ArrowUpRight className="mr-2 h-4 w-4" />
-                  View Analytics
-                </Link>
-              </Button>
-            )}
-          </CardContent>
-        </Card>
-      </div>
+          )}
+          
+          {canAccessFeature("monthly_breakdowns") && (
+            <Button asChild variant="outline" className="w-full justify-start">
+              <Link href="/analytics">
+                <ArrowUpRight className="mr-2 h-4 w-4" />
+                View Analytics
+              </Link>
+            </Button>
+          )}
+        </CardContent>
+      </Card>
     </div>
   );
 }
