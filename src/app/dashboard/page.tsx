@@ -158,56 +158,69 @@ export default function DashboardPage() {
         </p>
       </div>
       
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 mb-6">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">Active Subscriptions</CardTitle>
-            <CreditCard className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{stats.totalActive}</div>
-            <p className="text-xs text-muted-foreground">
-              Subscriptions being tracked
-            </p>
-          </CardContent>
-        </Card>
+      <div className="grid gap-6 mb-6">
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between pb-2">
+              <CardTitle className="text-sm font-medium">Active Subscriptions</CardTitle>
+              <CreditCard className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">{stats.totalActive}</div>
+              <p className="text-xs text-muted-foreground">
+                Subscriptions being tracked
+              </p>
+            </CardContent>
+          </Card>
+          
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between pb-2">
+              <CardTitle className="text-sm font-medium">Monthly Recurring</CardTitle>
+              <DollarSign className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">
+                ${stats.totalMonthly.toFixed(2)}
+                <span className="text-xs text-muted-foreground ml-1">/ month</span>
+              </div>
+              <div className="flex items-center pt-1">
+                <ArrowUpRight className="h-3 w-3 text-emerald-500 mr-1" />
+                <p className="text-xs text-emerald-500">+2.5% from last month</p>
+              </div>
+            </CardContent>
+          </Card>
+          
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between pb-2">
+              <CardTitle className="text-sm font-medium">Yearly Projection</CardTitle>
+              <CalendarClock className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">
+                ${((stats.totalMonthly + stats.totalYearly) * 12).toFixed(2)}
+                <span className="text-xs text-muted-foreground ml-1">/ year</span>
+              </div>
+              <div className="flex items-center pt-1">
+                <ArrowDownRight className="h-3 w-3 text-red-500 mr-1" />
+                <p className="text-xs text-red-500">Save $120 with annual plans</p>
+              </div>
+            </CardContent>
+          </Card>
+          
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between pb-2">
+              <CardTitle className="text-sm font-medium">Upcoming Renewals</CardTitle>
+              <AlertCircle className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">{stats.upcomingRenewals.length}</div>
+              <p className="text-xs text-muted-foreground">
+                Due within 7 days
+              </p>
+            </CardContent>
+          </Card>
+        </div>
         
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">Monthly Recurring</CardTitle>
-            <DollarSign className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">
-              ${stats.totalMonthly.toFixed(2)}
-              <span className="text-xs text-muted-foreground ml-1">/ month</span>
-            </div>
-            <div className="flex items-center pt-1">
-              <ArrowUpRight className="h-3 w-3 text-emerald-500 mr-1" />
-              <p className="text-xs text-emerald-500">+2.5% from last month</p>
-            </div>
-          </CardContent>
-        </Card>
-        
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">Yearly Projection</CardTitle>
-            <CalendarClock className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">
-              ${((stats.totalMonthly + stats.totalYearly) * 12).toFixed(2)}
-              <span className="text-xs text-muted-foreground ml-1">/ year</span>
-            </div>
-            <div className="flex items-center pt-1">
-              <ArrowDownRight className="h-3 w-3 text-red-500 mr-1" />
-              <p className="text-xs text-red-500">Save $120 with annual plans</p>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-      
-      <div className="mb-6">
         <FinancialOverview subscriptions={subscriptions} />
       </div>
       

@@ -19,45 +19,9 @@ export function FinancialOverview({ subscriptions }: FinancialOverviewProps) {
   const categorySpend = getCategorySpend(subscriptions);
 
   return (
-    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-      <Card>
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">Monthly Recurring</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="text-2xl font-bold">${mrr.toFixed(2)}</div>
-        </CardContent>
-      </Card>
-      
-      <Card>
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">Yearly Recurring</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="text-2xl font-bold">${yrr.toFixed(2)}</div>
-        </CardContent>
-      </Card>
-      
-      <Card>
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">Active Subscriptions</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="text-2xl font-bold">{subscriptions.length}</div>
-        </CardContent>
-      </Card>
-      
-      <Card>
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">Upcoming Renewals</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="text-2xl font-bold">{upcomingRenewals.length}</div>
-        </CardContent>
-      </Card>
-
+    <div className="grid gap-4 md:grid-cols-2">
       {canAccessFeature("monthly_breakdowns") && (
-        <Card className="md:col-span-2">
+        <Card>
           <CardHeader>
             <CardTitle>Category Breakdown</CardTitle>
           </CardHeader>
@@ -75,7 +39,7 @@ export function FinancialOverview({ subscriptions }: FinancialOverviewProps) {
       )}
 
       {upcomingRenewals.length > 0 && (
-        <Card className="md:col-span-2">
+        <Card>
           <CardHeader>
             <CardTitle>Upcoming Renewals</CardTitle>
           </CardHeader>
