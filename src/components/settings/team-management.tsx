@@ -8,15 +8,17 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import { MoreHorizontal, Plus, UserPlus } from "lucide-react";
 import { InviteTeamMemberDialog } from "./invite-team-member-dialog";
 import { EditTeamMemberDialog } from "./edit-team-member-dialog";
 import { TeamMember } from "@/lib/schemas/user";
 
 export function TeamManagement() {
-  const { members, isLoading } = useTeamStore();
+  const { members, isLoading, removeMember } = useTeamStore();
   const [inviteDialogOpen, setInviteDialogOpen] = useState(false);
   const [editingMember, setEditingMember] = useState<TeamMember | null>(null);
+  const [memberToRemove, setMemberToRemove] = useState<TeamMember | null>(null);
 
   const getRoleBadgeVariant = (role: string) => {
     switch (role) {
@@ -101,7 +103,10 @@ export function TeamManagement() {
                             <DropdownMenuItem onClick={() => setEditingMember(member)}>
                               Edit Role
                             </DropdownMenuItem>
-                            <DropdownMenuItem className="text-destructive">
+                            <DropdownMenuItem 
+                              className="text-destructive"
+                              onClick={() => setMemberToRemove(member)}
+                            >
                               Remove Member
                             </DropdownMenuItem>
                           </DropdownMenuContent>
@@ -126,6 +131,32 @@ export function TeamManagement() {
         open={!!editingMember}
         onOpenChange={(open) => !open && setEditingMember(null)}
       />
+      
+      <AlertDialog open={!!memberToRemove} onOpenChange={(open) => !open && setMemberToRemove(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Remove Team Member</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to remove {memberToRemove?.name || memberToRemove?.email} from the team? 
+              This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction 
+              className="bg-destructive text-white hover:bg-destructive/90"
+              onClick={() => {
+                if (memberToRemove) {
+                  removeMember(memberToRemove.id);
+                  setMemberToRemove(null);
+                }
+              }}
+            >
+              Remove Member
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </>
   );
 }
