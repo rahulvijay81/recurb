@@ -48,6 +48,7 @@ const PLAN_FEATURES = {
     "vendor_summaries",
     "enhanced_exports",
     "custom_reminders",
+    "auto_email_detection",
   ],
   team: [
     "manual_crud",
@@ -64,6 +65,7 @@ const PLAN_FEATURES = {
     "vendor_summaries",
     "enhanced_exports",
     "custom_reminders",
+    "auto_email_detection",
     "team_management",
     "shared_notes",
     "audit_logs",

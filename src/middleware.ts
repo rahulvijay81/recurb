@@ -7,6 +7,7 @@ const FEATURE_PATHS: Record<string, string[]> = {
   "/dashboard": ["basic", "pro", "team"],
   "/subscriptions": ["basic", "pro", "team"],
   "/subscriptions/import": ["basic", "pro", "team"],
+  "/api/subscriptions/auto-detect": ["pro", "team"],
   "/analytics": ["pro", "team"],
   "/calendar": ["pro", "team"],
   "/team": ["team"],
