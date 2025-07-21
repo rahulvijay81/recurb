@@ -57,7 +57,7 @@ export function SimpleEmailInput({ onSubscriptionsDetected }: SimpleEmailInputPr
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline" size="sm">
+        <Button variant="outline" className="whitespace-nowrap">
           <AtSign className="h-4 w-4 mr-2" />
           Email lookup
         </Button>

@@ -74,7 +74,7 @@ export function EmailInboxScanner({ onSubscriptionsDetected }: EmailInboxScanner
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline" size="sm">
+        <Button variant="outline" className="whitespace-nowrap">
           <Mail className="h-4 w-4 mr-2" />
           Scan inbox
         </Button>
@@ -93,7 +93,7 @@ export function EmailInboxScanner({ onSubscriptionsDetected }: EmailInboxScanner
             </ul>
           </div>
           
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             {Object.entries(EMAIL_PROVIDERS).map(([key, provider]) => (
               <Button
                 key={key}

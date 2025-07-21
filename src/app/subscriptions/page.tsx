@@ -89,7 +89,7 @@ export default function SubscriptionsPage() {
             name: "Netflix",
             amount: 15.99,
             currency: "USD",
-            billingCycle: "monthly",
+            billingCycle: "monthly" as "monthly" | "quarterly" | "yearly" | "custom",
             nextBillingDate: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000), // 5 days from now
             autoRenew: true,
             category: "Entertainment",
@@ -101,7 +101,7 @@ export default function SubscriptionsPage() {
             name: "Spotify",
             amount: 9.99,
             currency: "USD",
-            billingCycle: "monthly",
+            billingCycle: "monthly" as "monthly" | "quarterly" | "yearly" | "custom",
             nextBillingDate: new Date(Date.now() + 12 * 24 * 60 * 60 * 1000), // 12 days from now
             autoRenew: true,
             category: "Entertainment",
@@ -113,7 +113,7 @@ export default function SubscriptionsPage() {
             name: "Adobe Creative Cloud",
             amount: 52.99,
             currency: "USD",
-            billingCycle: "monthly",
+            billingCycle: "monthly" as "monthly" | "quarterly" | "yearly" | "custom",
             nextBillingDate: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000), // 3 days from now
             autoRenew: true,
             category: "Software",
@@ -125,7 +125,7 @@ export default function SubscriptionsPage() {
             name: "AWS",
             amount: 150.00,
             currency: "USD",
-            billingCycle: "monthly",
+            billingCycle: "monthly" as "monthly" | "quarterly" | "yearly" | "custom",
             nextBillingDate: new Date(Date.now() + 8 * 24 * 60 * 60 * 1000), // 8 days from now
             autoRenew: true,
             category: "Cloud Services",
@@ -137,7 +137,7 @@ export default function SubscriptionsPage() {
             name: "Microsoft 365",
             amount: 99.99,
             currency: "USD",
-            billingCycle: "yearly",
+            billingCycle: "yearly" as "monthly" | "quarterly" | "yearly" | "custom",
             nextBillingDate: new Date(Date.now() + 45 * 24 * 60 * 60 * 1000), // 45 days from now
             autoRenew: true,
             category: "Software",
@@ -188,9 +188,9 @@ export default function SubscriptionsPage() {
         </p>
       </div>
       
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
-        <form onSubmit={handleSearch} className="flex w-full sm:w-auto gap-2">
-          <div className="relative w-full sm:w-80">
+      <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 mb-6">
+        <form onSubmit={handleSearch} className="flex w-full lg:w-auto gap-2">
+          <div className="relative w-full lg:w-80">
             <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
             <Input
               type="search"
@@ -203,7 +203,7 @@ export default function SubscriptionsPage() {
           <Button type="submit">Search</Button>
         </form>
         
-        <div className="flex gap-2 w-full sm:w-auto">
+        <div className="flex flex-wrap gap-2 w-full lg:w-auto justify-start lg:justify-end">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="outline" size="icon">
@@ -216,7 +216,7 @@ export default function SubscriptionsPage() {
               
               <div className="p-2">
                 <p className="text-xs font-medium mb-1">Category</p>
-                <Select onValueChange={(value) => setCategoryFilter(value === "all" ? undefined : value)}>
+                <Select onValueChange={(value) => setCategoryFilter(value === "all" ? null : value)}>
                   <SelectTrigger>
                     <SelectValue placeholder="Select category" />
                   </SelectTrigger>
@@ -233,7 +233,7 @@ export default function SubscriptionsPage() {
               
               <div className="p-2">
                 <p className="text-xs font-medium mb-1">Vendor</p>
-                <Select onValueChange={(value) => setVendorFilter(value === "all" ? undefined : value)}>
+                <Select onValueChange={(value) => setVendorFilter(value === "all" ? null : value)}>
                   <SelectTrigger>
                     <SelectValue placeholder="Select vendor" />
                   </SelectTrigger>
@@ -263,7 +263,7 @@ export default function SubscriptionsPage() {
           </Button>
           
           {canAccessFeature("auto_email_detection") && (
-            <>
+            <div className="flex gap-2">
               <SimpleEmailInput 
                 onSubscriptionsDetected={(detected: any[]) => {
                   const newSubs = detected.map(d => ({
@@ -271,7 +271,7 @@ export default function SubscriptionsPage() {
                     name: d.name,
                     amount: d.amount,
                     currency: "USD",
-                    billingCycle: d.billingCycle,
+                    billingCycle: d.billingCycle as "monthly" | "quarterly" | "yearly" | "custom",
                     nextBillingDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
                     autoRenew: true,
                     category: d.category,
@@ -289,7 +289,7 @@ export default function SubscriptionsPage() {
                     name: d.name,
                     amount: d.amount,
                     currency: "USD",
-                    billingCycle: d.billingCycle,
+                    billingCycle: d.billingCycle as "monthly" | "quarterly" | "yearly" | "custom",
                     nextBillingDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
                     autoRenew: true,
                     category: d.category,
@@ -300,7 +300,7 @@ export default function SubscriptionsPage() {
                   toast.success(`Added ${detected.length} subscription${detected.length !== 1 ? 's' : ''}`);
                 }}
               />
-            </>
+            </div>
           )}
           
           {canAccessFeature("csv_import_export") && (
@@ -356,10 +356,12 @@ export default function SubscriptionsPage() {
                     </div>
                   </TableCell>
                   <TableCell>
-                    ${subscription.amount.toFixed(2)}
-                    <span className="text-xs text-muted-foreground">
-                      {subscription.currency}
-                    </span>
+                    <div className="flex flex-col">
+                      <span>${subscription.amount.toFixed(2)}</span>
+                      <span className="text-xs text-muted-foreground">
+                        {subscription.currency}
+                      </span>
+                    </div>
                   </TableCell>
                   <TableCell className="hidden md:table-cell">
                     <span className="capitalize">{subscription.billingCycle}</span>
@@ -400,7 +402,7 @@ export default function SubscriptionsPage() {
                         <DropdownMenuSeparator />
                         <DropdownMenuItem 
                           className="text-red-600"
-                          onClick={() => setSubscriptionToDelete(subscription.id)}
+                          onClick={() => setSubscriptionToDelete(subscription.id || null)}
                         >
                           Delete
                         </DropdownMenuItem>
@@ -411,7 +413,7 @@ export default function SubscriptionsPage() {
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={7} className="text-center py-8">
+                <TableCell colSpan={7} className="text-center py-10">
                   <div className="flex flex-col items-center justify-center">
                     <CreditCard className="h-10 w-10 text-muted-foreground mb-2" />
                     <p className="text-muted-foreground">No subscriptions found</p>
