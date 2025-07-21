@@ -8,6 +8,16 @@ import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Upload, File, X } from "lucide-react";
 import { toast } from "sonner";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 interface InvoiceUploadProps {
   subscriptionId?: string;
@@ -18,6 +28,7 @@ interface InvoiceUploadProps {
 export function InvoiceUpload({ subscriptionId, onUpload, existingFiles = [] }: InvoiceUploadProps) {
   const [uploading, setUploading] = useState(false);
   const [files, setFiles] = useState<string[]>(existingFiles);
+  const [fileToRemove, setFileToRemove] = useState<string | null>(null);
 
   const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFiles = event.target.files;
@@ -61,6 +72,7 @@ export function InvoiceUpload({ subscriptionId, onUpload, existingFiles = [] }: 
   };
 
   return (
+    <>
     <Card>
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
@@ -103,7 +115,7 @@ export function InvoiceUpload({ subscriptionId, onUpload, existingFiles = [] }: 
                     <Button
                       variant="ghost"
                       size="sm"
-                      onClick={() => removeFile(fileUrl)}
+                      onClick={() => setFileToRemove(fileUrl)}
                     >
                       <X className="h-4 w-4" />
                     </Button>
@@ -121,5 +133,31 @@ export function InvoiceUpload({ subscriptionId, onUpload, existingFiles = [] }: 
         </div>
       </CardContent>
     </Card>
+    
+    <AlertDialog open={!!fileToRemove} onOpenChange={(open) => !open && setFileToRemove(null)}>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>Remove File</AlertDialogTitle>
+          <AlertDialogDescription>
+            Are you sure you want to remove this file? This action cannot be undone.
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel>Cancel</AlertDialogCancel>
+          <AlertDialogAction 
+            className="bg-destructive text-white hover:bg-destructive/90"
+            onClick={() => {
+              if (fileToRemove) {
+                removeFile(fileToRemove);
+                setFileToRemove(null);
+              }
+            }}
+          >
+            Remove
+          </AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
+    </>
   );
 }

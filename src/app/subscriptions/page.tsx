@@ -40,6 +40,16 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 export default function SubscriptionsPage() {
   const {
@@ -60,6 +70,7 @@ export default function SubscriptionsPage() {
   
   const { canAccessFeature } = useAuthStore();
   const [searchTerm, setSearchTerm] = useState("");
+  const [subscriptionToDelete, setSubscriptionToDelete] = useState<string | null>(null);
   
   // Simulate fetching subscriptions
   useEffect(() => {
@@ -201,12 +212,12 @@ export default function SubscriptionsPage() {
               
               <div className="p-2">
                 <p className="text-xs font-medium mb-1">Category</p>
-                <Select onValueChange={(value) => setCategoryFilter(value)}>
+                <Select onValueChange={(value) => setCategoryFilter(value === "all" ? undefined : value)}>
                   <SelectTrigger>
                     <SelectValue placeholder="Select category" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">All Categories</SelectItem>
+                    <SelectItem value="all">All Categories</SelectItem>
                     {categories.map((category) => (
                       <SelectItem key={category} value={category}>
                         {category}
@@ -218,12 +229,12 @@ export default function SubscriptionsPage() {
               
               <div className="p-2">
                 <p className="text-xs font-medium mb-1">Vendor</p>
-                <Select onValueChange={(value) => setVendorFilter(value)}>
+                <Select onValueChange={(value) => setVendorFilter(value === "all" ? undefined : value)}>
                   <SelectTrigger>
                     <SelectValue placeholder="Select vendor" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">All Vendors</SelectItem>
+                    <SelectItem value="all">All Vendors</SelectItem>
                     {vendors.map((vendor) => (
                       <SelectItem key={vendor} value={vendor}>
                         {vendor}
@@ -342,7 +353,10 @@ export default function SubscriptionsPage() {
                           </Link>
                         </DropdownMenuItem>
                         <DropdownMenuSeparator />
-                        <DropdownMenuItem className="text-red-600">
+                        <DropdownMenuItem 
+                          className="text-red-600"
+                          onClick={() => setSubscriptionToDelete(subscription.id)}
+                        >
                           Delete
                         </DropdownMenuItem>
                       </DropdownMenuContent>
@@ -369,6 +383,32 @@ export default function SubscriptionsPage() {
           </TableBody>
         </Table>
       </div>
+      
+      <AlertDialog open={!!subscriptionToDelete} onOpenChange={(open) => !open && setSubscriptionToDelete(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete Subscription</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to delete this subscription? This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction 
+              className="bg-destructive text-white hover:bg-destructive/90"
+              onClick={() => {
+                if (subscriptionToDelete) {
+                  // In a real app, this would be an API call
+                  console.log("Delete subscription:", subscriptionToDelete);
+                  setSubscriptionToDelete(null);
+                }
+              }}
+            >
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }
