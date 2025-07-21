@@ -1,18 +1,83 @@
 "use client";
 
+import { useEffect } from "react";
+import { useAuthStore } from "@/hooks/store/use-auth-store";
+import { redirect } from "next/navigation";
 import { TeamManagement } from "@/components/settings/team-management";
+import { AuditLogs } from "@/components/team/audit-logs";
+import { WebhookConfig } from "@/components/team/webhook-config";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Users, History, Webhook } from "lucide-react";
 
 export default function TeamPage() {
+  const { canAccessFeature } = useAuthStore();
+  
+  useEffect(() => {
+    if (!canAccessFeature("team_management")) {
+      redirect("/settings/plans");
+    }
+  }, [canAccessFeature]);
+  
+  const mockAuditLogs = [
+    {
+      id: "1",
+      userId: "user1",
+      userName: "John Doe",
+      action: "create",
+      resourceType: "subscription",
+      resourceId: "sub1",
+      details: "Created Netflix subscription",
+      timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000)
+    },
+    {
+      id: "2",
+      userId: "user2",
+      userName: "Jane Smith",
+      action: "update",
+      resourceType: "subscription",
+      resourceId: "sub2",
+      details: "Updated Spotify subscription amount",
+      timestamp: new Date(Date.now() - 5 * 60 * 60 * 1000)
+    }
+  ];
+  
   return (
     <div className="p-6">
       <div className="flex flex-col gap-2 mb-6">
         <h1 className="text-3xl font-bold tracking-tight">Team Management</h1>
         <p className="text-muted-foreground">
-          Manage your team members and their permissions.
+          Manage your team members, audit logs, and integrations.
         </p>
       </div>
       
-      <TeamManagement />
+      <Tabs defaultValue="members" className="space-y-6">
+        <TabsList>
+          <TabsTrigger value="members">
+            <Users className="h-4 w-4 mr-2" />
+            Team Members
+          </TabsTrigger>
+          <TabsTrigger value="audit">
+            <History className="h-4 w-4 mr-2" />
+            Audit Logs
+          </TabsTrigger>
+          <TabsTrigger value="webhooks">
+            <Webhook className="h-4 w-4 mr-2" />
+            Webhooks
+          </TabsTrigger>
+        </TabsList>
+        
+        <TabsContent value="members">
+          <TeamManagement />
+        </TabsContent>
+        
+        <TabsContent value="audit">
+          <AuditLogs logs={mockAuditLogs} />
+        </TabsContent>
+        
+        <TabsContent value="webhooks">
+          <WebhookConfig />
+        </TabsContent>
+      </Tabs>
     </div>
   );
 }

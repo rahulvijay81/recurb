@@ -5,6 +5,11 @@ import { useAuthStore } from "@/hooks/store/use-auth-store";
 import { useSubscriptionStore } from "@/hooks/store/use-subscription-store";
 import { redirect } from "next/navigation";
 import { ExpenseChart } from "@/components/analytics/expense-chart";
+import { TrendsChart } from "@/components/analytics/trends-chart";
+import { ForecastingChart } from "@/components/analytics/forecasting-chart";
+import { VendorSummary } from "@/components/subscriptions/vendor-summary";
+import { EnhancedExport } from "@/components/subscriptions/enhanced-export";
+import { CalendarView } from "@/components/subscriptions/calendar-view";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { PieChart, BarChart3, CalendarDays, TrendingUp } from "lucide-react";
@@ -165,49 +170,11 @@ export default function AnalyticsPage() {
         </TabsList>
         
         <TabsContent value="overview" className="space-y-6">
-          <ExpenseChart 
-            title="6-Month Expense Forecast" 
-            description="Projected subscription expenses for the next 6 months"
-          />
+          <ForecastingChart subscriptions={subscriptions} />
           
           <div className="grid md:grid-cols-2 gap-6">
-            <Card>
-              <CardHeader>
-                <CardTitle>Expense by Category</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  {Object.entries(categoryData).map(([category, amount]) => (
-                    <div key={category} className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-3 h-3 rounded-full bg-primary" />
-                        <span>{category}</span>
-                      </div>
-                      <span className="font-medium">${amount.toFixed(2)}</span>
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-            
-            <Card>
-              <CardHeader>
-                <CardTitle>Subscriptions by Billing Cycle</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  {Object.entries(billingCycleData).map(([cycle, count]) => (
-                    <div key={cycle} className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-3 h-3 rounded-full bg-primary" />
-                        <span className="capitalize">{cycle}</span>
-                      </div>
-                      <span className="font-medium">{count} subscriptions</span>
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
+            <VendorSummary subscriptions={subscriptions} />
+            <EnhancedExport subscriptions={subscriptions} />
           </div>
         </TabsContent>
         
@@ -228,35 +195,11 @@ export default function AnalyticsPage() {
         </TabsContent>
         
         <TabsContent value="trends">
-          <Card>
-            <CardHeader>
-              <CardTitle>Expense Trends</CardTitle>
-              <p className="text-sm text-muted-foreground">
-                Track how your subscription expenses change over time
-              </p>
-            </CardHeader>
-            <CardContent>
-              <div className="flex items-center justify-center h-64 text-muted-foreground">
-                <p>Trend analysis charts will be displayed here</p>
-              </div>
-            </CardContent>
-          </Card>
+          <TrendsChart subscriptions={subscriptions} />
         </TabsContent>
         
         <TabsContent value="calendar">
-          <Card>
-            <CardHeader>
-              <CardTitle>Billing Calendar</CardTitle>
-              <p className="text-sm text-muted-foreground">
-                View your subscription billing dates on a calendar
-              </p>
-            </CardHeader>
-            <CardContent>
-              <div className="flex items-center justify-center h-64 text-muted-foreground">
-                <p>Calendar view will be displayed here</p>
-              </div>
-            </CardContent>
-          </Card>
+          <CalendarView subscriptions={subscriptions} />
         </TabsContent>
       </Tabs>
     </div>

@@ -16,6 +16,9 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { FinancialOverview } from "@/components/dashboard/financial-overview";
+import { CalendarView } from "@/components/subscriptions/calendar-view";
+import { DuplicateDetector } from "@/components/subscriptions/duplicate-detector";
 
 export default function DashboardPage() {
   const { subscriptions, isLoading, setSubscriptions, setLoading } = useSubscriptionStore();
@@ -204,42 +207,17 @@ export default function DashboardPage() {
         </Card>
       </div>
       
+      <FinancialOverview subscriptions={subscriptions} />
+      
+      {canAccessFeature("calendar") && (
+        <CalendarView subscriptions={subscriptions} />
+      )}
+      
+      {canAccessFeature("duplicate_detection") && (
+        <DuplicateDetector subscriptions={subscriptions} />
+      )}
+      
       <div className="grid gap-4 md:grid-cols-2">
-        <Card className="md:col-span-1">
-          <CardHeader>
-            <CardTitle>Upcoming Renewals</CardTitle>
-            <CardDescription>Subscriptions renewing in the next 7 days</CardDescription>
-          </CardHeader>
-          <CardContent>
-            {stats.upcomingRenewals.length > 0 ? (
-              <div className="space-y-4">
-                {stats.upcomingRenewals.map((sub) => (
-                  <div key={sub.id} className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <div className="w-2 h-2 rounded-full bg-primary" />
-                      <div>
-                        <p className="font-medium">{sub.name}</p>
-                        <p className="text-xs text-muted-foreground">
-                          {format(sub.nextBillingDate, "MMM dd, yyyy")}
-                        </p>
-                      </div>
-                    </div>
-                    <div className="text-right">
-                      <p className="font-medium">${sub.amount.toFixed(2)}</p>
-                      <p className="text-xs text-muted-foreground">{sub.billingCycle}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <div className="flex flex-col items-center justify-center py-8 text-center">
-                <CalendarClock className="h-10 w-10 text-muted-foreground mb-2" />
-                <p className="text-muted-foreground">No upcoming renewals in the next 7 days</p>
-              </div>
-            )}
-          </CardContent>
-        </Card>
-        
         <Card className="md:col-span-1">
           <CardHeader>
             <CardTitle>Quick Actions</CardTitle>
@@ -269,7 +247,7 @@ export default function DashboardPage() {
               </Button>
             )}
             
-            {canAccessFeature("analytics") && (
+            {canAccessFeature("monthly_breakdowns") && (
               <Button asChild variant="outline" className="w-full justify-start">
                 <Link href="/analytics">
                   <ArrowUpRight className="mr-2 h-4 w-4" />

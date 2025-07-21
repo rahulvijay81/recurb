@@ -31,6 +31,8 @@ import { CalendarIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAuthStore } from "@/hooks/store/use-auth-store";
 import { useSubscriptionStore } from "@/hooks/store/use-subscription-store";
+import { InvoiceUpload } from "@/components/subscriptions/invoice-upload";
+import { ReminderSettings } from "@/components/notifications/reminder-settings";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 
@@ -318,6 +320,14 @@ export function SubscriptionForm({ initialData, isEditing = false }: Subscriptio
             </FormItem>
           )}
         />
+        
+        {canAccessFeature("invoice_upload") && (
+          <InvoiceUpload subscriptionId={initialData?.id} />
+        )}
+        
+        {canAccessFeature("custom_reminders") && (
+          <ReminderSettings subscriptionId={initialData?.id} />
+        )}
         
         <div className="flex justify-end gap-4">
           <Button
