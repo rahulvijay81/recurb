@@ -2,6 +2,7 @@
 
 import { create } from "zustand";
 import { TeamMember } from "@/lib/schemas/user";
+import { logActivity } from "@/lib/utils/audit";
 
 interface TeamState {
   members: TeamMember[];
@@ -42,19 +43,34 @@ export const useTeamStore = create<TeamState>((set, get) => ({
   
   setMembers: (members) => set({ members }),
   
-  addMember: (member) => set((state) => ({
-    members: [...state.members, member]
-  })),
+  addMember: (member) => {
+    logActivity("invite", "team_member", member.id, `Invited team member: ${member.email}`);
+    set((state) => ({
+      members: [...state.members, member]
+    }));
+  },
   
-  updateMember: (id, updates) => set((state) => ({
-    members: state.members.map(member => 
-      member.id === id ? { ...member, ...updates } : member
-    )
-  })),
+  updateMember: (id, updates) => {
+    const member = get().members.find(m => m.id === id);
+    if (member && updates.role) {
+      logActivity("change_role", "team_member", id, `Changed role for ${member.email} to ${updates.role}`);
+    }
+    set((state) => ({
+      members: state.members.map(member => 
+        member.id === id ? { ...member, ...updates } : member
+      )
+    }));
+  },
   
-  removeMember: (id) => set((state) => ({
-    members: state.members.filter(member => member.id !== id)
-  })),
+  removeMember: (id) => {
+    const member = get().members.find(m => m.id === id);
+    if (member) {
+      logActivity("remove_member", "team_member", id, `Removed team member: ${member.email}`);
+    }
+    set((state) => ({
+      members: state.members.filter(member => member.id !== id)
+    }));
+  },
   
   setLoading: (isLoading) => set({ isLoading }),
 }));

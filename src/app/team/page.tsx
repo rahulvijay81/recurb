@@ -18,28 +18,7 @@ export default function TeamPage() {
     }
   }, [canAccessFeature]);
   
-  const mockAuditLogs = [
-    {
-      id: "1",
-      userId: "user1",
-      userName: "John Doe",
-      action: "create",
-      resourceType: "subscription",
-      resourceId: "sub1",
-      details: "Created Netflix subscription",
-      timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000)
-    },
-    {
-      id: "2",
-      userId: "user2",
-      userName: "Jane Smith",
-      action: "update",
-      resourceType: "subscription",
-      resourceId: "sub2",
-      details: "Updated Spotify subscription amount",
-      timestamp: new Date(Date.now() - 5 * 60 * 60 * 1000)
-    }
-  ];
+
   
   return (
     <div className="p-6">
@@ -71,7 +50,7 @@ export default function TeamPage() {
         </TabsContent>
         
         <TabsContent value="audit">
-          <AuditLogs logs={mockAuditLogs} />
+          <AuditLogs />
         </TabsContent>
         
         <TabsContent value="webhooks">

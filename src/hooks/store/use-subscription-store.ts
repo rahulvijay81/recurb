@@ -2,6 +2,7 @@
 
 import { create } from "zustand";
 import { Subscription } from "@/lib/schemas/subscription";
+import { logActivity } from "@/lib/utils/audit";
 
 interface SubscriptionState {
   subscriptions: Subscription[];
@@ -79,19 +80,34 @@ export const useSubscriptionStore = create<SubscriptionState>((set, get) => ({
   
   setSubscriptions: (subscriptions) => set({ subscriptions }),
   
-  addSubscription: (subscription) => set((state) => ({
-    subscriptions: [...state.subscriptions, subscription],
-  })),
+  addSubscription: (subscription) => {
+    logActivity("create", "subscription", subscription.id, `Created subscription: ${subscription.name}`);
+    set((state) => ({
+      subscriptions: [...state.subscriptions, subscription],
+    }));
+  },
   
-  updateSubscription: (id, updatedSubscription) => set((state) => ({
-    subscriptions: state.subscriptions.map((sub) =>
-      sub.id === id ? { ...sub, ...updatedSubscription } : sub
-    ),
-  })),
+  updateSubscription: (id, updatedSubscription) => {
+    const subscription = get().subscriptions.find(sub => sub.id === id);
+    if (subscription) {
+      logActivity("update", "subscription", id, `Updated subscription: ${subscription.name}`);
+    }
+    set((state) => ({
+      subscriptions: state.subscriptions.map((sub) =>
+        sub.id === id ? { ...sub, ...updatedSubscription } : sub
+      ),
+    }));
+  },
   
-  deleteSubscription: (id) => set((state) => ({
-    subscriptions: state.subscriptions.filter((sub) => sub.id !== id),
-  })),
+  deleteSubscription: (id) => {
+    const subscription = get().subscriptions.find(sub => sub.id === id);
+    if (subscription) {
+      logActivity("delete", "subscription", id, `Deleted subscription: ${subscription.name}`);
+    }
+    set((state) => ({
+      subscriptions: state.subscriptions.filter((sub) => sub.id !== id),
+    }));
+  },
   
   setLoading: (isLoading) => set({ isLoading }),
   
