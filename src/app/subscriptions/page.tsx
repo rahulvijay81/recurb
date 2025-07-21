@@ -39,6 +39,7 @@ import {
   Search,
   Upload,
 } from "lucide-react";
+import { formatDate } from "@/lib/utils/date";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -353,7 +354,7 @@ export default function SubscriptionsPage() {
                     <div className="flex flex-col">
                       <span>{subscription.name}</span>
                       <span className="text-xs text-muted-foreground md:hidden">
-                        {subscription.billingCycle} · {format(subscription.nextBillingDate, "MMM dd, yyyy")}
+                        {subscription.billingCycle} · {formatDate(subscription.nextBillingDate)}
                       </span>
                     </div>
                   </TableCell>
@@ -369,7 +370,7 @@ export default function SubscriptionsPage() {
                     <span className="capitalize">{subscription.billingCycle}</span>
                   </TableCell>
                   <TableCell className="hidden md:table-cell">
-                    {format(subscription.nextBillingDate, "MMM dd, yyyy")}
+                    {formatDate(subscription.nextBillingDate)}
                   </TableCell>
                   <TableCell className="hidden lg:table-cell">
                     {subscription.category && (

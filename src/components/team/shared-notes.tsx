@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -8,40 +8,73 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { MessageSquare, Send } from "lucide-react";
 import { toast } from "sonner";
-
-interface Note {
-  id: string;
-  content: string;
-  author: string;
-  authorInitials: string;
-  createdAt: Date;
-  subscriptionId: string;
-}
+import { useNotesStore } from "@/hooks/store/use-notes-store";
+import { useAuthStore } from "@/hooks/store/use-auth-store";
+import { Note } from "@/lib/schemas/note";
+import { formatDate } from "@/lib/utils/date";
 
 interface SharedNotesProps {
   subscriptionId: string;
-  notes?: Note[];
-  onAddNote?: (content: string) => void;
 }
 
-export function SharedNotes({ subscriptionId, notes = [], onAddNote }: SharedNotesProps) {
+export function SharedNotes({ subscriptionId }: SharedNotesProps) {
   const [newNote, setNewNote] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const { notes, addNote, getNotesBySubscription, setNotes } = useNotesStore();
+  const { user, canAccessFeature } = useAuthStore();
+  
+  const subscriptionNotes = getNotesBySubscription(subscriptionId);
+  
+  // Mock data initialization
+  useEffect(() => {
+    const mockNotes: Note[] = [
+      {
+        id: "note-1",
+        content: "This subscription needs review next month",
+        authorId: "user-1",
+        authorName: "John Doe",
+        subscriptionId,
+        createdAt: new Date("2024-01-15"),
+      },
+      {
+        id: "note-2", 
+        content: "Price increased by 20% - consider alternatives",
+        authorId: "user-2",
+        authorName: "Jane Smith",
+        subscriptionId,
+        createdAt: new Date("2024-01-20"),
+      },
+    ];
+    setNotes(mockNotes);
+  }, [subscriptionId, setNotes]);
 
   const handleSubmit = async () => {
-    if (!newNote.trim()) return;
+    if (!newNote.trim() || !user) return;
     
     setIsSubmitting(true);
     try {
-      onAddNote?.(newNote);
+      const note: Note = {
+        id: `note-${Date.now()}`,
+        content: newNote,
+        authorId: user.id,
+        authorName: user.name,
+        subscriptionId,
+        createdAt: new Date(),
+      };
+      
+      addNote(note);
       setNewNote("");
-      toast.success("Note added successfully");
+      toast.success("Note added and visible to all team members");
     } catch (error) {
       toast.error("Failed to add note");
     } finally {
       setIsSubmitting(false);
     }
   };
+  
+  if (!canAccessFeature("shared_notes")) {
+    return null;
+  }
 
   return (
     <Card>
@@ -72,24 +105,26 @@ export function SharedNotes({ subscriptionId, notes = [], onAddNote }: SharedNot
           </div>
 
           <div className="space-y-3">
-            {notes.length === 0 ? (
+            {subscriptionNotes.length === 0 ? (
               <p className="text-sm text-muted-foreground text-center py-4">
                 No notes yet. Be the first to add a team note!
               </p>
             ) : (
-              notes.map((note) => (
+              subscriptionNotes
+                .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
+                .map((note) => (
                 <div key={note.id} className="border rounded-lg p-3 space-y-2">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
                       <Avatar className="h-6 w-6">
                         <AvatarFallback className="text-xs">
-                          {note.authorInitials}
+                          {note.authorName.split(' ').map(n => n[0]).join('')}
                         </AvatarFallback>
                       </Avatar>
-                      <span className="text-sm font-medium">{note.author}</span>
+                      <span className="text-sm font-medium">{note.authorName}</span>
                     </div>
                     <Badge variant="outline" className="text-xs">
-                      {note.createdAt.toLocaleDateString()}
+                      {formatDate(note.createdAt)}
                     </Badge>
                   </div>
                   <p className="text-sm text-gray-700 whitespace-pre-wrap">

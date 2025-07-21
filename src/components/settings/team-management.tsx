@@ -28,9 +28,13 @@ export function TeamManagement() {
       case "owner": return "default";
       case "admin": return "secondary";
       case "member": return "outline";
-      case "viewer": return "destructive";
+      case "viewer": return "outline";
       default: return "outline";
     }
+  };
+
+  const getRoleBadgeClass = (role: string) => {
+    return role === "viewer" ? "bg-gray-500 text-white hover:bg-gray-600" : "";
   };
 
   return (
@@ -86,7 +90,7 @@ export function TeamManagement() {
                       </div>
                     </TableCell>
                     <TableCell>
-                      <Badge variant={getRoleBadgeVariant(member.role)}>
+                      <Badge variant={getRoleBadgeVariant(member.role)} className={getRoleBadgeClass(member.role)}>
                         {member.role}
                       </Badge>
                     </TableCell>

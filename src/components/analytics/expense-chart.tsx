@@ -14,6 +14,7 @@ import { Bar } from "react-chartjs-2";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useSubscriptionStore } from "@/hooks/store/use-subscription-store";
 import { Subscription } from "@/lib/schemas/subscription";
+import { formatDate } from "@/lib/utils/date";
 
 // Register ChartJS components
 ChartJS.register(
@@ -47,7 +48,7 @@ export function ExpenseChart({ title, description }: ExpenseChartProps) {
     
     for (let i = 0; i < 6; i++) {
       const month = new Date(today.getFullYear(), today.getMonth() + i, 1);
-      months.push(month.toLocaleString("default", { month: "short", year: "2-digit" }));
+      months.push(formatDate(month));
       
       // Calculate expenses for this month
       const monthlyExpense = calculateMonthlyExpense(subscriptions, month);

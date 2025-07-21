@@ -6,6 +6,7 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { History } from "lucide-react";
 import { AuditLogEntry } from "@/lib/types";
+import { formatDate } from "@/lib/utils/date";
 
 interface AuditLogsProps {
   logs: AuditLogEntry[];
@@ -53,7 +54,7 @@ export function AuditLogs({ logs }: AuditLogsProps) {
                         {log.action}
                       </Badge>
                       <span className="text-xs text-muted-foreground">
-                        {log.timestamp.toLocaleString()}
+                        {formatDate(log.timestamp)}
                       </span>
                     </div>
                   </div>

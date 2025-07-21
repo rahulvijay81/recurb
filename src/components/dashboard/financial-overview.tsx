@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Subscription } from "@/lib/schemas/subscription";
 import { calculateMRR, calculateYRR, getCategorySpend, getUpcomingRenewals } from "@/lib/utils/financial";
 import { useAuthStore } from "@/hooks/store/use-auth-store";
+import { formatDate } from "@/lib/utils/date";
 
 interface FinancialOverviewProps {
   subscriptions: Subscription[];
@@ -84,7 +85,7 @@ export function FinancialOverview({ subscriptions }: FinancialOverviewProps) {
                 <div key={sub.id} className="flex justify-between items-center">
                   <span className="text-sm">{sub.name}</span>
                   <Badge variant="outline">
-                    {new Date(sub.nextBillingDate).toLocaleDateString()}
+                    {formatDate(sub.nextBillingDate)}
                   </Badge>
                 </div>
               ))}

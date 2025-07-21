@@ -9,11 +9,15 @@ import { Badge } from "@/components/ui/badge";
 import { ArrowLeft, Edit, Trash2, Calendar, DollarSign, Building, Tag } from "lucide-react";
 import Link from "next/link";
 import { format } from "date-fns";
+import { SharedNotes } from "@/components/team/shared-notes";
+import { useAuthStore } from "@/hooks/store/use-auth-store";
+import { formatDate } from "@/lib/utils/date";
 
 export default function SubscriptionDetailsPage() {
   const params = useParams();
   const router = useRouter();
   const { subscriptions, isLoading } = useSubscriptionStore();
+  const { canAccessFeature } = useAuthStore();
   const [subscription, setSubscription] = useState(null);
 
   const subscriptionId = params.id as string;
@@ -114,7 +118,7 @@ export default function SubscriptionDetailsPage() {
               <p className="text-sm font-medium text-muted-foreground">Next Billing Date</p>
               <p className="flex items-center gap-2">
                 <Calendar className="h-4 w-4" />
-                {format(subscription.nextBillingDate, "PPP")}
+                {formatDate(subscription.nextBillingDate)}
               </p>
             </div>
             <div>
@@ -171,6 +175,12 @@ export default function SubscriptionDetailsPage() {
               <p className="text-muted-foreground whitespace-pre-wrap">{subscription.notes}</p>
             </CardContent>
           </Card>
+        )}
+        
+        {canAccessFeature("shared_notes") && (
+          <div className="md:col-span-2">
+            <SharedNotes subscriptionId={subscription.id} />
+          </div>
         )}
       </div>
     </div>
