@@ -52,42 +52,42 @@ export function MainLayout({ children }: MainLayoutProps) {
       href: "/dashboard",
       icon: Home,
       active: pathname === "/dashboard",
-      plan: "basic",
+      feature: "manual_crud",
     },
     {
       name: "Subscriptions",
       href: "/subscriptions",
       icon: Repeat,
       active: pathname.startsWith("/subscriptions"),
-      plan: "basic",
+      feature: "manual_crud",
     },
     {
       name: "Analytics",
       href: "/analytics",
       icon: TrendingUp,
       active: pathname.startsWith("/analytics"),
-      plan: "pro",
+      feature: "trends",
     },
     {
       name: "Calendar",
       href: "/calendar",
       icon: Calendar,
       active: pathname.startsWith("/calendar"),
-      plan: "pro",
+      feature: "calendar",
     },
     {
       name: "Team",
       href: "/team",
       icon: Users,
       active: pathname.startsWith("/team"),
-      plan: "team",
+      feature: "team_management",
     },
     {
       name: "Settings",
       href: "/settings",
       icon: Settings,
       active: pathname.startsWith("/settings"),
-      plan: "basic",
+      feature: "manual_crud",
     },
   ];
   
@@ -102,8 +102,7 @@ export function MainLayout({ children }: MainLayoutProps) {
         <SidebarContent className="px-2">
           <SidebarMenu>
             {navigation.map((item) => {
-              const isAccessible = item.plan === "basic" || canAccessFeature(item.plan === "team" ? "team_management" : item.name.toLowerCase());
-              if (!isAccessible) return null;
+              if (!canAccessFeature(item.feature)) return null;
               
               return (
                 <SidebarMenuItem key={item.name}>
@@ -157,9 +156,7 @@ export function MainLayout({ children }: MainLayoutProps) {
               </div>
               <nav className="flex-1 space-y-1">
                 {navigation.map((item) => {
-                  const isAccessible = item.plan === "basic" || canAccessFeature(item.plan === "team" ? "team_management" : item.name.toLowerCase());
-                  
-                  if (!isAccessible) return null;
+                  if (!canAccessFeature(item.feature)) return null;
                   
                   return (
                     <Link

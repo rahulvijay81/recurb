@@ -28,7 +28,7 @@ export default function PlansPage() {
       if (user) {
         setUser({
           ...user,
-          plan: newPlan as "basic" | "pro" | "team",
+          plan: newPlan as "free" | "basic" | "pro" | "team",
         });
         
         toast.success(`Successfully upgraded to ${newPlan} plan`);
@@ -44,22 +44,34 @@ export default function PlansPage() {
   
   const plans = [
     {
-      name: "Basic",
+      name: "Free",
       price: "Free",
-      description: "For individuals just getting started",
+      description: "Perfect for getting started",
       features: [
-        "Manual CRUD operations",
-        "CSV import/export",
-        "Auto-renewal flags",
+        "Up to 5 subscriptions",
+        "Basic CRUD operations",
         "Tags & categories",
+      ],
+      current: plan === "free",
+    },
+    {
+      name: "Basic",
+      price: "$9/month",
+      description: "For individuals managing more subscriptions",
+      features: [
+        "Unlimited subscriptions",
+        "Everything in Free",
+        "Auto-renewal flags",
+        "CSV import/export",
         "MRR/YRR display",
+        "Email support",
       ],
       current: plan === "basic",
     },
     {
       name: "Pro",
-      price: "$9.99",
-      description: "For power users who need more insights",
+      price: "$29.99/month",
+      description: "For power users who need insights",
       features: [
         "Everything in Basic",
         "Monthly breakdowns",
@@ -75,8 +87,8 @@ export default function PlansPage() {
     },
     {
       name: "Team",
-      price: "$19.99",
-      description: "For teams who manage subscriptions together",
+      price: "$49.99/month",
+      description: "For teams managing subscriptions together",
       features: [
         "Everything in Pro",
         "Team management",
@@ -97,11 +109,11 @@ export default function PlansPage() {
         </p>
       </div>
       
-      <div className="grid md:grid-cols-3 gap-6">
+      <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
         {plans.map((planOption) => (
           <Card
             key={planOption.name.toLowerCase()}
-            className={`flex flex-col ${
+            className={`relative flex flex-col ${
               planOption.popular ? "border-primary" : ""
             } ${planOption.current ? "bg-muted/50" : ""}`}
           >

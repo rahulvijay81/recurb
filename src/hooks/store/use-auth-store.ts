@@ -21,6 +21,11 @@ interface AuthState {
 }
 
 const PLAN_FEATURES = {
+  free: [
+    "manual_crud",
+    "tags_categories",
+    "subscription_limit_5",
+  ],
   basic: [
     "manual_crud",
     "csv_import_export",
@@ -70,12 +75,12 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   user: null,
   isLoading: true,
   isAuthenticated: false,
-  plan: "basic",
+  plan: "free",
   
   setUser: (user) => set({ 
     user, 
     isAuthenticated: !!user,
-    plan: user?.plan || "basic",
+    plan: user?.plan || "free",
   }),
   
   setLoading: (isLoading) => set({ isLoading }),
@@ -93,7 +98,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     set({ 
       user: null, 
       isAuthenticated: false,
-      plan: "basic",
+      plan: "free",
     });
     window.location.href = "/auth/login";
   },

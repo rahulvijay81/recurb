@@ -6,7 +6,10 @@ import { jwtVerify } from "jose";
 const FEATURE_PATHS: Record<string, string[]> = {
   "/dashboard": ["basic", "pro", "team"],
   "/subscriptions": ["basic", "pro", "team"],
+  "/subscriptions/import": ["basic", "pro", "team"],
   "/analytics": ["pro", "team"],
+  "/calendar": ["pro", "team"],
+  "/team": ["team"],
   "/settings/team": ["team"],
   "/settings/webhooks": ["team"],
   "/settings/audit": ["team"],
