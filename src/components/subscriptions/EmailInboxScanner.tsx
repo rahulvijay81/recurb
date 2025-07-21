@@ -3,47 +3,62 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { useAuthStore } from "@/hooks/store/use-auth-store";
 import { DetectedSubscription } from "@/lib/utils/email-subscription-detector";
-import { Mail, Plus } from "lucide-react";
+import { EMAIL_PROVIDERS } from "@/lib/utils/email-providers";
+import { Mail, Plus, ExternalLink } from "lucide-react";
 
-interface EmailDetectionDialogProps {
+interface EmailInboxScannerProps {
   onSubscriptionsDetected: (subscriptions: DetectedSubscription[]) => void;
 }
 
-export function EmailDetectionDialog({ onSubscriptionsDetected }: EmailDetectionDialogProps) {
+export function EmailInboxScanner({ onSubscriptionsDetected }: EmailInboxScannerProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const [emailText, setEmailText] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [detectedSubs, setDetectedSubs] = useState<DetectedSubscription[]>([]);
+  const [scannedCount, setScannedCount] = useState(0);
   const { canAccessFeature } = useAuthStore();
 
   if (!canAccessFeature("auto_email_detection")) {
     return null;
   }
 
-  const handleDetect = async () => {
-    if (!emailText.trim()) return;
+  const handleProviderAuth = (provider: string) => {
+    const providerConfig = EMAIL_PROVIDERS[provider];
+    const clientId = provider === "gmail" 
+      ? process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID 
+      : process.env.NEXT_PUBLIC_MICROSOFT_CLIENT_ID;
+    
+    const params = new URLSearchParams({
+      client_id: clientId || "",
+      response_type: "code",
+      scope: providerConfig.scopes.join(" "),
+      redirect_uri: `${window.location.origin}/api/auth/callback/${provider}`,
+      access_type: "offline",
+      prompt: "consent"
+    });
 
+    window.open(`${providerConfig.authUrl}?${params}`, "_blank", "width=500,height=600");
+  };
+
+  const handleScanEmails = async (provider: string, accessToken: string) => {
     setIsLoading(true);
     try {
-      const emails = emailText.split('\n').filter(line => line.includes('@'));
-      
-      const response = await fetch('/api/subscriptions/auto-detect', {
+      const response = await fetch('/api/subscriptions/email-scan', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ emails }),
+        body: JSON.stringify({ provider, accessToken }),
       });
 
       const result = await response.json();
       
       if (response.ok) {
         setDetectedSubs(result.data);
+        setScannedCount(result.scannedEmails);
       }
     } catch (error) {
-      console.error('Detection failed:', error);
+      console.error('Email scan failed:', error);
     } finally {
       setIsLoading(false);
     }
@@ -52,8 +67,8 @@ export function EmailDetectionDialog({ onSubscriptionsDetected }: EmailDetection
   const handleAddSelected = () => {
     onSubscriptionsDetected(detectedSubs);
     setIsOpen(false);
-    setEmailText("");
     setDetectedSubs([]);
+    setScannedCount(0);
   };
 
   return (
@@ -61,37 +76,51 @@ export function EmailDetectionDialog({ onSubscriptionsDetected }: EmailDetection
       <DialogTrigger asChild>
         <Button variant="outline" size="sm">
           <Mail className="h-4 w-4 mr-2" />
-          Scan emails
+          Scan inbox
         </Button>
       </DialogTrigger>
       <DialogContent className="max-w-2xl">
         <DialogHeader>
-          <DialogTitle>Auto-detect subscriptions from emails</DialogTitle>
+          <DialogTitle>Scan email inbox for subscriptions</DialogTitle>
         </DialogHeader>
         <div className="space-y-4">
           <div className="text-sm text-muted-foreground space-y-2">
-            <p>Paste your subscription emails below to automatically detect services:</p>
+            <p>Connect your email account to automatically detect subscription services:</p>
             <ul className="list-disc list-inside space-y-1 text-xs">
-              <li>Copy billing emails from Netflix, Spotify, Adobe, etc.</li>
-              <li>Paste multiple emails at once</li>
-              <li>We'll scan for subscription services and pricing</li>
+              <li>We'll scan for billing emails from popular services</li>
+              <li>Only subscription-related emails are analyzed</li>
+              <li>Your email data is not stored</li>
             </ul>
           </div>
-          <Textarea
-            placeholder="Example: Paste emails like 'Your Netflix subscription will renew on...' or 'Thank you for your Spotify payment...'"
-            value={emailText}
-            onChange={(e) => setEmailText(e.target.value)}
-            rows={6}
-          />
-          <Button onClick={handleDetect} disabled={isLoading || !emailText.trim()}>
-            {isLoading ? "Scanning emails..." : "Scan for subscriptions"}
-          </Button>
+          
+          <div className="grid grid-cols-2 gap-3">
+            {Object.entries(EMAIL_PROVIDERS).map(([key, provider]) => (
+              <Button
+                key={key}
+                variant="outline"
+                onClick={() => handleProviderAuth(key)}
+                disabled={isLoading}
+                className="flex items-center gap-2"
+              >
+                <ExternalLink className="h-4 w-4" />
+                Connect {provider.name}
+              </Button>
+            ))}
+          </div>
+
+          {isLoading && (
+            <div className="text-center py-4">
+              <div className="text-sm text-muted-foreground">Scanning your emails...</div>
+            </div>
+          )}
           
           {detectedSubs.length > 0 && (
             <div className="space-y-3">
               <div className="flex items-center gap-2">
-                <h4 className="font-medium">Found {detectedSubs.length} subscription{detectedSubs.length !== 1 ? 's' : ''}:</h4>
-                <Badge variant="outline" className="text-xs">Ready to add</Badge>
+                <h4 className="font-medium">Found {detectedSubs.length} subscription{detectedSubs.length !== 1 ? 's' : ''}</h4>
+                <Badge variant="outline" className="text-xs">
+                  Scanned {scannedCount} emails
+                </Badge>
               </div>
               <div className="space-y-2">
                 {detectedSubs.map((sub, index) => (
@@ -113,10 +142,10 @@ export function EmailDetectionDialog({ onSubscriptionsDetected }: EmailDetection
             </div>
           )}
           
-          {emailText.trim() && detectedSubs.length === 0 && !isLoading && (
+          {scannedCount > 0 && detectedSubs.length === 0 && !isLoading && (
             <div className="text-center py-4 text-muted-foreground">
-              <p className="text-sm">No subscriptions detected in this text.</p>
-              <p className="text-xs mt-1">Try pasting billing emails or receipts.</p>
+              <p className="text-sm">No subscriptions detected in {scannedCount} emails.</p>
+              <p className="text-xs mt-1">Try a different email account or check your billing folder.</p>
             </div>
           )}
         </div>

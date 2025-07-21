@@ -51,8 +51,8 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { EmailDetectionDialog } from "@/components/subscriptions/EmailDetectionDialog";
-import { DetectedSubscription } from "@/lib/utils/email-subscription-detector";
+import { EmailInboxScanner } from "@/components/subscriptions/EmailInboxScanner";
+import { SimpleEmailInput } from "@/components/subscriptions/SimpleEmailInput";
 
 export default function SubscriptionsPage() {
   const {
@@ -263,25 +263,44 @@ export default function SubscriptionsPage() {
           </Button>
           
           {canAccessFeature("auto_email_detection") && (
-            <EmailDetectionDialog 
-              onSubscriptionsDetected={(detected: DetectedSubscription[]) => {
-                // Convert detected subscriptions to subscription format and add them
-                const newSubs = detected.map(d => ({
-                  id: Math.random().toString(36).substr(2, 9),
-                  name: d.name,
-                  amount: d.amount,
-                  currency: "USD",
-                  billingCycle: d.billingCycle,
-                  nextBillingDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
-                  autoRenew: true,
-                  category: d.category,
-                  vendor: d.vendor,
-                  tags: [],
-                }));
-                setSubscriptions([...subscriptions, ...newSubs]);
-                toast.success(`Added ${detected.length} subscription${detected.length !== 1 ? 's' : ''}`);
-              }}
-            />
+            <>
+              <SimpleEmailInput 
+                onSubscriptionsDetected={(detected: any[]) => {
+                  const newSubs = detected.map(d => ({
+                    id: Math.random().toString(36).substr(2, 9),
+                    name: d.name,
+                    amount: d.amount,
+                    currency: "USD",
+                    billingCycle: d.billingCycle,
+                    nextBillingDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+                    autoRenew: true,
+                    category: d.category,
+                    vendor: d.vendor,
+                    tags: [],
+                  }));
+                  setSubscriptions([...subscriptions, ...newSubs]);
+                  toast.success(`Added ${detected.length} subscription${detected.length !== 1 ? 's' : ''}`);
+                }}
+              />
+              <EmailInboxScanner 
+                onSubscriptionsDetected={(detected: any[]) => {
+                  const newSubs = detected.map(d => ({
+                    id: Math.random().toString(36).substr(2, 9),
+                    name: d.name,
+                    amount: d.amount,
+                    currency: "USD",
+                    billingCycle: d.billingCycle,
+                    nextBillingDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+                    autoRenew: true,
+                    category: d.category,
+                    vendor: d.vendor,
+                    tags: [],
+                  }));
+                  setSubscriptions([...subscriptions, ...newSubs]);
+                  toast.success(`Added ${detected.length} subscription${detected.length !== 1 ? 's' : ''}`);
+                }}
+              />
+            </>
           )}
           
           {canAccessFeature("csv_import_export") && (
