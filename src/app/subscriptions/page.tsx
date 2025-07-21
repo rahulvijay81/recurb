@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useSubscriptionStore } from "@/hooks/store/use-subscription-store";
 import { useAuthStore } from "@/hooks/store/use-auth-store";
+import { toast } from "@/lib/utils/toast";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -66,6 +67,7 @@ export default function SubscriptionsPage() {
     getCategories,
     getTags,
     getVendors,
+    deleteSubscription,
   } = useSubscriptionStore();
   
   const { canAccessFeature } = useAuthStore();
@@ -398,8 +400,9 @@ export default function SubscriptionsPage() {
               className="bg-destructive text-white hover:bg-destructive/90"
               onClick={() => {
                 if (subscriptionToDelete) {
-                  // In a real app, this would be an API call
-                  console.log("Delete subscription:", subscriptionToDelete);
+                  const subscription = subscriptions.find(s => s.id === subscriptionToDelete);
+                  deleteSubscription(subscriptionToDelete);
+                  toast.success(`${subscription?.name || 'Subscription'} has been deleted`);
                   setSubscriptionToDelete(null);
                 }
               }}

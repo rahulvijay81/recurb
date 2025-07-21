@@ -34,6 +34,21 @@ export function InvoiceUpload({ subscriptionId, onUpload, existingFiles = [] }: 
     const selectedFiles = event.target.files;
     if (!selectedFiles) return;
 
+    // Calculate current total size
+    const currentTotalSize = files.reduce((total, fileUrl) => {
+      // Simulate getting file size - in real app, store file metadata
+      return total + 500000; // Assume 500KB per existing file
+    }, 0);
+
+    // Calculate new files total size
+    const newFilesTotalSize = Array.from(selectedFiles).reduce((total, file) => total + file.size, 0);
+    const totalSizeAfterUpload = currentTotalSize + newFilesTotalSize;
+
+    if (totalSizeAfterUpload > 3 * 1024 * 1024) {
+      toast.error("Total file size cannot exceed 3MB");
+      return;
+    }
+
     setUploading(true);
     const newFiles: string[] = [];
 
@@ -94,7 +109,7 @@ export function InvoiceUpload({ subscriptionId, onUpload, existingFiles = [] }: 
               className="mt-1"
             />
             <p className="text-sm text-muted-foreground mt-1">
-              Max 10MB per file. Multiple files supported.
+              Max 10MB per file, 3MB total. Multiple files supported.
             </p>
           </div>
 

@@ -16,7 +16,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
-import { toast } from "sonner";
+import { toast } from "@/lib/utils/toast";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/hooks/store/use-auth-store";
 import Link from "next/link";

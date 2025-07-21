@@ -14,7 +14,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { toast } from "sonner";
+import { toast } from "@/lib/utils/toast";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/hooks/store/use-auth-store";
 import Link from "next/link";

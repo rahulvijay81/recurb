@@ -13,6 +13,7 @@ import { InviteTeamMemberDialog } from "./invite-team-member-dialog";
 import { EditTeamMemberDialog } from "./edit-team-member-dialog";
 import { TeamMember } from "@/lib/schemas/user";
 import { UserAvatar } from "@/components/common/user-avatar";
+import { toast } from "@/lib/utils/toast";
 
 export function TeamManagement() {
   const { members, isLoading, removeMember } = useTeamStore();
@@ -144,6 +145,7 @@ export function TeamManagement() {
               onClick={() => {
                 if (memberToRemove) {
                   removeMember(memberToRemove.id);
+                  toast.success(`${memberToRemove.name || memberToRemove.email} has been removed from the team`);
                   setMemberToRemove(null);
                 }
               }}

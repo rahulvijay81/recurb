@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useTeamStore } from "@/hooks/store/use-team-store";
 import { inviteTeamMemberSchema, InviteTeamMemberFormValues } from "@/lib/schemas/team";
-import { toast } from "sonner";
+import { toast } from "@/lib/utils/toast";
 import { FormDialog } from "@/components/common/form-dialog";
 
 interface InviteTeamMemberDialogProps {

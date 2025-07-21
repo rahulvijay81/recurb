@@ -8,7 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useTeamStore } from "@/hooks/store/use-team-store";
 import { editTeamMemberSchema, EditTeamMemberFormValues } from "@/lib/schemas/team";
 import { TeamMember } from "@/lib/schemas/user";
-import { toast } from "sonner";
+import { toast } from "@/lib/utils/toast";
 import { FormDialog } from "@/components/common/form-dialog";
 
 interface EditTeamMemberDialogProps {

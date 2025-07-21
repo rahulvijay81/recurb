@@ -34,7 +34,7 @@ import { useAuthStore } from "@/hooks/store/use-auth-store";
 import { useSubscriptionStore } from "@/hooks/store/use-subscription-store";
 import { InvoiceUpload } from "@/components/subscriptions/invoice-upload";
 import { ReminderSettings } from "@/components/notifications/reminder-settings";
-import { toast } from "sonner";
+import { toast } from "@/lib/utils/toast";
 import { useRouter } from "next/navigation";
 
 interface SubscriptionFormProps {

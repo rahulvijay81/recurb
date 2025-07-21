@@ -5,7 +5,7 @@ import { useDropzone } from "react-dropzone";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { LoadingButton } from "@/components/common/loading-button";
-import { toast } from "sonner";
+import { toast } from "@/lib/utils/toast";
 import { Upload, FileText, CheckCircle, AlertCircle } from "lucide-react";
 import { useSubscriptionStore } from "@/hooks/store/use-subscription-store";
 import { useRouter } from "next/navigation";
