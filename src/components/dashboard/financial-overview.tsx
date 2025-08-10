@@ -2,6 +2,7 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { Subscription } from "@/lib/schemas/subscription";
 import { calculateMRR, calculateYRR, getCategorySpend, getUpcomingRenewals } from "@/lib/utils/financial";
 import { useAuthStore } from "@/hooks/store/use-auth-store";
@@ -23,14 +24,28 @@ export function FinancialOverview({ subscriptions }: FinancialOverviewProps) {
       {canAccessFeature("monthly_breakdowns") && (
         <Card>
           <CardHeader>
-            <CardTitle>Category Breakdown</CardTitle>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <CardTitle>Category Breakdown</CardTitle>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Monthly spending by category</p>
+              </TooltipContent>
+            </Tooltip>
           </CardHeader>
           <CardContent>
             <div className="space-y-2">
               {Object.entries(categorySpend).map(([category, amount]) => (
                 <div key={category} className="flex justify-between items-center">
                   <span className="text-sm">{category}</span>
-                  <Badge variant="secondary">${amount.toFixed(2)}/mo</Badge>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Badge variant="secondary">${amount.toFixed(2)}/mo</Badge>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Monthly spend in {category}</p>
+                    </TooltipContent>
+                  </Tooltip>
                 </div>
               ))}
             </div>
@@ -41,16 +56,30 @@ export function FinancialOverview({ subscriptions }: FinancialOverviewProps) {
       {upcomingRenewals.length > 0 && (
         <Card>
           <CardHeader>
-            <CardTitle>Upcoming Renewals</CardTitle>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <CardTitle>Upcoming Renewals</CardTitle>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Subscriptions renewing in the next 30 days</p>
+              </TooltipContent>
+            </Tooltip>
           </CardHeader>
           <CardContent>
             <div className="space-y-2">
               {upcomingRenewals.slice(0, 5).map((sub) => (
                 <div key={sub.id} className="flex justify-between items-center">
                   <span className="text-sm">{sub.name}</span>
-                  <Badge variant="outline">
-                    {formatDate(sub.nextBillingDate)}
-                  </Badge>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Badge variant="outline">
+                        {formatDate(sub.nextBillingDate)}
+                      </Badge>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Next billing: {formatDate(sub.nextBillingDate)}</p>
+                    </TooltipContent>
+                  </Tooltip>
                 </div>
               ))}
             </div>

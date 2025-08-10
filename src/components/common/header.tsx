@@ -3,7 +3,6 @@
 import { Bell, Moon, Sun } from "lucide-react";
 import { useThemeToggle } from "@/hooks/store/use-theme-store";
 import { Button } from "@/components/ui/button";
-import { useEffect, useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import {
   DropdownMenu,
@@ -17,33 +16,20 @@ import { useNotificationStore } from "@/hooks/store/use-notification-store";
 import { UserDropdown } from "./user-dropdown";
 
 export function Header() {
-  const [themeError, setThemeError] = useState<string | null>(null);
-  const [themeState, setThemeState] = useState({ theme: 'light', toggleTheme: () => {} });
-  
-  useEffect(() => {
-    try {
-      const themeStore = useThemeToggle();
-      setThemeState(themeStore);
-    } catch (error) {
-      setThemeError('Theme system unavailable');
-      console.error('Theme store error:', error);
-    }
-  }, []);
-  
+  const { theme, toggleTheme } = useThemeToggle();
   const { notifications, unreadCount, markAsRead, markAllAsRead } = useNotificationStore();
 
   return (
-    <header className="flex items-center justify-end p-4 border-b bg-background">
+    <header className="flex items-center justify-end px-4 py-3 border-b bg-background">
 
       <div className="flex items-center gap-3">
         {/* Theme Toggle */}
         <Button
           variant="ghost"
           size="icon"
-          onClick={themeState.toggleTheme}
-          disabled={!!themeError}
+          onClick={toggleTheme}
         >
-          {themeState.theme === "dark" ? (
+          {theme === "dark" ? (
             <Sun className="h-5 w-5" />
           ) : (
             <Moon className="h-5 w-5" />

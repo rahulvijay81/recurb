@@ -7,6 +7,7 @@ import { subscriptionFormSchema, type SubscriptionFormValues } from "@/lib/schem
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { LoadingButton } from "@/components/common/loading-button";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import {
   Form,
   FormControl,
@@ -112,7 +113,14 @@ export function SubscriptionForm({ initialData, isEditing = false }: Subscriptio
             name="name"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Subscription Name</FormLabel>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <FormLabel>Subscription Name</FormLabel>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>Enter the name of your subscription service</p>
+                  </TooltipContent>
+                </Tooltip>
                 <FormControl>
                   <Input placeholder="Netflix, Spotify, etc." {...field} />
                 </FormControl>
@@ -127,7 +135,14 @@ export function SubscriptionForm({ initialData, isEditing = false }: Subscriptio
               name="amount"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Amount</FormLabel>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <FormLabel>Amount</FormLabel>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Cost per billing cycle</p>
+                    </TooltipContent>
+                  </Tooltip>
                   <FormControl>
                     <Input type="number" step="0.01" placeholder="0.00" {...field} />
                   </FormControl>
@@ -291,7 +306,14 @@ export function SubscriptionForm({ initialData, isEditing = false }: Subscriptio
             render={({ field }) => (
               <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
                 <div className="space-y-0.5">
-                  <FormLabel className="text-base">Auto-Renewal</FormLabel>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <FormLabel className="text-base">Auto-Renewal</FormLabel>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Enable to track automatic renewals and get reminders</p>
+                    </TooltipContent>
+                  </Tooltip>
                   <FormDescription>
                     This subscription will automatically renew
                   </FormDescription>
