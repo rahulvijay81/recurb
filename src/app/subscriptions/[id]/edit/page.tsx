@@ -4,12 +4,13 @@ import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { useSubscriptionStore } from "@/hooks/store/use-subscription-store";
 import { SubscriptionForm } from "@/components/subscriptions/subscription-form";
+import { Subscription } from "@/lib/schemas/subscription";
 
 export default function EditSubscriptionPage() {
   const params = useParams();
   const router = useRouter();
   const { subscriptions, isLoading } = useSubscriptionStore();
-  const [subscription, setSubscription] = useState(null);
+  const [subscription, setSubscription] = useState<Subscription | null>(null);
 
   const subscriptionId = params.id as string;
 
@@ -49,7 +50,6 @@ export default function EditSubscriptionPage() {
       <div className="border rounded-md p-6">
         <SubscriptionForm 
           initialData={{
-            id: subscription.id,
             name: subscription.name,
             amount: subscription.amount,
             currency: subscription.currency,

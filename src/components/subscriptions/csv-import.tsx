@@ -53,8 +53,8 @@ export function CsvImport() {
             
             if (!parsedData.success) {
               // Handle validation errors
-              const errors = parsedData.error.errors.map(
-                (err) => `Row ${err.path[0] || "unknown"}: ${err.message}`
+              const errors = parsedData.error.issues.map(
+                (err) => `Row ${String(err.path[0]) || "unknown"}: ${err.message}`
               );
               setParseErrors(errors);
               toast.error("Invalid CSV format");
@@ -75,7 +75,7 @@ export function CsvImport() {
           } catch (error) {
             console.error("Error parsing CSV:", error);
             if (error instanceof z.ZodError) {
-              setParseErrors(error.errors.map((err) => err.message));
+              setParseErrors(error.issues.map((err) => err.message));
             } else {
               setParseErrors(["Failed to parse CSV file"]);
             }

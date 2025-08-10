@@ -38,7 +38,7 @@ export default function AnalyticsPage() {
               name: "Netflix",
               amount: 15.99,
               currency: "USD",
-              billingCycle: "monthly",
+              billingCycle: "monthly" as const,
               nextBillingDate: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000), // 5 days from now
               autoRenew: true,
               category: "Entertainment",
@@ -50,7 +50,7 @@ export default function AnalyticsPage() {
               name: "Spotify",
               amount: 9.99,
               currency: "USD",
-              billingCycle: "monthly",
+              billingCycle: "monthly" as const,
               nextBillingDate: new Date(Date.now() + 12 * 24 * 60 * 60 * 1000), // 12 days from now
               autoRenew: true,
               category: "Entertainment",
@@ -62,7 +62,7 @@ export default function AnalyticsPage() {
               name: "Adobe Creative Cloud",
               amount: 52.99,
               currency: "USD",
-              billingCycle: "monthly",
+              billingCycle: "monthly" as const,
               nextBillingDate: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000), // 3 days from now
               autoRenew: true,
               category: "Software",
@@ -74,7 +74,7 @@ export default function AnalyticsPage() {
               name: "AWS",
               amount: 150.00,
               currency: "USD",
-              billingCycle: "monthly",
+              billingCycle: "monthly" as const,
               nextBillingDate: new Date(Date.now() + 8 * 24 * 60 * 60 * 1000), // 8 days from now
               autoRenew: true,
               category: "Cloud Services",
@@ -86,7 +86,7 @@ export default function AnalyticsPage() {
               name: "Microsoft 365",
               amount: 99.99,
               currency: "USD",
-              billingCycle: "yearly",
+              billingCycle: "yearly" as const,
               nextBillingDate: new Date(Date.now() + 45 * 24 * 60 * 60 * 1000), // 45 days from now
               autoRenew: true,
               category: "Software",

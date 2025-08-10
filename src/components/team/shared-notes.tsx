@@ -57,7 +57,7 @@ export function SharedNotes({ subscriptionId }: SharedNotesProps) {
         id: `note-${Date.now()}`,
         content: newNote,
         authorId: user.id,
-        authorName: user.name,
+        authorName: user.name || user.email,
         subscriptionId,
         createdAt: new Date(),
       };

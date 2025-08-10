@@ -10,7 +10,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Badge } from "@/components/ui/badge";
 import { Webhook, Trash2, Plus } from "lucide-react";
 import { toast } from "sonner";
-import { WebhookConfig } from "@/lib/types";
+import type { WebhookConfig } from "@/lib/types";
 
 interface WebhookConfigProps {
   webhooks?: WebhookConfig[];

@@ -30,7 +30,7 @@ export function RegisterForm() {
   const router = useRouter();
   const { setUser } = useAuthStore();
   
-  const form = useForm<RegisterFormValues>({
+  const form = useForm({
     resolver: zodResolver(registerSchema),
     defaultValues: {
       name: "",

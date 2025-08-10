@@ -12,13 +12,14 @@ import { format } from "date-fns";
 import { SharedNotes } from "@/components/team/shared-notes";
 import { useAuthStore } from "@/hooks/store/use-auth-store";
 import { formatDate } from "@/lib/utils/date";
+import { Subscription } from "@/lib/schemas/subscription";
 
 export default function SubscriptionDetailsPage() {
   const params = useParams();
   const router = useRouter();
   const { subscriptions, isLoading } = useSubscriptionStore();
   const { canAccessFeature } = useAuthStore();
-  const [subscription, setSubscription] = useState(null);
+  const [subscription, setSubscription] = useState<Subscription | null>(null);
 
   const subscriptionId = params.id as string;
 
@@ -179,7 +180,7 @@ export default function SubscriptionDetailsPage() {
         
         {canAccessFeature("shared_notes") && (
           <div className="md:col-span-2">
-            <SharedNotes subscriptionId={subscription.id} />
+            <SharedNotes subscriptionId={subscription.id!} />
           </div>
         )}
       </div>

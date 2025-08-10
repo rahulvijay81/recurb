@@ -31,8 +31,8 @@ export async function middleware(request: NextRequest) {
   
   try {
     // Verify the token
-    if (!process.env.JWT_SECRET) {
-      throw new Error("JWT_SECRET environment variable is required");
+    if (!token || !process.env.JWT_SECRET) {
+      throw new Error("Token or JWT_SECRET is missing");
     }
     const secret = new TextEncoder().encode(process.env.JWT_SECRET);
     const { payload } = await jwtVerify(token, secret);

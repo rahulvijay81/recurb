@@ -178,7 +178,7 @@ export function MainLayout({ children }: MainLayoutProps) {
               </nav>
               <div className="pt-4 border-t">
                 <div className="flex items-center gap-2 p-2">
-                  <UserAvatar user={user} />
+                  <UserAvatar user={user || undefined} />
                   <div className="flex flex-col text-left min-w-0 flex-1">
                     <span className="text-sm font-medium truncate">{user?.name || user?.email}</span>
                     <span className="text-xs text-muted-foreground capitalize">{plan} Plan</span>

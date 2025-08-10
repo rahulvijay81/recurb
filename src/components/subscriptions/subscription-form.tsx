@@ -48,7 +48,7 @@ export function SubscriptionForm({ initialData, isEditing = false }: Subscriptio
   const { addSubscription, updateSubscription } = useSubscriptionStore();
   const router = useRouter();
   
-  const form = useForm<SubscriptionFormValues>({
+  const form = useForm<any>({
     resolver: zodResolver(subscriptionFormSchema),
     defaultValues: {
       name: initialData?.name || "",
@@ -72,21 +72,23 @@ export function SubscriptionForm({ initialData, isEditing = false }: Subscriptio
       // For demo purposes, we'll just update the store
       
       const subscription = {
-        id: initialData?.id || Math.random().toString(36).substring(2, 9),
+        id: Math.random().toString(36).substring(2, 9),
         name: data.name,
-        amount: parseFloat(data.amount),
+        amount: data.amount,
         currency: data.currency,
         billingCycle: data.billingCycle,
         nextBillingDate: new Date(data.nextBillingDate),
         autoRenew: data.autoRenew,
         category: data.category,
-        tags: typeof data.tags === "string" ? data.tags.split(",").map(tag => tag.trim()) : data.tags,
+        tags: data.tags || [],
         notes: data.notes,
         vendor: data.vendor,
       };
       
-      if (isEditing && initialData?.id) {
-        updateSubscription(initialData.id, subscription);
+      if (isEditing) {
+        // For editing, we need to get the subscription ID from the URL or store
+        const subscriptionId = window.location.pathname.split('/')[2]; // Extract ID from URL
+        updateSubscription(subscriptionId, subscription);
         toast.success("Subscription updated successfully");
       } else {
         addSubscription(subscription);
@@ -323,11 +325,11 @@ export function SubscriptionForm({ initialData, isEditing = false }: Subscriptio
         />
         
         {canAccessFeature("invoice_upload") && (
-          <InvoiceUpload subscriptionId={initialData?.id} />
+          <InvoiceUpload />
         )}
         
         {canAccessFeature("custom_reminders") && (
-          <ReminderSettings subscriptionId={initialData?.id} />
+          <ReminderSettings />
         )}
         
         <div className="flex justify-end gap-4">

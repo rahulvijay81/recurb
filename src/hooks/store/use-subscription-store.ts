@@ -98,14 +98,18 @@ export const useSubscriptionStore = create<SubscriptionState>((set, get) => ({
   },
   
   addSubscription: (subscription) => {
-    logActivity("create", "subscription", subscription.id, `Created subscription: ${subscription.name}`);
+    const subscriptionWithId = {
+      ...subscription,
+      id: subscription.id || `sub-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`
+    };
+    logActivity("create", "subscription", subscriptionWithId.id, `Created subscription: ${subscription.name}`);
     // Clear cache when subscriptions change
     categoriesCache = null;
     tagsCache = null;
     vendorsCache = null;
     lastSubscriptionsHash = null;
     set((state) => ({
-      subscriptions: [...state.subscriptions, subscription],
+      subscriptions: [...state.subscriptions, subscriptionWithId],
     }));
   },
   

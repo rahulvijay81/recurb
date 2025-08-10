@@ -34,7 +34,8 @@ export async function verifyToken(token: string) {
 
 // Auth helpers
 export async function getCurrentUser() {
-  const token = cookies().get("auth-token")?.value;
+  const cookieStore = await cookies();
+  const token = cookieStore.get("auth-token")?.value;
   
   if (!token) {
     return null;
