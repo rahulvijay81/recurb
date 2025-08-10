@@ -30,13 +30,6 @@ const PLAN_FEATURES = {
     "tags_categories",
     "subscription_limit_5",
   ],
-  basic: [
-    "manual_crud",
-    "csv_import_export",
-    "auto_renewal_flags",
-    "tags_categories",
-    "mrr_yrr",
-  ],
   pro: [
     "manual_crud",
     "csv_import_export",

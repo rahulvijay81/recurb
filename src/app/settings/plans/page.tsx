@@ -28,7 +28,7 @@ export default function PlansPage() {
       if (user) {
         setUser({
           ...user,
-          plan: newPlan as "free" | "basic" | "pro" | "team",
+          plan: newPlan as "free" | "pro" | "team",
         });
         
         toast.success(`Successfully upgraded to ${newPlan} plan`);
@@ -54,26 +54,17 @@ export default function PlansPage() {
       ],
       current: plan === "free",
     },
-    {
-      name: "Basic",
-      price: "$9/month",
-      description: "For individuals managing more subscriptions",
-      features: [
-        "Unlimited subscriptions",
-        "Everything in Free",
-        "Auto-renewal flags",
-        "CSV import/export",
-        "MRR/YRR display",
-        "Email support",
-      ],
-      current: plan === "basic",
-    },
+
     {
       name: "Pro",
       price: "$29.99/month",
       description: "For power users who need insights",
       features: [
-        "Everything in Basic",
+        "Everything in Free",
+        "Unlimited subscriptions",
+        "CSV import/export",
+        "Auto-renewal flags",
+        "MRR/YRR display",
         "Monthly breakdowns",
         "Trends & forecasting",
         "Duplicate detection",
@@ -109,7 +100,7 @@ export default function PlansPage() {
         </p>
       </div>
       
-      <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto">
         {plans.map((planOption) => (
           <Card
             key={planOption.name.toLowerCase()}
@@ -162,7 +153,7 @@ export default function PlansPage() {
                   "Current Plan"
                 ) : (
                   <>
-                    {plan === "basic" ? "Upgrade" : "Switch"} to {planOption.name}
+                    Switch to {planOption.name}
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </>
                 )}

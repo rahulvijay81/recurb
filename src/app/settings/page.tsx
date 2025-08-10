@@ -51,14 +51,14 @@ export default function SettingsPage() {
                 <div>
                   <p className="font-medium capitalize">{plan} Plan</p>
                   <p className="text-sm text-muted-foreground">
-                    {plan === "basic" && "Free tier with basic features"}
+                    {plan === "free" && "Free tier with basic features"}
                     {plan === "pro" && "Pro tier with advanced analytics"}
                     {plan === "team" && "Team tier with collaboration features"}
                   </p>
                 </div>
                 <Button asChild>
                   <Link href="/settings/plans">
-                    {plan === "basic" ? "Upgrade" : "Manage"}
+                    {plan === "free" ? "Upgrade" : "Manage"}
                   </Link>
                 </Button>
               </div>

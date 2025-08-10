@@ -83,11 +83,11 @@ export function LoginForm() {
       await new Promise((resolve) => setTimeout(resolve, 1000));
       
       const mockUsers = {
-        "basic@example.com": {
-          id: "user_basic",
-          email: "basic@example.com",
-          name: "Basic User",
-          plan: "basic" as const,
+        "free@example.com": {
+          id: "user_free",
+          email: "free@example.com",
+          name: "Free User",
+          plan: "free" as const,
           currency: "USD",
           createdAt: new Date(),
           updatedAt: new Date(),
@@ -213,7 +213,7 @@ export function LoginForm() {
           <p className="text-muted-foreground mb-2">Demo accounts:</p>
           <div className="grid grid-cols-1 gap-2 text-xs">
             <div className="border rounded-md p-2">
-              <p><strong>Basic Plan:</strong> basic@example.com</p>
+              <p><strong>Free Plan:</strong> free@example.com</p>
               <p><strong>Password:</strong> password</p>
             </div>
             <div className="border rounded-md p-2">

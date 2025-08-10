@@ -4,15 +4,22 @@ Recurb is a full-stack Next.js application for managing and visualizing recurrin
 
 ## Features
 
-### Basic Plan
-- Manual CRUD operations for subscriptions
+### Free Plan
+- Manual CRUD operations for subscriptions (up to 5)
+- Tags and categories
+- Basic MRR display
+
+### Pro Plan
+- Unlimited subscriptions
 - CSV import/export
 - Auto-renewal flags
 - Tags and categories
 - MRR/YRR display
-
-### Pro Plan
-- All Basic features
+- All Free features
+- Unlimited subscriptions
+- CSV import/export
+- Auto-renewal flags
+- MRR/YRR display
 - Monthly breakdowns
 - Category-wise trends
 - Expense forecasting
@@ -70,7 +77,7 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 For demonstration purposes, you can use the following accounts:
 
-- **Basic Plan**: basic@example.com / password
+- **Free Plan**: free@example.com / password
 - **Pro Plan**: pro@example.com / password
 - **Team Plan**: team@example.com / password
 

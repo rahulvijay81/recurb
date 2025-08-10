@@ -4,7 +4,7 @@ export const userSchema = z.object({
   id: z.string(),
   email: z.string().email("Please enter a valid email address"),
   name: z.string().optional(),
-  plan: z.enum(["free", "basic", "pro", "team"]).default("free"),
+  plan: z.enum(["free", "pro", "team"]).default("free"),
   createdAt: z.date(),
   updatedAt: z.date(),
   teamId: z.string().optional(),

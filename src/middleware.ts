@@ -4,9 +4,9 @@ import { jwtVerify } from "jose";
 
 // Define feature paths and their required plans
 const FEATURE_PATHS: Record<string, string[]> = {
-  "/dashboard": ["basic", "pro", "team"],
-  "/subscriptions": ["basic", "pro", "team"],
-  "/subscriptions/import": ["basic", "pro", "team"],
+  "/dashboard": ["pro", "team"],
+  "/subscriptions": ["pro", "team"],
+  "/subscriptions/import": ["pro", "team"],
   "/api/subscriptions/auto-detect": ["pro", "team"],
   "/analytics": ["pro", "team"],
   "/calendar": ["pro", "team"],
@@ -39,7 +39,7 @@ export async function middleware(request: NextRequest) {
     const secret = new TextEncoder().encode(process.env.JWT_SECRET);
     const { payload } = await jwtVerify(token, secret);
     
-    const userPlan = payload.plan as string || "basic";
+    const userPlan = payload.plan as string || "free";
     const currentPath = request.nextUrl.pathname;
     
     // Optimized path matching - check exact matches first, then prefixes

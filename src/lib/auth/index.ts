@@ -13,7 +13,7 @@ export async function createToken(user: Partial<User>) {
     id: user.id,
     email: user.email,
     name: user.name,
-    plan: user.plan || "basic",
+    plan: user.plan || "free",
     teamId: user.teamId,
     role: user.role,
   })
@@ -71,15 +71,13 @@ export async function getCurrentUser() {
 export function canAccessFeature(user: Partial<User> | null, feature: string): boolean {
   if (!user) return false;
   
-  const plan = user.plan || "basic";
+  const plan = user.plan || "free";
   
   const PLAN_FEATURES = {
-    basic: [
+    free: [
       "manual_crud",
-      "csv_import_export",
-      "auto_renewal_flags",
       "tags_categories",
-      "mrr_yrr",
+      "subscription_limit_5",
     ],
     pro: [
       "manual_crud",

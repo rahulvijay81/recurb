@@ -1,7 +1,7 @@
 import { User } from "../schemas/user";
 import { Subscription } from "../schemas/subscription";
 
-export type Plan = "free" | "basic" | "pro" | "team";
+export type Plan = "free" | "pro" | "team";
 
 export type PlanFeatures = {
   [key in Plan]: string[];
