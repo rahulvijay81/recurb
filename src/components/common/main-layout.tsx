@@ -95,22 +95,25 @@ export function MainLayout({ children }: MainLayoutProps) {
   return (
     <SidebarProvider>
       <Sidebar className="hidden lg:flex">
-        <SidebarHeader className="p-4">
-          <Link href="/dashboard" className="flex items-center gap-2 font-semibold text-lg">
+        <SidebarHeader className="p-4 border-b">
+          <Link href="/dashboard" className="flex items-center gap-2 font-bold text-lg text-primary">
+            <div className="w-7 h-7 bg-primary rounded-md flex items-center justify-center">
+              <span className="text-primary-foreground font-bold text-xs">R</span>
+            </div>
             <span>Recurb</span>
           </Link>
         </SidebarHeader>
-        <SidebarContent className="px-2">
-          <SidebarMenu>
+        <SidebarContent className="px-3 py-3">
+          <SidebarMenu className="space-y-1">
             {navigation.map((item) => {
               if (!canAccessFeature(item.feature)) return null;
               
               return (
                 <SidebarMenuItem key={item.name}>
-                  <SidebarMenuButton asChild isActive={item.active}>
+                  <SidebarMenuButton asChild isActive={item.active} className="h-10 px-3 rounded-md font-medium">
                     <Link href={item.href}>
                       <item.icon className="h-5 w-5" />
-                      <span>{item.name}</span>
+                      <span className="text-sm">{item.name}</span>
                     </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
@@ -118,7 +121,7 @@ export function MainLayout({ children }: MainLayoutProps) {
             })}
           </SidebarMenu>
         </SidebarContent>
-        <SidebarFooter className="p-2">
+        <SidebarFooter className="p-3 border-t">
           <UserDropdown variant="sidebar" showPlan />
         </SidebarFooter>
       </Sidebar>
