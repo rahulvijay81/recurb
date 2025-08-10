@@ -29,28 +29,31 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next();
   }
   
+  // Check JWT_SECRET before processing
+  if (!process.env.JWT_SECRET) {
+    console.error("JWT_SECRET environment variable is required");
+    return NextResponse.redirect(new URL("/auth/login", request.url));
+  }
+
   try {
-    // Verify the token
-    if (!token || !process.env.JWT_SECRET) {
-      throw new Error("Token or JWT_SECRET is missing");
-    }
     const secret = new TextEncoder().encode(process.env.JWT_SECRET);
     const { payload } = await jwtVerify(token, secret);
     
-    // Check if user has access to the requested path
     const userPlan = payload.plan as string || "basic";
+    const currentPath = request.nextUrl.pathname;
     
-    // Check feature access for specific paths
+    // Optimized path matching - check exact matches first, then prefixes
     for (const [path, allowedPlans] of Object.entries(FEATURE_PATHS)) {
-      if (request.nextUrl.pathname.startsWith(path) && !allowedPlans.includes(userPlan)) {
-        // Redirect to upgrade page if user doesn't have access
-        return NextResponse.redirect(new URL("/settings/plans", request.url));
+      if (currentPath === path || currentPath.startsWith(path + "/")) {
+        if (!allowedPlans.includes(userPlan)) {
+          return NextResponse.redirect(new URL("/settings/plans", request.url));
+        }
+        break;
       }
     }
     
     return NextResponse.next();
   } catch (error) {
-    // Token is invalid, redirect to login
     return NextResponse.redirect(new URL("/auth/login", request.url));
   }
 }

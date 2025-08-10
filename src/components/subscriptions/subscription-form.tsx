@@ -38,7 +38,7 @@ import { toast } from "@/lib/utils/toast";
 import { useRouter } from "next/navigation";
 
 interface SubscriptionFormProps {
-  initialData?: Partial<SubscriptionFormValues>;
+  initialData?: Partial<SubscriptionFormValues & { id?: string }>;
   isEditing?: boolean;
 }
 
@@ -48,7 +48,7 @@ export function SubscriptionForm({ initialData, isEditing = false }: Subscriptio
   const { addSubscription, updateSubscription } = useSubscriptionStore();
   const router = useRouter();
   
-  const form = useForm<any>({
+  const form = useForm<SubscriptionFormValues>({
     resolver: zodResolver(subscriptionFormSchema),
     defaultValues: {
       name: initialData?.name || "",
@@ -85,10 +85,8 @@ export function SubscriptionForm({ initialData, isEditing = false }: Subscriptio
         vendor: data.vendor,
       };
       
-      if (isEditing) {
-        // For editing, we need to get the subscription ID from the URL or store
-        const subscriptionId = window.location.pathname.split('/')[2]; // Extract ID from URL
-        updateSubscription(subscriptionId, subscription);
+      if (isEditing && initialData?.id) {
+        updateSubscription(initialData.id, subscription);
         toast.success("Subscription updated successfully");
       } else {
         addSubscription(subscription);

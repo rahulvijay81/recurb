@@ -3,6 +3,7 @@
 import { Bell, Moon, Sun } from "lucide-react";
 import { useThemeToggle } from "@/hooks/store/use-theme-store";
 import { Button } from "@/components/ui/button";
+import { useEffect, useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import {
   DropdownMenu,
@@ -16,7 +17,19 @@ import { useNotificationStore } from "@/hooks/store/use-notification-store";
 import { UserDropdown } from "./user-dropdown";
 
 export function Header() {
-  const { theme, toggleTheme } = useThemeToggle();
+  const [themeError, setThemeError] = useState<string | null>(null);
+  const [themeState, setThemeState] = useState({ theme: 'light', toggleTheme: () => {} });
+  
+  useEffect(() => {
+    try {
+      const themeStore = useThemeToggle();
+      setThemeState(themeStore);
+    } catch (error) {
+      setThemeError('Theme system unavailable');
+      console.error('Theme store error:', error);
+    }
+  }, []);
+  
   const { notifications, unreadCount, markAsRead, markAllAsRead } = useNotificationStore();
 
   return (
@@ -27,9 +40,10 @@ export function Header() {
         <Button
           variant="ghost"
           size="icon"
-          onClick={toggleTheme}
+          onClick={themeState.toggleTheme}
+          disabled={!!themeError}
         >
-          {theme === "dark" ? (
+          {themeState.theme === "dark" ? (
             <Sun className="h-5 w-5" />
           ) : (
             <Moon className="h-5 w-5" />

@@ -78,19 +78,10 @@ const PLAN_FEATURES = {
 };
 
 export const useAuthStore = create<AuthState>((set, get) => ({
-  user: {
-    id: "user-1",
-    email: "team@example.com",
-    name: "Team User",
-    plan: "team" as const,
-    role: "admin" as const,
-    createdAt: new Date(),
-    updatedAt: new Date(),
-    currency: "USD",
-  },
+  user: null,
   isLoading: false,
-  isAuthenticated: true,
-  plan: "team",
+  isAuthenticated: false,
+  plan: "free",
   
   setUser: (user) => set({ 
     user, 

@@ -4,7 +4,10 @@ import { User } from "../schemas/user";
 
 // JWT helpers
 export async function createToken(user: Partial<User>) {
-  const secret = new TextEncoder().encode(process.env.JWT_SECRET || "fallback_secret_for_development_only");
+  if (!process.env.JWT_SECRET) {
+    throw new Error("JWT_SECRET environment variable is required");
+  }
+  const secret = new TextEncoder().encode(process.env.JWT_SECRET);
   
   const token = await new SignJWT({
     id: user.id,
@@ -24,7 +27,10 @@ export async function createToken(user: Partial<User>) {
 
 export async function verifyToken(token: string) {
   try {
-    const secret = new TextEncoder().encode(process.env.JWT_SECRET || "fallback_secret_for_development_only");
+    if (!process.env.JWT_SECRET) {
+      throw new Error("JWT_SECRET environment variable is required");
+    }
+    const secret = new TextEncoder().encode(process.env.JWT_SECRET);
     const { payload } = await jwtVerify(token, secret);
     return payload;
   } catch (error) {

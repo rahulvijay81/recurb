@@ -30,88 +30,30 @@ export default function DashboardPage() {
     upcomingRenewals: [] as Subscription[],
   });
   
-  // Simulate fetching subscriptions
+  // Fetch subscriptions from API
   useEffect(() => {
     const fetchSubscriptions = async () => {
       setLoading(true);
       try {
-        // In a real app, this would be an API call
-        // For demo purposes, we'll use mock data
-        const mockSubscriptions: Subscription[] = [
-          {
-            id: "1",
-            name: "Netflix",
-            amount: 15.99,
-            currency: "USD",
-            billingCycle: "monthly",
-            nextBillingDate: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000), // 5 days from now
-            autoRenew: true,
-            category: "Entertainment",
-            tags: ["streaming", "video"],
-            vendor: "Netflix Inc.",
-          },
-          {
-            id: "2",
-            name: "Spotify",
-            amount: 9.99,
-            currency: "USD",
-            billingCycle: "monthly",
-            nextBillingDate: new Date(Date.now() + 12 * 24 * 60 * 60 * 1000), // 12 days from now
-            autoRenew: true,
-            category: "Entertainment",
-            tags: ["streaming", "music"],
-            vendor: "Spotify AB",
-          },
-          {
-            id: "3",
-            name: "Adobe Creative Cloud",
-            amount: 52.99,
-            currency: "USD",
-            billingCycle: "monthly",
-            nextBillingDate: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000), // 3 days from now
-            autoRenew: true,
-            category: "Software",
-            tags: ["design", "productivity"],
-            vendor: "Adobe Inc.",
-          },
-          {
-            id: "4",
-            name: "AWS",
-            amount: 150.00,
-            currency: "USD",
-            billingCycle: "monthly",
-            nextBillingDate: new Date(Date.now() + 8 * 24 * 60 * 60 * 1000), // 8 days from now
-            autoRenew: true,
-            category: "Cloud Services",
-            tags: ["hosting", "infrastructure"],
-            vendor: "Amazon Web Services",
-          },
-          {
-            id: "5",
-            name: "Microsoft 365",
-            amount: 99.99,
-            currency: "USD",
-            billingCycle: "yearly",
-            nextBillingDate: new Date(Date.now() + 45 * 24 * 60 * 60 * 1000), // 45 days from now
-            autoRenew: true,
-            category: "Software",
-            tags: ["productivity", "office"],
-            vendor: "Microsoft",
-          },
-        ];
+        // TODO: Replace with actual API call
+        // const response = await fetch('/api/subscriptions');
+        // const data = await response.json();
+        // setSubscriptions(data.subscriptions || []);
         
-        setSubscriptions(mockSubscriptions);
+        // Temporary: Use existing subscriptions from store or empty array
+        const existingSubscriptions = subscriptions.length > 0 ? subscriptions : [];
+        setSubscriptions(existingSubscriptions);
         
         // Calculate stats
-        const totalMonthly = mockSubscriptions
+        const totalMonthly = existingSubscriptions
           .filter(sub => sub.billingCycle === "monthly")
           .reduce((sum, sub) => sum + sub.amount, 0);
           
-        const totalYearly = mockSubscriptions
+        const totalYearly = existingSubscriptions
           .filter(sub => sub.billingCycle === "yearly")
           .reduce((sum, sub) => sum + (sub.amount / 12), 0);
           
-        const upcomingRenewals = mockSubscriptions
+        const upcomingRenewals = existingSubscriptions
           .filter(sub => {
             const daysUntilRenewal = Math.ceil(
               (sub.nextBillingDate.getTime() - Date.now()) / (1000 * 60 * 60 * 24)
@@ -121,7 +63,7 @@ export default function DashboardPage() {
           .sort((a, b) => a.nextBillingDate.getTime() - b.nextBillingDate.getTime());
         
         setStats({
-          totalActive: mockSubscriptions.length,
+          totalActive: existingSubscriptions.length,
           totalMonthly,
           totalYearly: totalYearly,
           upcomingRenewals,
