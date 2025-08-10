@@ -34,6 +34,7 @@ import { useAuthStore } from "@/hooks/store/use-auth-store";
 import { useSubscriptionStore } from "@/hooks/store/use-subscription-store";
 import { InvoiceUpload } from "@/components/subscriptions/invoice-upload";
 import { ReminderSettings } from "@/components/notifications/reminder-settings";
+import { TagsSelect } from "@/components/subscriptions/tags-select";
 import { toast } from "@/lib/utils/toast";
 import { useRouter } from "next/navigation";
 
@@ -58,7 +59,7 @@ export function SubscriptionForm({ initialData, isEditing = false }: Subscriptio
       nextBillingDate: initialData?.nextBillingDate || format(new Date(), "yyyy-MM-dd"),
       autoRenew: initialData?.autoRenew ?? true,
       category: initialData?.category || "",
-      tags: initialData?.tags?.join(", ") || "",
+      tags: initialData?.tags || [],
       notes: initialData?.notes || "",
       vendor: initialData?.vendor || "",
     },
@@ -80,7 +81,7 @@ export function SubscriptionForm({ initialData, isEditing = false }: Subscriptio
         nextBillingDate: new Date(data.nextBillingDate),
         autoRenew: data.autoRenew,
         category: data.category,
-        tags: data.tags || [],
+        tags: Array.isArray(data.tags) ? data.tags : [],
         notes: data.notes,
         vendor: data.vendor,
       };
@@ -273,9 +274,11 @@ export function SubscriptionForm({ initialData, isEditing = false }: Subscriptio
                 <FormItem>
                   <FormLabel>Tags</FormLabel>
                   <FormControl>
-                    <Input placeholder="streaming, productivity, etc." {...field} />
+                    <TagsSelect
+                      value={Array.isArray(field.value) ? field.value : []}
+                      onChange={field.onChange}
+                    />
                   </FormControl>
-                  <FormDescription>Separate tags with commas</FormDescription>
                   <FormMessage />
                 </FormItem>
               )}

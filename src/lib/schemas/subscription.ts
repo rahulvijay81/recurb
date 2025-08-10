@@ -26,7 +26,7 @@ export const subscriptionFormSchema = subscriptionSchema.omit({
 }).extend({
   nextBillingDate: z.string().min(1, "Next billing date is required"),
   amount: z.string().min(1, "Amount is required").transform(val => parseFloat(val)),
-  tags: z.string().optional().transform(val => val ? val.split(",").map(tag => tag.trim()) : []),
+  tags: z.array(z.string()).optional().default([]),
 });
 
 export const csvImportSchema = z.array(
