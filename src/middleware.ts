@@ -3,6 +3,22 @@ import type { NextRequest } from "next/server";
 import { jwtVerify } from "jose";
 
 export async function middleware(request: NextRequest) {
+  // Check setup completion for non-setup routes
+  if (!request.nextUrl.pathname.startsWith("/setup") && !request.nextUrl.pathname.startsWith("/api/setup")) {
+    try {
+      const setupCheck = await fetch(new URL('/api/setup', request.url));
+      const { complete } = await setupCheck.json();
+      if (!complete) {
+        return NextResponse.redirect(new URL("/setup", request.url));
+      }
+    } catch {}
+  }
+
+  // Allow setup route without auth
+  if (request.nextUrl.pathname.startsWith("/setup")) {
+    return NextResponse.next();
+  }
+
   const token = request.cookies.get("auth-token")?.value;
   
   // If no token and not on auth pages, redirect to login
@@ -33,6 +49,6 @@ export async function middleware(request: NextRequest) {
 // Apply middleware to all routes except public assets
 export const config = {
   matcher: [
-    "/((?!api/public|_next/static|_next/image|favicon.ico|public/|auth/verify).*)",
+    "/((?!api/public|api/setup|_next/static|_next/image|favicon.ico|public/|auth/verify).*)",
   ],
 };

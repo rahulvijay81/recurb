@@ -27,9 +27,10 @@ interface SubscriptionState {
   
   // Actions
   setSubscriptions: (subscriptions: Subscription[]) => void;
-  addSubscription: (subscription: Subscription) => void;
-  updateSubscription: (id: string, subscription: Partial<Subscription>) => void;
-  deleteSubscription: (id: string) => void;
+  fetchSubscriptions: () => Promise<void>;
+  addSubscription: (subscription: Subscription) => Promise<void>;
+  updateSubscription: (id: string, subscription: Partial<Subscription>) => Promise<void>;
+  deleteSubscription: (id: string) => Promise<void>;
   setLoading: (isLoading: boolean) => void;
   setError: (error: string | null) => void;
   
@@ -89,60 +90,135 @@ export const useSubscriptionStore = create<SubscriptionState>((set, get) => ({
   searchQuery: "",
   
   setSubscriptions: (subscriptions) => {
-    // Clear cache when subscriptions change
     categoriesCache = null;
     tagsCache = null;
     vendorsCache = null;
     lastSubscriptionsHash = null;
-    set({ subscriptions });
+    set({ subscriptions, error: null });
   },
   
-  addSubscription: (subscription) => {
-    const subscriptionWithId = {
-      ...subscription,
-      id: subscription.id || `sub-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`
-    };
-    logActivity("create", "subscription", subscriptionWithId.id, `Created subscription: ${subscription.name}`);
-    // Clear cache when subscriptions change
-    categoriesCache = null;
-    tagsCache = null;
-    vendorsCache = null;
-    lastSubscriptionsHash = null;
-    set((state) => ({
-      subscriptions: [...state.subscriptions, subscriptionWithId],
-    }));
-  },
-  
-  updateSubscription: (id, updatedSubscription) => {
-    const subscription = get().subscriptions.find(sub => sub.id === id);
-    if (subscription) {
-      logActivity("update", "subscription", id, `Updated subscription: ${subscription.name}`);
+  fetchSubscriptions: async () => {
+    try {
+      set({ isLoading: true, error: null });
+      const response = await fetch('/api/subscriptions');
+      
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({ error: 'Failed to fetch subscriptions' }));
+        throw new Error(errorData.error || 'Failed to fetch subscriptions');
+      }
+      
+      const result = await response.json();
+      const subscriptions = result.data || [];
+      get().setSubscriptions(subscriptions);
+      set({ isLoading: false });
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Database connection failed';
+      set({ error: message, isLoading: false });
     }
-    // Clear cache when subscriptions change
-    categoriesCache = null;
-    tagsCache = null;
-    vendorsCache = null;
-    lastSubscriptionsHash = null;
-    set((state) => ({
-      subscriptions: state.subscriptions.map((sub) =>
-        sub.id === id ? { ...sub, ...updatedSubscription } : sub
-      ),
-    }));
   },
   
-  deleteSubscription: (id) => {
-    const subscription = get().subscriptions.find(sub => sub.id === id);
-    if (subscription) {
-      logActivity("delete", "subscription", id, `Deleted subscription: ${subscription.name}`);
+  addSubscription: async (subscription) => {
+    try {
+      set({ isLoading: true, error: null });
+      const response = await fetch('/api/subscriptions', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(subscription),
+      });
+      
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({ error: 'Failed to create subscription' }));
+        throw new Error(errorData.error || 'Failed to create subscription');
+      }
+      
+      const result = await response.json();
+      const newSubscription = result.data || subscription;
+      
+      logActivity("create", "subscription", newSubscription.id, `Created subscription: ${subscription.name}`);
+      categoriesCache = null;
+      tagsCache = null;
+      vendorsCache = null;
+      lastSubscriptionsHash = null;
+      set((state) => ({
+        subscriptions: [...state.subscriptions, newSubscription],
+        isLoading: false,
+      }));
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Database connection failed';
+      set({ error: message, isLoading: false });
+      throw error;
     }
-    // Clear cache when subscriptions change
-    categoriesCache = null;
-    tagsCache = null;
-    vendorsCache = null;
-    lastSubscriptionsHash = null;
-    set((state) => ({
-      subscriptions: state.subscriptions.filter((sub) => sub.id !== id),
-    }));
+  },
+  
+  updateSubscription: async (id, updatedSubscription) => {
+    try {
+      set({ isLoading: true, error: null });
+      const response = await fetch(`/api/subscriptions/${id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updatedSubscription),
+      });
+      
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({ error: 'Failed to update subscription' }));
+        throw new Error(errorData.error || 'Failed to update subscription');
+      }
+      
+      const result = await response.json();
+      const updated = result.data || updatedSubscription;
+      
+      const subscription = get().subscriptions.find(sub => sub.id === id);
+      if (subscription) {
+        logActivity("update", "subscription", id, `Updated subscription: ${subscription.name}`);
+      }
+      
+      categoriesCache = null;
+      tagsCache = null;
+      vendorsCache = null;
+      lastSubscriptionsHash = null;
+      set((state) => ({
+        subscriptions: state.subscriptions.map((sub) =>
+          sub.id === id ? { ...sub, ...updated } : sub
+        ),
+        isLoading: false,
+      }));
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Database connection failed';
+      set({ error: message, isLoading: false });
+      throw error;
+    }
+  },
+  
+  deleteSubscription: async (id) => {
+    try {
+      set({ isLoading: true, error: null });
+      const response = await fetch(`/api/subscriptions/${id}`, {
+        method: 'DELETE',
+      });
+      
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({ error: 'Failed to delete subscription' }));
+        throw new Error(errorData.error || 'Failed to delete subscription');
+      }
+      
+      const subscription = get().subscriptions.find(sub => sub.id === id);
+      if (subscription) {
+        logActivity("delete", "subscription", id, `Deleted subscription: ${subscription.name}`);
+      }
+      
+      categoriesCache = null;
+      tagsCache = null;
+      vendorsCache = null;
+      lastSubscriptionsHash = null;
+      set((state) => ({
+        subscriptions: state.subscriptions.filter((sub) => sub.id !== id),
+        isLoading: false,
+      }));
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Database connection failed';
+      set({ error: message, isLoading: false });
+      throw error;
+    }
   },
   
   setLoading: (isLoading) => set({ isLoading }),
