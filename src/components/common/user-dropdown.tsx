@@ -20,7 +20,7 @@ interface UserDropdownProps {
 }
 
 export function UserDropdown({ variant = "header", showPlan = false }: UserDropdownProps) {
-  const { user, plan, logout } = useAuthStore();
+  const { user, logout } = useAuthStore();
 
   const triggerContent = variant === "sidebar" ? (
     <div className="flex items-center gap-2 w-full">
@@ -32,7 +32,6 @@ export function UserDropdown({ variant = "header", showPlan = false }: UserDropd
       </Avatar>
       <div className="flex flex-col text-left min-w-0 flex-1">
         <span className="text-sm font-medium truncate">{user?.name || user?.email}</span>
-        {showPlan && <span className="text-xs text-muted-foreground capitalize">{plan} Plan</span>}
       </div>
     </div>
   ) : (

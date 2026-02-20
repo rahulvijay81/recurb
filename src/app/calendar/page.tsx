@@ -112,27 +112,6 @@ export default function CalendarPage() {
       .reduce((sum, sub) => sum + sub.amount, 0);
   }, [subscriptions]);
 
-  if (!canAccessFeature("calendar")) {
-    return (
-      <div className="flex items-center justify-center min-h-[400px]">
-        <Card className="w-full max-w-md">
-          <CardHeader className="text-center">
-            <Calendar className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-            <CardTitle>Calendar View</CardTitle>
-          </CardHeader>
-          <CardContent className="text-center space-y-4">
-            <p className="text-muted-foreground">
-              Upgrade to Pro to access the renewal calendar and never miss a payment again.
-            </p>
-            <Button asChild>
-              <Link href="/settings/plans">Upgrade Now</Link>
-            </Button>
-          </CardContent>
-        </Card>
-      </div>
-    );
-  }
-
   if (loading) {
     return (
       <div className="space-y-6">

@@ -46,7 +46,6 @@ export function LoginForm() {
         id: `google_${Date.now()}`,
         email: "user@gmail.com",
         name: "Google User",
-        plan: "team" as const,
         currency: "USD",
         createdAt: new Date(),
         updatedAt: new Date(),
@@ -58,8 +57,7 @@ export function LoginForm() {
       const secret = new TextEncoder().encode(jwtSecret);
       const token = await new SignJWT({ 
         id: googleUser.id, 
-        email: googleUser.email, 
-        plan: googleUser.plan 
+        email: googleUser.email
       })
         .setProtectedHeader({ alg: "HS256" })
         .setExpirationTime("24h")
@@ -83,32 +81,11 @@ export function LoginForm() {
       await new Promise((resolve) => setTimeout(resolve, 1000));
       
       const mockUsers = {
-        "free@example.com": {
-          id: "user_free",
-          email: "free@example.com",
-          name: "Free User",
-          plan: "free" as const,
+        "user@example.com": {
+          id: "user_1",
+          email: "user@example.com",
+          name: "Demo User",
           currency: "USD",
-          createdAt: new Date(),
-          updatedAt: new Date(),
-        },
-        "pro@example.com": {
-          id: "user_pro",
-          email: "pro@example.com",
-          name: "Pro User",
-          plan: "pro" as const,
-          currency: "USD",
-          createdAt: new Date(),
-          updatedAt: new Date(),
-        },
-        "team@example.com": {
-          id: "user_team",
-          email: "team@example.com",
-          name: "Team User",
-          plan: "team" as const,
-          currency: "USD",
-          teamId: "team_1",
-          role: "owner" as const,
           createdAt: new Date(),
           updatedAt: new Date(),
         },
@@ -123,8 +100,7 @@ export function LoginForm() {
         const secret = new TextEncoder().encode(jwtSecret);
         const token = await new SignJWT({ 
           id: user.id, 
-          email: user.email, 
-          plan: user.plan 
+          email: user.email
         })
           .setProtectedHeader({ alg: "HS256" })
           .setExpirationTime("24h")
@@ -210,20 +186,10 @@ export function LoginForm() {
         </p>
         
         <div className="mt-6 border-t pt-4">
-          <p className="text-muted-foreground mb-2">Demo accounts:</p>
-          <div className="grid grid-cols-1 gap-2 text-xs">
-            <div className="border rounded-md p-2">
-              <p><strong>Free Plan:</strong> free@example.com</p>
-              <p><strong>Password:</strong> password</p>
-            </div>
-            <div className="border rounded-md p-2">
-              <p><strong>Pro Plan:</strong> pro@example.com</p>
-              <p><strong>Password:</strong> password</p>
-            </div>
-            <div className="border rounded-md p-2">
-              <p><strong>Team Plan:</strong> team@example.com</p>
-              <p><strong>Password:</strong> password</p>
-            </div>
+          <p className="text-muted-foreground mb-2">Demo account:</p>
+          <div className="border rounded-md p-2 text-xs">
+            <p><strong>Email:</strong> user@example.com</p>
+            <p><strong>Password:</strong> password</p>
           </div>
         </div>
       </div>

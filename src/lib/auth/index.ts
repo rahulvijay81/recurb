@@ -13,7 +13,6 @@ export async function createToken(user: Partial<User>) {
     id: user.id,
     email: user.email,
     name: user.name,
-    plan: user.plan || "free",
     teamId: user.teamId,
     role: user.role,
   })
@@ -58,7 +57,6 @@ export async function getCurrentUser() {
       id: payload.id as string,
       email: payload.email as string,
       name: payload.name as string,
-      plan: payload.plan as string,
       teamId: payload.teamId as string,
       role: payload.role as string,
     };
@@ -69,53 +67,5 @@ export async function getCurrentUser() {
 
 // Feature access control
 export function canAccessFeature(user: Partial<User> | null, feature: string): boolean {
-  if (!user) return false;
-  
-  const plan = user.plan || "free";
-  
-  const PLAN_FEATURES = {
-    free: [
-      "manual_crud",
-      "tags_categories",
-      "subscription_limit_5",
-    ],
-    pro: [
-      "manual_crud",
-      "csv_import_export",
-      "auto_renewal_flags",
-      "tags_categories",
-      "mrr_yrr",
-      "monthly_breakdowns",
-      "trends",
-      "forecasting",
-      "duplicate_detection",
-      "invoice_upload",
-      "calendar",
-      "vendor_summaries",
-      "enhanced_exports",
-      "custom_reminders",
-    ],
-    team: [
-      "manual_crud",
-      "csv_import_export",
-      "auto_renewal_flags",
-      "tags_categories",
-      "mrr_yrr",
-      "monthly_breakdowns",
-      "trends",
-      "forecasting",
-      "duplicate_detection",
-      "invoice_upload",
-      "calendar",
-      "vendor_summaries",
-      "enhanced_exports",
-      "custom_reminders",
-      "team_management",
-      "shared_notes",
-      "audit_logs",
-      "webhooks",
-    ],
-  };
-  
-  return PLAN_FEATURES[plan as keyof typeof PLAN_FEATURES].includes(feature);
+  return !!user;
 }

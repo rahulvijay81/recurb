@@ -14,7 +14,7 @@ import Link from "next/link";
 
 
 export default function SettingsPage() {
-  const { user, plan, canAccessFeature } = useAuthStore();
+  const { user, canAccessFeature } = useAuthStore();
   
   return (
     <div className="p-6">
@@ -49,18 +49,11 @@ export default function SettingsPage() {
             <CardContent className="space-y-4">
               <div className="flex items-center justify-between p-4 border rounded-md">
                 <div>
-                  <p className="font-medium capitalize">{plan} Plan</p>
+                  <p className="font-medium">Open Source Plan</p>
                   <p className="text-sm text-muted-foreground">
-                    {plan === "free" && "Free tier with basic features"}
-                    {plan === "pro" && "Pro tier with advanced analytics"}
-                    {plan === "team" && "Team tier with collaboration features"}
+                    All features available
                   </p>
                 </div>
-                <Button asChild>
-                  <Link href="/settings/plans">
-                    {plan === "free" ? "Upgrade" : "Manage"}
-                  </Link>
-                </Button>
               </div>
             </CardContent>
           </Card>

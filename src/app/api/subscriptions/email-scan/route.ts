@@ -11,12 +11,7 @@ export async function POST(request: NextRequest) {
     }
 
     const secret = new TextEncoder().encode(process.env.JWT_SECRET || "fallback_secret_for_development_only");
-    const { payload } = await jwtVerify(token, secret);
-    const userPlan = payload.plan as string;
-
-    if (!["pro", "team"].includes(userPlan)) {
-      return NextResponse.json({ error: "Feature not available for your plan" }, { status: 403 });
-    }
+    await jwtVerify(token, secret);
 
     const { provider, accessToken } = await request.json();
     

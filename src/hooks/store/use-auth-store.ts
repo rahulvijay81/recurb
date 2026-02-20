@@ -2,13 +2,11 @@
 
 import { create } from "zustand";
 import { User } from "@/lib/schemas/user";
-import { Plan } from "@/lib/types";
 
 interface AuthState {
   user: User | null;
   isLoading: boolean;
   isAuthenticated: boolean;
-  plan: Plan;
   
   // Actions
   setUser: (user: User | null) => void;
@@ -16,7 +14,7 @@ interface AuthState {
   updateProfile: (data: { name: string; email: string; company?: string; phone?: string; timezone?: string; currency?: string }) => Promise<void>;
   logout: () => void;
   
-  // Feature access based on plan
+  // Feature access
   canAccessFeature: (feature: string) => boolean;
   // Role-based permissions
   canEdit: () => boolean;
@@ -24,62 +22,14 @@ interface AuthState {
   canManageTeam: () => boolean;
 }
 
-const PLAN_FEATURES = {
-  free: [
-    "manual_crud",
-    "tags_categories",
-    "subscription_limit_5",
-  ],
-  pro: [
-    "manual_crud",
-    "csv_import_export",
-    "auto_renewal_flags",
-    "tags_categories",
-    "mrr_yrr",
-    "monthly_breakdowns",
-    "trends",
-    "forecasting",
-    "duplicate_detection",
-    "invoice_upload",
-    "calendar",
-    "vendor_summaries",
-    "enhanced_exports",
-    "custom_reminders",
-    "auto_email_detection",
-  ],
-  team: [
-    "manual_crud",
-    "csv_import_export",
-    "auto_renewal_flags",
-    "tags_categories",
-    "mrr_yrr",
-    "monthly_breakdowns",
-    "trends",
-    "forecasting",
-    "duplicate_detection",
-    "invoice_upload",
-    "calendar",
-    "vendor_summaries",
-    "enhanced_exports",
-    "custom_reminders",
-    "auto_email_detection",
-    "team_management",
-    "shared_notes",
-    "audit_logs",
-    "webhooks",
-  ],
-};
-
 export const useAuthStore = create<AuthState>((set, get) => ({
   user: null,
   isLoading: false,
   isAuthenticated: false,
-  plan: "free",
   
   setUser: (user) => set({ 
     user, 
     isAuthenticated: !!user,
-    plan: user?.plan || "free",
   }),
   
   setLoading: (isLoading) => set({ isLoading }),
@@ -97,14 +47,12 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     set({ 
       user: null, 
       isAuthenticated: false,
-      plan: "free",
     });
     window.location.href = "/auth/login";
   },
   
   canAccessFeature: (feature) => {
-    const { plan } = get();
-    return PLAN_FEATURES[plan].includes(feature);
+    return true;
   },
   
   canEdit: () => {

@@ -2,20 +2,6 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { jwtVerify } from "jose";
 
-// Define feature paths and their required plans
-const FEATURE_PATHS: Record<string, string[]> = {
-  "/dashboard": ["pro", "team"],
-  "/subscriptions": ["pro", "team"],
-  "/subscriptions/import": ["pro", "team"],
-  "/api/subscriptions/auto-detect": ["pro", "team"],
-  "/analytics": ["pro", "team"],
-  "/calendar": ["pro", "team"],
-  "/team": ["team"],
-  "/settings/team": ["team"],
-  "/settings/webhooks": ["team"],
-  "/settings/audit": ["team"],
-};
-
 export async function middleware(request: NextRequest) {
   const token = request.cookies.get("auth-token")?.value;
   
@@ -37,21 +23,7 @@ export async function middleware(request: NextRequest) {
 
   try {
     const secret = new TextEncoder().encode(process.env.JWT_SECRET);
-    const { payload } = await jwtVerify(token, secret);
-    
-    const userPlan = payload.plan as string || "free";
-    const currentPath = request.nextUrl.pathname;
-    
-    // Optimized path matching - check exact matches first, then prefixes
-    for (const [path, allowedPlans] of Object.entries(FEATURE_PATHS)) {
-      if (currentPath === path || currentPath.startsWith(path + "/")) {
-        if (!allowedPlans.includes(userPlan)) {
-          return NextResponse.redirect(new URL("/settings/plans", request.url));
-        }
-        break;
-      }
-    }
-    
+    await jwtVerify(token, secret);
     return NextResponse.next();
   } catch (error) {
     return NextResponse.redirect(new URL("/auth/login", request.url));

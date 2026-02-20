@@ -40,7 +40,7 @@ interface MainLayoutProps {
 export function MainLayout({ children }: MainLayoutProps) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const pathname = usePathname();
-  const { user, plan, logout, canAccessFeature } = useAuthStore();
+  const { user, logout, canAccessFeature } = useAuthStore();
   
   // Close mobile menu when path changes
   useEffect(() => {
@@ -184,7 +184,6 @@ export function MainLayout({ children }: MainLayoutProps) {
                   <UserAvatar user={user || undefined} />
                   <div className="flex flex-col text-left min-w-0 flex-1">
                     <span className="text-sm font-medium truncate">{user?.name || user?.email}</span>
-                    <span className="text-xs text-muted-foreground capitalize">{plan} Plan</span>
                   </div>
                 </div>
                 <div className="mt-2 space-y-1">

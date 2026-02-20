@@ -1,12 +1,6 @@
 import { User } from "../schemas/user";
 import { Subscription } from "../schemas/subscription";
 
-export type Plan = "free" | "pro" | "team";
-
-export type PlanFeatures = {
-  [key in Plan]: string[];
-};
-
 export interface ApiResponse<T> {
   data?: T;
   error?: string;
