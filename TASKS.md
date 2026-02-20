@@ -1,16 +1,5 @@
 # Recurb - Development Tasks
 
-## Phase 2: Self-Hosted Features
-
-### P1 - High Priority
-
-- [ ] **T2.4** Backup/Restore System
-  - Create `scripts/backup.ts` (CLI tool)
-  - Create `scripts/restore.ts` (CLI tool)
-  - Support SQLite file copy + PostgreSQL pg_dump
-  - Add scheduled backups (cron/Bull)
-  - Timeline: 3 days
-
 - [ ] **T2.5** Admin Panel
   - Create `/admin` route group
   - Pages: System info, database status, user management
@@ -19,9 +8,8 @@
   - Depends on: T2.2
 
 - [ ] **T2.6** Health & Monitoring
-  - Endpoint: `/api/health` (DB, Redis, disk space)
+  - Endpoint: `/api/health` (DB, disk space)
   - Endpoint: `/api/metrics` (Prometheus format)
-  - Add structured logging (Winston/Pino)
   - Timeline: 2 days
 
 ## Phase 3: Enterprise Features

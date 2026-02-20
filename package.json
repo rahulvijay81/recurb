@@ -8,7 +8,10 @@
     "start": "next start",
     "lint": "next lint",
     "migrate": "tsx scripts/migrate.ts",
-    "migrate:rollback": "tsx scripts/rollback.ts"
+    "migrate:rollback": "tsx scripts/rollback.ts",
+    "backup": "tsx scripts/backup.ts",
+    "backup:service": "tsx scripts/backup-service.ts",
+    "restore": "tsx scripts/restore.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.1.1",
@@ -38,8 +41,10 @@
     "@radix-ui/react-tooltip": "^1.2.7",
     "@tanstack/react-table": "^8.21.3",
     "@types/better-sqlite3": "^7.6.13",
+    "@types/node-cron": "^3.0.11",
     "@types/pg": "^8.16.0",
     "axios": "^1.6.7",
+    "bcryptjs": "^3.0.3",
     "better-sqlite3": "^12.6.2",
     "chart.js": "^4.4.1",
     "class-variance-authority": "^0.7.1",
@@ -54,6 +59,7 @@
     "mysql2": "^3.17.4",
     "next": "15.4.2",
     "next-themes": "^0.4.6",
+    "node-cron": "^4.2.1",
     "papaparse": "^5.4.1",
     "pg": "^8.18.0",
     "react": "19.1.0",

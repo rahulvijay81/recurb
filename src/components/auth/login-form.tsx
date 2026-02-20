@@ -17,14 +17,12 @@ import { Input } from "@/components/ui/input";
 import { toast } from "@/lib/utils/toast";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/hooks/store/use-auth-store";
-import Link from "next/link";
-import { SignJWT } from "jose";
-import { Separator } from "@/components/ui/separator";
-import { GoogleOAuthButton } from "@/components/common/google-oauth-button";
 import { LoadingButton } from "@/components/common/loading-button";
+import { Eye, EyeOff } from "lucide-react";
 
 export function LoginForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
   const { setUser } = useAuthStore();
   
@@ -36,83 +34,27 @@ export function LoginForm() {
     },
   });
   
-  const handleGoogleLogin = async () => {
-    setIsSubmitting(true);
-    try {
-      // Simulate Google OAuth flow
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      
-      const googleUser = {
-        id: `google_${Date.now()}`,
-        email: "user@gmail.com",
-        name: "Google User",
-        currency: "USD",
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      };
-      
-      setUser(googleUser);
-      
-      const jwtSecret = process.env.NEXT_PUBLIC_JWT_SECRET || "recurb_super_secret_jwt_key_2024_development_only_change_in_production";
-      const secret = new TextEncoder().encode(jwtSecret);
-      const token = await new SignJWT({ 
-        id: googleUser.id, 
-        email: googleUser.email
-      })
-        .setProtectedHeader({ alg: "HS256" })
-        .setExpirationTime("24h")
-        .sign(secret);
-      
-      document.cookie = `auth-token=${token}; path=/; max-age=86400`;
-      
-      toast.success("Google login successful");
-      router.push("/dashboard");
-    } catch (error) {
-      toast.error("Google login failed");
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-  
+
   const onSubmit = async (data: LoginFormValues) => {
     setIsSubmitting(true);
     
     try {
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      
-      const mockUsers = {
-        "user@example.com": {
-          id: "user_1",
-          email: "user@example.com",
-          name: "Demo User",
-          currency: "USD",
-          createdAt: new Date(),
-          updatedAt: new Date(),
-        },
-      };
-      
-      const user = mockUsers[data.email as keyof typeof mockUsers];
-      
-      if (user) {
-        setUser(user);
-        
-        const jwtSecret = process.env.NEXT_PUBLIC_JWT_SECRET || "recurb_super_secret_jwt_key_2024_development_only_change_in_production";
-        const secret = new TextEncoder().encode(jwtSecret);
-        const token = await new SignJWT({ 
-          id: user.id, 
-          email: user.email
-        })
-          .setProtectedHeader({ alg: "HS256" })
-          .setExpirationTime("24h")
-          .sign(secret);
-        
-        document.cookie = `auth-token=${token}; path=/; max-age=86400`;
-        
-        toast.success("Login successful");
-        router.push("/dashboard");
-      } else {
-        toast.error("Invalid email or password");
+      const response = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        toast.error(result.error || "Invalid email or password");
+        return;
       }
+
+      setUser(result.data);
+      toast.success("Login successful");
+      router.push("/dashboard");
     } catch (error) {
       console.error("Login error:", error);
       toast.error("Login failed");
@@ -123,19 +65,6 @@ export function LoginForm() {
   
   return (
     <div className="space-y-6">
-      <GoogleOAuthButton onClick={handleGoogleLogin} disabled={isSubmitting}>
-        Continue with Google
-      </GoogleOAuthButton>
-      
-      <div className="relative">
-        <div className="absolute inset-0 flex items-center">
-          <Separator className="w-full" />
-        </div>
-        <div className="relative flex justify-center text-xs uppercase">
-          <span className="bg-background px-2 text-muted-foreground">Or continue with</span>
-        </div>
-      </div>
-      
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
         <FormField
@@ -157,9 +86,23 @@ export function LoginForm() {
           name="password"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Password</FormLabel>
+              <div className="flex items-center justify-between">
+                <FormLabel>Password</FormLabel>
+                <a href="/auth/forgot-password" className="text-xs text-primary hover:underline">
+                  Forgot password?
+                </a>
+              </div>
               <FormControl>
-                <Input type="password" placeholder="••••••••" {...field} />
+                <div className="relative">
+                  <Input type={showPassword ? "text" : "password"} placeholder="••••••••" {...field} className="pr-10" />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-700 dark:hover:text-slate-300"
+                  >
+                    {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                  </button>
+                </div>
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -176,23 +119,6 @@ export function LoginForm() {
         </LoadingButton>
         </form>
       </Form>
-      
-      <div className="mt-4 text-center text-sm">
-        <p className="text-muted-foreground">
-          Don&apos;t have an account?{" "}
-          <Link href="/auth/register" className="text-primary hover:underline">
-            Sign up
-          </Link>
-        </p>
-        
-        <div className="mt-6 border-t pt-4">
-          <p className="text-muted-foreground mb-2">Demo account:</p>
-          <div className="border rounded-md p-2 text-xs">
-            <p><strong>Email:</strong> user@example.com</p>
-            <p><strong>Password:</strong> password</p>
-          </div>
-        </div>
-      </div>
     </div>
   );
 }

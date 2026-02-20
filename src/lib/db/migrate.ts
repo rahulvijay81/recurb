@@ -8,6 +8,8 @@ export async function runMigrations(): Promise<void> {
   console.log(`Running migrations for ${dbType}...`);
 
   try {
+    await db.connect();
+    
     const tables = createAllTables(dbType);
     
     for (const tableSql of tables) {

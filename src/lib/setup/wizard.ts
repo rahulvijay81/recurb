@@ -4,6 +4,7 @@ import bcrypt from 'bcryptjs';
 export async function isSetupComplete(): Promise<boolean> {
   try {
     const db = await getDatabase();
+    await db.connect();
     const result = await db.query<{ value: string }>(
       "SELECT value FROM system_config WHERE key = 'setup_complete'"
     );
@@ -22,6 +23,7 @@ export async function completeSetup(data: {
   orgPlan: 'free' | 'pro' | 'team';
 }): Promise<void> {
   const db = await getDatabase();
+  await db.connect();
   
   await db.transaction(async (tx) => {
     const orgResult = await tx.execute(

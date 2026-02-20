@@ -10,6 +10,13 @@ export class SqliteAdapter implements DatabaseAdapter {
   }
 
   async connect(): Promise<void> {
+    const fs = require('fs');
+    const path = require('path');
+    const dir = path.dirname(this.config.database);
+    if (!fs.existsSync(dir)) {
+      fs.mkdirSync(dir, { recursive: true });
+    }
+    
     this.db = new Database(this.config.database, {
       verbose: process.env.NODE_ENV === 'development' ? console.log : undefined,
     });
@@ -43,7 +50,14 @@ export class SqliteAdapter implements DatabaseAdapter {
   async transaction<T>(callback: (adapter: DatabaseAdapter) => Promise<T>): Promise<T> {
     if (!this.db) throw new Error('Database not connected');
     
-    const txn = this.db.transaction(() => callback(this));
-    return txn() as T;
+    this.db.exec('BEGIN');
+    try {
+      const result = await callback(this);
+      this.db.exec('COMMIT');
+      return result;
+    } catch (error) {
+      this.db.exec('ROLLBACK');
+      throw error;
+    }
   }
 }

@@ -14,18 +14,20 @@ const setupSchema = z.object({
 
 export async function POST(request: NextRequest) {
   try {
-    if (await isSetupComplete()) {
-      return NextResponse.json({ error: 'Setup already completed' }, { status: 400 });
-    }
-
     const body = await request.json();
     const data = setupSchema.parse(body);
+
+    const setupComplete = await isSetupComplete();
+    if (setupComplete) {
+      return NextResponse.json({ error: 'Setup already completed' }, { status: 400 });
+    }
 
     await runMigrations();
     await completeSetup(data);
 
     return NextResponse.json({ success: true });
   } catch (error) {
+    console.error('Setup error:', error);
     return NextResponse.json({ error: 'Setup failed' }, { status: 500 });
   }
 }

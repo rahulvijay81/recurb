@@ -52,7 +52,6 @@ export async function getDatabase(): Promise<DatabaseAdapter> {
     };
 
     dbInstance = createDatabase(config);
-    await dbInstance.connect();
   }
 
   return dbInstance;

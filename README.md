@@ -39,72 +39,136 @@ Recurb is a full-stack Next.js application for managing and visualizing recurrin
 
 ## Tech Stack
 
-- **Frontend**: Next.js (App Router), TypeScript, Tailwind CSS, shadcn/ui
+- **Frontend**: Next.js 15.4 (App Router), React 19, TypeScript, Tailwind CSS 4, shadcn/ui
 - **State Management**: Zustand
 - **Form Handling**: React Hook Form, Zod
-- **Authentication**: JWT
-- **Data Visualization**: Chart.js
+- **Authentication**: JWT (jose), bcryptjs
+- **Database**: SQLite (better-sqlite3) with PostgreSQL/MySQL support
+- **Data Visualization**: Chart.js, react-chartjs-2
+- **UI Components**: Radix UI, Lucide Icons
+- **File Handling**: React Dropzone, PapaParse (CSV)
+- **Date Handling**: date-fns, react-day-picker
 
 ## Getting Started
 
-First, install the dependencies:
+### Prerequisites
 
+- Node.js 20+ 
+- npm, yarn, pnpm, or bun
+
+### Installation
+
+1. Clone the repository:
+```bash
+git clone <repository-url>
+cd admin-subscription-tracker
+```
+
+2. Install dependencies:
 ```bash
 npm install
-# or
-yarn install
-# or
-pnpm install
-# or
-bun install
 ```
 
-Then, run the development server:
+3. Set up environment variables:
+```bash
+cp .env.example .env.local
+```
+Edit `.env.local` and configure your settings (JWT_SECRET, database, etc.)
 
+4. Run database migrations:
+```bash
+npm run migrate
+```
+
+5. Start the development server:
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-## Demo Accounts
-
-For demonstration purposes, you can use the following accounts:
-
-- **Free Plan**: free@example.com / password
-- **Pro Plan**: pro@example.com / password
-- **Team Plan**: team@example.com / password
+Open [http://localhost:3000](http://localhost:3000) to access the application.
 
 ## Project Structure
 
-- `src/app`: Next.js App Router pages
-- `src/components`: React components
-  - `ui`: shadcn/ui components
-  - `common`: Shared components
-  - `subscriptions`: Subscription-related components
-  - `analytics`: Analytics and chart components
-  - `auth`: Authentication components
-- `src/hooks`: Custom React hooks
-  - `store`: Zustand stores
-- `src/lib`: Utility functions and shared code
-  - `schemas`: Zod schemas
-  - `types`: TypeScript types
-  - `auth`: Authentication utilities
-  - `api`: API utilities
+```
+src/
+├── app/                    # Next.js App Router pages
+│   ├── api/               # API routes
+│   ├── auth/              # Authentication pages
+│   ├── dashboard/         # Dashboard page
+│   ├── subscriptions/     # Subscription management
+│   ├── analytics/         # Analytics & reports
+│   ├── calendar/          # Calendar view
+│   ├── team/              # Team management
+│   ├── settings/          # User settings
+│   └── setup/             # Initial setup wizard
+├── components/            # React components
+│   ├── ui/               # shadcn/ui components
+│   ├── common/           # Shared components
+│   ├── subscriptions/    # Subscription components
+│   ├── analytics/        # Chart components
+│   ├── auth/             # Auth components
+│   ├── dashboard/        # Dashboard widgets
+│   ├── team/             # Team components
+│   ├── notifications/    # Notification system
+│   └── settings/         # Settings components
+├── hooks/                 # Custom React hooks
+│   └── store/            # Zustand stores
+├── lib/                   # Utilities & shared code
+│   ├── db/               # Database layer
+│   ├── schemas/          # Zod validation schemas
+│   ├── types/            # TypeScript types
+│   ├── auth/             # Auth utilities
+│   ├── api/              # API utilities
+│   ├── backup/           # Backup/restore logic
+│   ├── config/           # Configuration
+│   ├── setup/            # Setup utilities
+│   └── utils/            # Helper functions
+├── data/                  # Static data files
+└── middleware.ts          # Next.js middleware
 
-## Feature Implementation
+scripts/
+├── migrate.ts             # Database migrations
+├── rollback.ts            # Rollback migrations
+├── backup.ts              # Manual backup
+├── backup-service.ts      # Automated backup service
+└── restore.ts             # Restore from backup
 
-- **Plan-based Access Control**: Implemented via middleware and Zustand store
-- **Subscription CRUD**: Form-based UI with validation
-- **CSV Import/Export**: File upload with validation
-- **Analytics**: Interactive charts with Chart.js
-- **Team Collaboration**: Role-based access control
+data/
+└── recurb.db              # SQLite database (default)
+```
+
+## Available Scripts
+
+- `npm run dev` - Start development server
+- `npm run build` - Build for production
+- `npm run start` - Start production server
+- `npm run lint` - Run ESLint
+- `npm run migrate` - Run database migrations
+- `npm run migrate:rollback` - Rollback last migration
+- `npm run backup` - Create manual database backup
+- `npm run backup:service` - Start automated backup service
+- `npm run restore` - Restore database from backup
+
+## Database Support
+
+Recurb supports multiple database backends:
+
+- **SQLite** (default) - Best for development and small deployments
+- **PostgreSQL** - Recommended for production
+- **MySQL** - Alternative production option
+
+Configure via `DATABASE_TYPE` and `DATABASE_URL` in `.env.local`
+
+## Key Features Implementation
+
+- **Multi-tier Access Control**: Plan-based features via middleware and Zustand
+- **Subscription Management**: Full CRUD with validation and file uploads
+- **CSV Import/Export**: Bulk operations with PapaParse
+- **Analytics Dashboard**: Interactive charts and forecasting
+- **Team Collaboration**: Role-based access, shared notes, audit logs
+- **Calendar View**: Visual subscription timeline
+- **Backup/Restore**: Automated and manual database backups
+- **Setup Wizard**: First-run configuration flow
 
 ## License
 
