@@ -18,13 +18,7 @@ export function EmailInboxScanner({ onSubscriptionsDetected }: EmailInboxScanner
   const [isLoading, setIsLoading] = useState(false);
   const [detectedSubs, setDetectedSubs] = useState<DetectedSubscription[]>([]);
   const [scannedCount, setScannedCount] = useState(0);
-  const { canAccessFeature } = useAuthStore();
-
-  if (!canAccessFeature("auto_email_detection")) {
-    return null;
-  }
-
-  const handleProviderAuth = (provider: string) => {
+      const handleProviderAuth = (provider: string) => {
     const providerConfig = EMAIL_PROVIDERS[provider];
     const clientId = provider === "gmail" 
       ? process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID 

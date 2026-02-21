@@ -18,8 +18,7 @@ export default function SubscriptionDetailsPage() {
   const params = useParams();
   const router = useRouter();
   const { subscriptions, isLoading } = useSubscriptionStore();
-  const { canAccessFeature } = useAuthStore();
-  const [subscription, setSubscription] = useState<Subscription | null>(null);
+    const [subscription, setSubscription] = useState<Subscription | null>(null);
 
   const subscriptionId = params.id as string;
 
@@ -178,7 +177,7 @@ export default function SubscriptionDetailsPage() {
           </Card>
         )}
         
-        {canAccessFeature("shared_notes") && (
+        {(
           <div className="md:col-span-2">
             <SharedNotes subscriptionId={subscription.id!} />
           </div>

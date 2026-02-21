@@ -14,17 +14,10 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { PieChart, BarChart3, TrendingUp } from "lucide-react";
 
 export default function AnalyticsPage() {
-  const { canAccessFeature } = useAuthStore();
-  const { subscriptions, isLoading, setSubscriptions, setLoading } = useSubscriptionStore();
+    const { subscriptions, isLoading, setSubscriptions, setLoading } = useSubscriptionStore();
   
   // Check if user has access to analytics feature
-  useEffect(() => {
-    if (!canAccessFeature("trends")) {
-      redirect("/settings/plans");
-    }
-  }, [canAccessFeature]);
-  
-  // Simulate fetching subscriptions if not already loaded
+    // Simulate fetching subscriptions if not already loaded
   useEffect(() => {
     if (subscriptions.length === 0 && !isLoading) {
       const fetchSubscriptions = async () => {

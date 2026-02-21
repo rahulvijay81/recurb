@@ -8,8 +8,10 @@ export async function isSetupComplete(): Promise<boolean> {
     const result = await db.query<{ value: string }>(
       "SELECT value FROM system_config WHERE key = 'setup_complete'"
     );
+    console.log('isSetupComplete query result:', result);
     return result.length > 0 && result[0].value === 'true';
-  } catch {
+  } catch (error) {
+    console.error('isSetupComplete error:', error);
     return false;
   }
 }

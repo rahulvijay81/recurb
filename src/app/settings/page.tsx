@@ -14,7 +14,7 @@ import Link from "next/link";
 
 
 export default function SettingsPage() {
-  const { user, canAccessFeature } = useAuthStore();
+  const { user } = useAuthStore();
   
   return (
     <div className="p-6">

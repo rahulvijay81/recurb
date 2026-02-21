@@ -10,17 +10,5 @@ export default function TeamLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const { canAccessFeature } = useAuthStore();
-
-  useEffect(() => {
-    if (!canAccessFeature("team_management")) {
-      redirect("/dashboard");
-    }
-  }, [canAccessFeature]);
-
-  if (!canAccessFeature("team_management")) {
-    return null;
-  }
-
-  return <MainLayout>{children}</MainLayout>;
+        return <MainLayout>{children}</MainLayout>;
 }

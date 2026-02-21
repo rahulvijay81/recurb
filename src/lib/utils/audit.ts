@@ -8,10 +8,9 @@ export const logActivity = (
   resourceId: string,
   details: string
 ) => {
-  const { user, canAccessFeature } = useAuthStore.getState();
+  const { user } = useAuthStore.getState();
   
-  // Only log for Team plan users
-  if (!user || !canAccessFeature("audit_logs")) {
+  if (!user) {
     return;
   }
   

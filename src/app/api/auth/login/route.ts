@@ -5,7 +5,7 @@ import { compare } from "bcryptjs";
 
 export async function POST(request: NextRequest) {
   try {
-    const { email, password } = await request.json();
+    const { email, password, rememberMe } = await request.json();
 
     if (!email || !password) {
       return NextResponse.json({ error: "Email and password required" }, { status: 400 });
@@ -13,7 +13,7 @@ export async function POST(request: NextRequest) {
 
     const db = await getDatabase();
     const users = await db.query(
-      `SELECT * FROM users WHERE email = ?`,
+      `SELECT id, email, name, role, password_hash, organization_id FROM users WHERE email = ?`,
       [email]
     );
 
@@ -48,7 +48,7 @@ export async function POST(request: NextRequest) {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
-      maxAge: 86400,
+      maxAge: rememberMe ? 2592000 : 86400,
     });
 
     return response;

@@ -12,9 +12,7 @@ import Link from "next/link";
 
 export default function CalendarPage() {
   const { subscriptions, setSubscriptions, setLoading, loading } = useSubscriptionStore();
-  const { canAccessFeature } = useAuthStore();
-
-  useEffect(() => {
+    useEffect(() => {
     const loadSubscriptions = async () => {
       setLoading(true);
       try {

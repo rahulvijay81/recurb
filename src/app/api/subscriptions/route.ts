@@ -11,7 +11,7 @@ export async function GET(request: NextRequest) {
 
     const db = await getDatabase();
     const subscriptions = await db.query(
-      `SELECT * FROM subscriptions WHERE user_id = ? ORDER BY created_at DESC`,
+      `SELECT id, name, amount, currency, billing_cycle, category, tags, next_billing_date, auto_renew, notes, invoice_url, user_id, organization_id, created_at, updated_at FROM subscriptions WHERE user_id = ? ORDER BY created_at DESC`,
       [user.id]
     );
 
@@ -39,7 +39,7 @@ export async function POST(request: NextRequest) {
     );
 
     const newSubscription = await db.query(
-      `SELECT * FROM subscriptions WHERE id = ?`,
+      `SELECT id, name, amount, currency, billing_cycle, category, tags, next_billing_date, auto_renew, notes, invoice_url, user_id, organization_id, created_at, updated_at FROM subscriptions WHERE id = ?`,
       [result.insertId]
     );
 

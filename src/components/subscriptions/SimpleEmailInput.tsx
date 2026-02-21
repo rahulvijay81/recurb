@@ -18,13 +18,7 @@ export function SimpleEmailInput({ onSubscriptionsDetected }: SimpleEmailInputPr
   const [email, setEmail] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [detectedSubs, setDetectedSubs] = useState<DetectedSubscription[]>([]);
-  const { canAccessFeature } = useAuthStore();
-
-  if (!canAccessFeature("auto_email_detection")) {
-    return null;
-  }
-
-  const handleDetect = async () => {
+      const handleDetect = async () => {
     if (!email.trim() || !email.includes('@')) return;
 
     setIsLoading(true);

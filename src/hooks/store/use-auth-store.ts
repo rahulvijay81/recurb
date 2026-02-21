@@ -16,8 +16,6 @@ interface AuthState {
   updateProfile: (data: { name: string; email: string; company?: string; phone?: string; timezone?: string; currency?: string }) => Promise<void>;
   logout: () => void;
   
-  // Feature access
-  canAccessFeature: (feature: string) => boolean;
   // Role-based permissions
   canEdit: () => boolean;
   canDelete: () => boolean;
@@ -74,10 +72,6 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       isAuthenticated: false,
     });
     window.location.href = "/auth/login";
-  },
-  
-  canAccessFeature: (feature) => {
-    return true;
   },
   
   canEdit: () => {

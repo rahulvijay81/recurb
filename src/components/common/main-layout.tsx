@@ -40,7 +40,7 @@ interface MainLayoutProps {
 export function MainLayout({ children }: MainLayoutProps) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const pathname = usePathname();
-  const { user, logout, canAccessFeature } = useAuthStore();
+  const { user, logout } = useAuthStore();
   
   // Close mobile menu when path changes
   useEffect(() => {
@@ -106,9 +106,7 @@ export function MainLayout({ children }: MainLayoutProps) {
         <SidebarContent className="px-3 py-3">
           <SidebarMenu className="space-y-1">
             {navigation.map((item) => {
-              if (!canAccessFeature(item.feature)) return null;
-              
-              return (
+                            return (
                 <SidebarMenuItem key={item.name}>
                   <SidebarMenuButton asChild isActive={item.active} className="h-10 px-3 rounded-md font-medium">
                     <Link href={item.href}>
@@ -160,9 +158,7 @@ export function MainLayout({ children }: MainLayoutProps) {
               </div>
               <nav className="flex-1 space-y-1">
                 {navigation.map((item) => {
-                  if (!canAccessFeature(item.feature)) return null;
-                  
-                  return (
+                                    return (
                     <Link
                       key={item.name}
                       href={item.href}

@@ -21,7 +21,7 @@ export function SharedNotes({ subscriptionId }: SharedNotesProps) {
   const [newNote, setNewNote] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { notes, addNote, getNotesBySubscription, setNotes } = useNotesStore();
-  const { user, canAccessFeature } = useAuthStore();
+  const { user } = useAuthStore();
   
   const subscriptionNotes = getNotesBySubscription(subscriptionId);
   
@@ -72,11 +72,7 @@ export function SharedNotes({ subscriptionId }: SharedNotesProps) {
     }
   };
   
-  if (!canAccessFeature("shared_notes")) {
-    return null;
-  }
-
-  return (
+    return (
     <Card>
       <CardHeader>
         <CardTitle className="flex items-center gap-2">

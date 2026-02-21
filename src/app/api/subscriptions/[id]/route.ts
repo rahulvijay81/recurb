@@ -15,7 +15,7 @@ export async function GET(
     const { id } = await params;
     const db = await getDatabase();
     const subscriptions = await db.query(
-      `SELECT * FROM subscriptions WHERE id = ? AND user_id = ?`,
+      `SELECT id, name, amount, currency, billing_cycle, category, tags, next_billing_date, auto_renew, notes, invoice_url, user_id, organization_id, created_at, updated_at FROM subscriptions WHERE id = ? AND user_id = ?`,
       [id, user.id]
     );
 
@@ -53,7 +53,7 @@ export async function PUT(
     );
 
     const updated = await db.query(
-      `SELECT * FROM subscriptions WHERE id = ? AND user_id = ?`,
+      `SELECT id, name, amount, currency, billing_cycle, category, tags, next_billing_date, auto_renew, notes, invoice_url, user_id, organization_id, created_at, updated_at FROM subscriptions WHERE id = ? AND user_id = ?`,
       [id, user.id]
     );
 

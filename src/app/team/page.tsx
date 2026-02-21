@@ -10,17 +10,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Users, History, Webhook } from "lucide-react";
 
 export default function TeamPage() {
-  const { canAccessFeature } = useAuthStore();
-  
-  useEffect(() => {
-    if (!canAccessFeature("team_management")) {
-      redirect("/settings/plans");
-    }
-  }, [canAccessFeature]);
-  
-
-  
-  return (
+      return (
     <div className="p-6">
       <div className="flex flex-col gap-2 mb-6">
         <h1 className="text-3xl font-bold tracking-tight">Team Management</h1>

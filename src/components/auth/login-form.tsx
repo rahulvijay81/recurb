@@ -19,10 +19,12 @@ import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/hooks/store/use-auth-store";
 import { LoadingButton } from "@/components/common/loading-button";
 import { Eye, EyeOff } from "lucide-react";
+import { Checkbox } from "@/components/ui/checkbox";
 
 export function LoginForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [rememberMe, setRememberMe] = useState(false);
   const router = useRouter();
   const { setUser } = useAuthStore();
   
@@ -42,7 +44,7 @@ export function LoginForm() {
       const response = await fetch('/api/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
+        body: JSON.stringify({ ...data, rememberMe }),
       });
 
       const result = await response.json();
@@ -108,6 +110,13 @@ export function LoginForm() {
             </FormItem>
           )}
         />
+        
+        <div className="flex items-center space-x-2">
+          <Checkbox id="remember" checked={rememberMe} onCheckedChange={(checked) => setRememberMe(checked === true)} />
+          <label htmlFor="remember" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+            Remember me
+          </label>
+        </div>
         
         <LoadingButton 
           type="submit" 

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -20,6 +20,7 @@ export default function SetupPage() {
   const router = useRouter();
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
+  const [checking, setChecking] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
     dbType: 'sqlite' as 'sqlite' | 'postgres' | 'mysql',
@@ -29,6 +30,26 @@ export default function SetupPage() {
     orgName: '',
     orgPlan: 'pro' as 'free' | 'pro' | 'team',
   });
+
+  useEffect(() => {
+    console.log('Checking setup status...');
+    fetch('/api/setup')
+      .then(res => res.json())
+      .then(data => {
+        console.log('Setup status:', data);
+        if (data.complete) {
+          console.log('Setup already complete, redirecting to login');
+          router.replace('/auth/login');
+        } else {
+          console.log('Setup not complete, showing setup form');
+          setChecking(false);
+        }
+      })
+      .catch(err => {
+        console.error('Setup check failed:', err);
+        setChecking(false);
+      });
+  }, [router]);
 
   const handleNext = () => setStep(s => Math.min(s + 1, 3));
   const handleBack = () => setStep(s => Math.max(s - 1, 1));
@@ -46,6 +67,8 @@ export default function SetupPage() {
       setLoading(false);
     }
   };
+
+  if (checking) return null;
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-950 dark:to-slate-900">

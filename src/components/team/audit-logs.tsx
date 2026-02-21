@@ -6,13 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export function AuditLogs() {
   const { logs } = useAuditStore();
-  const { canAccessFeature } = useAuthStore();
-
-  if (!canAccessFeature("audit_logs")) {
-    return null;
-  }
-
-  return (
+      return (
     <Card>
       <CardHeader>
         <CardTitle>Audit Logs</CardTitle>

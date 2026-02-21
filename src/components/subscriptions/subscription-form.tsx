@@ -46,8 +46,7 @@ interface SubscriptionFormProps {
 
 export function SubscriptionForm({ initialData, isEditing = false }: SubscriptionFormProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const { canAccessFeature } = useAuthStore();
-  const { addSubscription, updateSubscription } = useSubscriptionStore();
+    const { addSubscription, updateSubscription } = useSubscriptionStore();
   const router = useRouter();
   
   const form = useForm<SubscriptionFormValues>({
@@ -281,7 +280,7 @@ export function SubscriptionForm({ initialData, isEditing = false }: Subscriptio
             )}
           />
           
-          {canAccessFeature("tags_categories") && (
+          {(
             <FormField
               control={form.control}
               name="tags"
@@ -347,11 +346,11 @@ export function SubscriptionForm({ initialData, isEditing = false }: Subscriptio
           )}
         />
         
-        {canAccessFeature("invoice_upload") && (
+        {(
           <InvoiceUpload />
         )}
         
-        {canAccessFeature("custom_reminders") && (
+        {(
           <ReminderSettings />
         )}
         

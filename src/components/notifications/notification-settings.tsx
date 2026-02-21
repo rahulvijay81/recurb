@@ -35,8 +35,7 @@ interface NotificationConfig {
 }
 
 export function NotificationSettings() {
-  const { canAccessFeature } = useAuthStore();
-  const [config, setConfig] = useState<NotificationConfig>({
+    const [config, setConfig] = useState<NotificationConfig>({
     email: {
       enabled: true,
       renewalReminders: true,
@@ -134,7 +133,7 @@ export function NotificationSettings() {
                   </div>
                 )}
 
-                {canAccessFeature('enhanced_exports') && (
+                {(
                   <div className="flex items-center justify-between">
                     <div>
                       <Label>Weekly Reports</Label>
@@ -164,7 +163,7 @@ export function NotificationSettings() {
       </Card>
 
       {/* Webhook Notifications - Team Plan Only */}
-      {canAccessFeature('webhooks') && (
+      {(
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
@@ -235,7 +234,7 @@ export function NotificationSettings() {
       )}
 
       {/* Reminder Schedule */}
-      {canAccessFeature('custom_reminders') && (
+      {(
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">

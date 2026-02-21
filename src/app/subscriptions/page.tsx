@@ -74,7 +74,7 @@ export default function SubscriptionsPage() {
     deleteSubscription,
   } = useSubscriptionStore();
   
-  const { canAccessFeature, canEdit, canDelete } = useAuthStore();
+  const { canEdit, canDelete } = useAuthStore();
   const [searchTerm, setSearchTerm] = useState("");
   const [subscriptionToDelete, setSubscriptionToDelete] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
@@ -279,7 +279,7 @@ export default function SubscriptionsPage() {
             </Button>
           )}
           
-          {canAccessFeature("auto_email_detection") && (
+          {(
             <div className="flex gap-2">
               <SimpleEmailInput 
                 onSubscriptionsDetected={(detected: any[]) => {
@@ -320,7 +320,7 @@ export default function SubscriptionsPage() {
             </div>
           )}
           
-          {canAccessFeature("csv_import_export") && (
+          {(
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="outline">

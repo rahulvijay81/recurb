@@ -13,15 +13,14 @@ interface FinancialOverviewProps {
 }
 
 export function FinancialOverview({ subscriptions }: FinancialOverviewProps) {
-  const { canAccessFeature } = useAuthStore();
-  const mrr = calculateMRR(subscriptions);
+    const mrr = calculateMRR(subscriptions);
   const yrr = calculateYRR(subscriptions);
   const upcomingRenewals = getUpcomingRenewals(subscriptions);
   const categorySpend = getCategorySpend(subscriptions);
 
   return (
     <div className="grid gap-4 md:grid-cols-2">
-      {canAccessFeature("monthly_breakdowns") && (
+      {(
         <Card>
           <CardHeader>
             <Tooltip>

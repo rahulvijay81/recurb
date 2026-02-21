@@ -22,8 +22,7 @@ import { DuplicateDetector } from "@/components/subscriptions/duplicate-detector
 
 export default function DashboardPage() {
   const { subscriptions, isLoading, setSubscriptions, setLoading } = useSubscriptionStore();
-  const { canAccessFeature } = useAuthStore();
-  const [stats, setStats] = useState({
+    const [stats, setStats] = useState({
     totalActive: 0,
     totalMonthly: 0,
     totalYearly: 0,
@@ -166,7 +165,7 @@ export default function DashboardPage() {
         <FinancialOverview subscriptions={subscriptions} />
       </div>
       
-      {canAccessFeature("duplicate_detection") && (
+      {(
         <div className="mb-6">
           <DuplicateDetector subscriptions={subscriptions} />
         </div>
@@ -192,7 +191,7 @@ export default function DashboardPage() {
             </Link>
           </Button>
           
-          {canAccessFeature("csv_import_export") && (
+          {(
             <Button asChild variant="outline" className="w-full justify-start">
               <Link href="/subscriptions/import">
                 <ArrowUpRight className="mr-2 h-4 w-4" />
@@ -201,7 +200,7 @@ export default function DashboardPage() {
             </Button>
           )}
           
-          {canAccessFeature("monthly_breakdowns") && (
+          {(
             <Button asChild variant="outline" className="w-full justify-start">
               <Link href="/analytics">
                 <ArrowUpRight className="mr-2 h-4 w-4" />

@@ -10,17 +10,5 @@ export default function AnalyticsLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const { canAccessFeature } = useAuthStore();
-
-  useEffect(() => {
-    if (!canAccessFeature("trends")) {
-      redirect("/settings/plans");
-    }
-  }, [canAccessFeature]);
-
-  if (!canAccessFeature("trends")) {
-    return null;
-  }
-
-  return <MainLayout>{children}</MainLayout>;
+        return <MainLayout>{children}</MainLayout>;
 }

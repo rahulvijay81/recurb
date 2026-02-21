@@ -64,8 +64,3 @@ export async function getCurrentUser() {
     return null;
   }
 }
-
-// Feature access control
-export function canAccessFeature(user: Partial<User> | null, feature: string): boolean {
-  return !!user;
-}
