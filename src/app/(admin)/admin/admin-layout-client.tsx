@@ -14,7 +14,7 @@ import {
   SidebarInset 
 } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
-import { Info, Database, Users, Settings, Menu, X, Home } from "lucide-react";
+import { Info, Database, Users, Settings, Menu, X, Home, Shield } from "lucide-react";
 import Link from "next/link";
 import { UserDropdown } from "@/components/common/user-dropdown";
 
@@ -27,6 +27,7 @@ export function AdminLayoutClient({ children }: { children: React.ReactNode }) {
     { name: "System Info", href: "/admin/system", icon: Info, active: pathname === "/admin/system" },
     { name: "Database", href: "/admin/database", icon: Database, active: pathname === "/admin/database" },
     { name: "Users", href: "/admin/users", icon: Users, active: pathname === "/admin/users" },
+    { name: "Roles", href: "/admin/roles", icon: Shield, active: pathname === "/admin/roles" },
     { name: "Features", href: "/admin/features", icon: Settings, active: pathname === "/admin/features" },
   ];
   

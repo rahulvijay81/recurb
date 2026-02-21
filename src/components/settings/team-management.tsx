@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useTeamStore } from "@/hooks/store/use-team-store";
-import { useAuthStore } from "@/hooks/store/use-auth-store";
+import { useAuth } from "@/hooks/use-auth";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -18,7 +18,7 @@ import { toast } from "@/lib/utils/toast";
 
 export function TeamManagement() {
   const { members, isLoading, removeMember } = useTeamStore();
-  const { canManageTeam } = useAuthStore();
+  const { canManageTeam } = useAuth();
   const [inviteDialogOpen, setInviteDialogOpen] = useState(false);
   const [editingMember, setEditingMember] = useState<TeamMember | null>(null);
   const [memberToRemove, setMemberToRemove] = useState<TeamMember | null>(null);

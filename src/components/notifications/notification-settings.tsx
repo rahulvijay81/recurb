@@ -10,7 +10,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Separator } from "@/components/ui/separator";
 import { Bell, Mail, Webhook, Clock } from "lucide-react";
 import { toast } from "sonner";
-import { useAuthStore } from "@/hooks/store/use-auth-store";
 
 interface NotificationConfig {
   email: {

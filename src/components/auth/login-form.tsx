@@ -16,7 +16,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { toast } from "@/lib/utils/toast";
 import { useRouter } from "next/navigation";
-import { useAuthStore } from "@/hooks/store/use-auth-store";
+import { authClient } from "@/lib/auth/client";
 import { LoadingButton } from "@/components/common/loading-button";
 import { Eye, EyeOff } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -26,7 +26,6 @@ export function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
   const router = useRouter();
-  const { setUser } = useAuthStore();
   
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
@@ -54,7 +53,7 @@ export function LoginForm() {
         return;
       }
 
-      setUser(result.data);
+      authClient.setUser(result.data);
       toast.success("Login successful");
       router.push("/dashboard");
     } catch (error) {

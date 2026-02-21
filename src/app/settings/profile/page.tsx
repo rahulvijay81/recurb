@@ -1,6 +1,6 @@
 "use client";
 
-import { useAuthStore } from "@/hooks/store/use-auth-store";
+import { useAuth } from "@/hooks/use-auth";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -12,7 +12,7 @@ import currencies from "@/data/currencies.json";
 import { useState } from "react";
 
 export default function ProfilePage() {
-  const { user, updateProfile } = useAuthStore();
+  const { user, updateProfile } = useAuth();
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({
     name: user?.name || "",

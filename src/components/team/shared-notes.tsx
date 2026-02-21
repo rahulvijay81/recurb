@@ -9,7 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { MessageSquare, Send } from "lucide-react";
 import { toast } from "sonner";
 import { useNotesStore } from "@/hooks/store/use-notes-store";
-import { useAuthStore } from "@/hooks/store/use-auth-store";
+import { useAuth } from "@/hooks/use-auth";
 import { Note } from "@/lib/schemas/note";
 import { formatDate } from "@/lib/utils/date";
 
@@ -21,7 +21,7 @@ export function SharedNotes({ subscriptionId }: SharedNotesProps) {
   const [newNote, setNewNote] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { notes, addNote, getNotesBySubscription } = useNotesStore();
-  const { user } = useAuthStore();
+  const { user } = useAuth();
   
   const subscriptionNotes = getNotesBySubscription(subscriptionId);
 

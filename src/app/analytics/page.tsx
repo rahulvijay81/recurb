@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { redirect } from "next/navigation";
 import { Subscription } from "@/lib/schemas/subscription";
 import { ExpenseChart } from "@/components/analytics/expense-chart";
 import { TrendsChart } from "@/components/analytics/trends-chart";
@@ -14,11 +15,16 @@ import { PieChart, BarChart3, TrendingUp } from "lucide-react";
 export default function AnalyticsPage() {
   const [subscriptions, setSubscriptions] = useState<Subscription[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [hasAccess, setHasAccess] = useState(true);
   
   useEffect(() => {
     const fetchData = async () => {
       try {
         const res = await fetch('/api/subscriptions');
+        if (res.status === 403) {
+          setHasAccess(false);
+          return;
+        }
         if (!res.ok) throw new Error('Failed to fetch');
         const result = await res.json();
         const mapped = (result.data || []).map((sub: any) => ({
@@ -48,6 +54,21 @@ export default function AnalyticsPage() {
     };
     fetchData();
   }, []);
+  
+  if (!hasAccess) {
+    return (
+      <div className="p-6">
+        <Card>
+          <CardContent className="flex items-center justify-center h-64">
+            <div className="text-center">
+              <p className="text-lg font-medium">Access Denied</p>
+              <p className="text-sm text-muted-foreground mt-2">You don't have permission to view analytics.</p>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
   
   // Calculate category distribution
   const categoryData = subscriptions.reduce((acc, sub) => {

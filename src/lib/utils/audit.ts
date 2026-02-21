@@ -1,4 +1,4 @@
-import { useAuthStore } from "@/hooks/store/use-auth-store";
+import { authClient } from "@/lib/auth/client";
 import { useAuditStore } from "@/hooks/store/use-audit-store";
 import { AuditLog } from "@/lib/schemas/audit";
 
@@ -8,7 +8,7 @@ export const logActivity = (
   resourceId: string,
   details: string
 ) => {
-  const { user } = useAuthStore.getState();
+  const user = authClient.getUser();
   
   if (!user) {
     return;

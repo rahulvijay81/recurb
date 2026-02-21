@@ -1,16 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getDatabase } from "@/lib/db";
-import { getCurrentUser } from "@/lib/auth";
+import { requirePermission } from "@/lib/auth";
+import { PERMISSIONS } from "@/lib/auth/permissions";
 
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const user = await getCurrentUser();
-    if (!user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
+    const user = await requirePermission(PERMISSIONS.SUBSCRIPTIONS_READ);
 
     const { id } = await params;
     const db = await getDatabase();
@@ -25,7 +23,7 @@ export async function GET(
 
     return NextResponse.json({ data: subscriptions[0] });
   } catch (error) {
-    return NextResponse.json({ error: "Failed to fetch subscription" }, { status: 500 });
+    return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
   }
 }
 
@@ -34,10 +32,7 @@ export async function PUT(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const user = await getCurrentUser();
-    if (!user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
+    const user = await requirePermission(PERMISSIONS.SUBSCRIPTIONS_UPDATE);
 
     const { id } = await params;
     const body = await request.json();
@@ -63,7 +58,7 @@ export async function PUT(
 
     return NextResponse.json({ data: updated[0] });
   } catch (error) {
-    return NextResponse.json({ error: "Failed to update subscription" }, { status: 500 });
+    return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
   }
 }
 
@@ -79,10 +74,7 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const user = await getCurrentUser();
-    if (!user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
+    const user = await requirePermission(PERMISSIONS.SUBSCRIPTIONS_DELETE);
 
     const { id } = await params;
     const db = await getDatabase();
@@ -97,6 +89,6 @@ export async function DELETE(
 
     return NextResponse.json({ data: { success: true } });
   } catch (error) {
-    return NextResponse.json({ error: "Failed to delete subscription" }, { status: 500 });
+    return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
   }
 }

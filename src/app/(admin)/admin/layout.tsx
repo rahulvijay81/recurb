@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
-import { cookies } from "next/headers";
-import { jwtVerify } from "jose";
+import { getCurrentUser } from "@/lib/auth";
+import { hasPermission, PERMISSIONS } from "@/lib/auth/permissions";
 import { AdminLayoutClient } from "./admin-layout-client";
 
 export default async function AdminLayout({
@@ -8,22 +8,14 @@ export default async function AdminLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const cookieStore = await cookies();
-  const token = cookieStore.get("auth-token")?.value;
+  const user = await getCurrentUser();
 
-  if (!token) {
+  if (!user) {
     redirect("/auth/login");
   }
 
-  try {
-    const secret = new TextEncoder().encode(process.env.JWT_SECRET);
-    const { payload } = await jwtVerify(token, secret);
-    
-    if (payload.role !== "owner" && payload.role !== "admin") {
-      redirect("/dashboard");
-    }
-  } catch {
-    redirect("/auth/login");
+  if (!hasPermission(user.role, PERMISSIONS.ROLES_MANAGE)) {
+    redirect("/dashboard");
   }
 
   return <AdminLayoutClient>{children}</AdminLayoutClient>;

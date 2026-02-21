@@ -14,7 +14,7 @@ import {
   SidebarInset 
 } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
-import { useAuthStore } from "@/hooks/store/use-auth-store";
+import { useAuth } from "@/hooks/use-auth";
 import { 
   Home, 
   Repeat, 
@@ -40,7 +40,7 @@ interface MainLayoutProps {
 export function MainLayout({ children }: MainLayoutProps) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const pathname = usePathname();
-  const { user, logout } = useAuthStore();
+  const { user, logout } = useAuth();
   
   // Close mobile menu when path changes
   useEffect(() => {

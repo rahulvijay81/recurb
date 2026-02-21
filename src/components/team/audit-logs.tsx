@@ -1,7 +1,6 @@
 "use client";
 
 import { useAuditStore } from "@/hooks/store/use-audit-store";
-import { useAuthStore } from "@/hooks/store/use-auth-store";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export function AuditLogs() {

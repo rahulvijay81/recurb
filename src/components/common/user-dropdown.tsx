@@ -11,7 +11,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { useAuthStore } from "@/hooks/store/use-auth-store";
+import { useAuth } from "@/hooks/use-auth";
 import Link from "next/link";
 
 interface UserDropdownProps {
@@ -19,7 +19,7 @@ interface UserDropdownProps {
 }
 
 export function UserDropdown({ variant = "header" }: UserDropdownProps) {
-  const { user, logout } = useAuthStore();
+  const { user, logout } = useAuth();
 
   const triggerContent = variant === "sidebar" ? (
     <div className="flex items-center gap-2 w-full">

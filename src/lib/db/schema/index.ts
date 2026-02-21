@@ -5,6 +5,7 @@ import { createCategoriesTable } from './categories';
 import { createAuditLogsTable } from './audit_logs';
 import { createSystemConfigTable } from './system_config';
 import { createFeatureFlagsTable } from './feature_flags';
+import { createRolesTable, createPermissionsTable } from './roles';
 
 export * from './organizations';
 export * from './users';
@@ -13,6 +14,7 @@ export * from './categories';
 export * from './audit_logs';
 export * from './system_config';
 export * from './feature_flags';
+export * from './roles';
 export * from './rollback';
 
 export const createAllTables = (dbType: 'sqlite' | 'postgres' | 'mysql') => {
@@ -20,6 +22,8 @@ export const createAllTables = (dbType: 'sqlite' | 'postgres' | 'mysql') => {
     createSystemConfigTable(dbType),
     createOrganizationsTable(dbType),
     createUsersTable(dbType),
+    createRolesTable(dbType),
+    createPermissionsTable(dbType),
     createCategoriesTable(dbType),
     createSubscriptionsTable(dbType),
     createAuditLogsTable(dbType),

@@ -1,6 +1,7 @@
 import { jwtVerify, SignJWT } from "jose";
 import { cookies } from "next/headers";
 import { User } from "../schemas/user";
+import { hasPermission, Permission } from "./permissions";
 
 // JWT helpers
 export async function createToken(user: Partial<User>) {
@@ -63,4 +64,12 @@ export async function getCurrentUser() {
   } catch (error) {
     return null;
   }
+}
+
+export async function requirePermission(permission: Permission) {
+  const user = await getCurrentUser();
+  if (!user || !hasPermission(user.role, permission)) {
+    throw new Error('Unauthorized');
+  }
+  return user;
 }

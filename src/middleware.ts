@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { jwtVerify } from "jose";
+import { hasPermission } from "./lib/auth/permissions";
 
 export async function middleware(request: NextRequest) {
   // Check setup completion for non-setup routes
@@ -39,7 +40,18 @@ export async function middleware(request: NextRequest) {
 
   try {
     const secret = new TextEncoder().encode(process.env.JWT_SECRET);
-    await jwtVerify(token, secret);
+    const { payload } = await jwtVerify(token, secret);
+    const role = payload.role as string;
+
+    // Permission checks for specific routes
+    if (request.nextUrl.pathname.startsWith("/admin") && !hasPermission(role, 'roles:manage')) {
+      return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+    }
+
+    if (request.nextUrl.pathname.startsWith("/team") && !hasPermission(role, 'team:read')) {
+      return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+    }
+
     return NextResponse.next();
   } catch (error) {
     return NextResponse.redirect(new URL("/auth/login", request.url));

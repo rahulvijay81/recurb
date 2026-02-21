@@ -31,7 +31,6 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { format } from "date-fns";
 import { CalendarIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { useAuthStore } from "@/hooks/store/use-auth-store";
 import { useSubscriptionStore } from "@/hooks/store/use-subscription-store";
 import { InvoiceUpload } from "@/components/subscriptions/invoice-upload";
 import { ReminderSettings } from "@/components/notifications/reminder-settings";

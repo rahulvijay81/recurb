@@ -1,9 +1,6 @@
 "use client";
 
 import { CsvImport } from "@/components/subscriptions/csv-import";
-import { useAuthStore } from "@/hooks/store/use-auth-store";
-import { redirect } from "next/navigation";
-import { useEffect } from "react";
 
 export default function ImportPage() {
     // Check if user has access to CSV import feature

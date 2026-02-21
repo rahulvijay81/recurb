@@ -1,13 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getDatabase } from "@/lib/db";
-import { getCurrentUser } from "@/lib/auth";
+import { requirePermission } from "@/lib/auth";
+import { PERMISSIONS } from "@/lib/auth/permissions";
 
 export async function GET(request: NextRequest) {
   try {
-    const user = await getCurrentUser();
-    if (!user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
+    const user = await requirePermission(PERMISSIONS.SUBSCRIPTIONS_READ);
 
     const db = await getDatabase();
     const subscriptions = await db.query(
@@ -17,16 +15,13 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json({ data: subscriptions });
   } catch (error) {
-    return NextResponse.json({ error: "Failed to fetch subscriptions" }, { status: 500 });
+    return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
   }
 }
 
 export async function POST(request: NextRequest) {
   try {
-    const user = await getCurrentUser();
-    if (!user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
+    const user = await requirePermission(PERMISSIONS.SUBSCRIPTIONS_CREATE);
 
     const body = await request.json();
     const { name, amount, currency, billing_cycle, category, vendor, tags, next_billing_date, auto_renew, notes, invoice_url } = body;
@@ -62,6 +57,6 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ data: newSubscription[0] }, { status: 201 });
   } catch (error) {
     console.error('Subscription creation error:', error);
-    return NextResponse.json({ error: "Failed to create subscription" }, { status: 500 });
+    return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
   }
 }

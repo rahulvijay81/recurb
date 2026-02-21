@@ -4,22 +4,6 @@
 
 ### P1 - High Priority
 
-- [ ] **T3.1** Multi-Tenancy
-  - Add `organization_id` to all tables
-  - Create tenant isolation middleware
-  - Add tenant context to Zustand stores
-  - Update all queries with tenant filtering
-  - Timeline: 5 days
-  - Depends on: T1.6
-
-- [ ] **T3.2** Advanced RBAC
-  - Define permission system in `src/lib/auth/permissions.ts`
-  - Create `roles` and `permissions` tables
-  - Update middleware for permission checks
-  - UI: Role management in admin panel
-  - Timeline: 4 days
-  - Depends on: T2.5
-
 - [ ] **T3.3** Audit Logging
   - Create `audit_logs` table
   - Add audit middleware for all mutations

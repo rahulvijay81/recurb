@@ -1,8 +1,5 @@
 "use client";
 
-import { useEffect } from "react";
-import { useAuthStore } from "@/hooks/store/use-auth-store";
-import { redirect } from "next/navigation";
 import { TeamManagement } from "@/components/settings/team-management";
 import { AuditLogs } from "@/components/team/audit-logs";
 import { WebhookConfig } from "@/components/team/webhook-config";
