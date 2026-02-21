@@ -24,9 +24,9 @@ export function useAuth() {
     isAuthenticated: authClient.isAuthenticated(),
     setUser: updateUser,
     logout: authClient.logout.bind(authClient),
-    canEdit: authClient.canEdit,
-    canDelete: authClient.canDelete,
-    canManageTeam: authClient.canManageTeam,
+    canEdit: authClient.canEdit.bind(authClient),
+    canDelete: authClient.canDelete.bind(authClient),
+    canManageTeam: authClient.canManageTeam.bind(authClient),
     updateProfile: authClient.updateProfile.bind(authClient),
   };
 }
