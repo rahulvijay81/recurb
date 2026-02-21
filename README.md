@@ -11,9 +11,9 @@
   </p>
 
   <p>
-    <a href="https://github.com/rahulvijay81/admin-subscription-tracker/stargazers"><img src="https://img.shields.io/github/stars/rahulvijay81/admin-subscription-tracker?style=social" alt="GitHub stars"></a>
-    <a href="https://github.com/rahulvijay81/admin-subscription-tracker/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="License"></a>
-    <a href="https://github.com/rahulvijay81/admin-subscription-tracker/issues"><img src="https://img.shields.io/github/issues/rahulvijay81/admin-subscription-tracker" alt="GitHub issues"></a>
+    <a href="https://github.com/rahulvijay81/recurb/stargazers"><img src="https://img.shields.io/github/stars/rahulvijay81/recurb?style=social" alt="GitHub stars"></a>
+    <a href="https://github.com/rahulvijay81/recurb/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="License"></a>
+    <a href="https://github.com/rahulvijay81/recurb/issues"><img src="https://img.shields.io/github/issues/rahulvijay81/recurb" alt="GitHub issues"></a>
   </p>
 
   <p>
@@ -53,8 +53,8 @@ Get Recurb up and running in 3 simple steps:
 
 ```bash
 # 1. Clone the repository
-git clone https://github.com/rahulvijay81/admin-subscription-tracker.git
-cd admin-subscription-tracker
+git clone https://github.com/rahulvijay81/recurb.git
+cd recurb
 
 # 2. Install dependencies
 npm install
@@ -174,7 +174,7 @@ Join our community to get help, share ideas, and connect with other users:
 - 💬 [Discord Server](https://discord.gg/yourinvite)
 - 🐦 [Twitter/X](https://twitter.com/rahulvijay81)
 - 📧 [Email](mailto:rahulvijay81@gmail.com)
-- 🐛 [Issue Tracker](https://github.com/rahulvijay81/admin-subscription-tracker/issues)
+- 🐛 [Issue Tracker](https://github.com/rahulvijay81/recurb/issues)
 
 ---
 

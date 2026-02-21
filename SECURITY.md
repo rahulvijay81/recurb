@@ -124,7 +124,7 @@ Recurb implements the following security measures:
 
 For security concerns, contact: **rahulvijay81@gmail.com**
 
-For general questions, use [GitHub Issues](https://github.com/rahulvijay81/admin-subscription-tracker/issues).
+For general questions, use [GitHub Issues](https://github.com/rahulvijay81/recurb/issues).
 
 ---
 

@@ -24,13 +24,13 @@ This project adheres to the [Contributor Covenant Code of Conduct](CODE_OF_CONDU
 
 2. **Clone your fork**
    ```bash
-   git clone https://github.com/YOUR_USERNAME/admin-subscription-tracker.git
-   cd admin-subscription-tracker
+   git clone https://github.com/YOUR_USERNAME/recurb.git
+   cd recurb
    ```
 
 3. **Add upstream remote**
    ```bash
-   git remote add upstream https://github.com/rahulvijay81/admin-subscription-tracker.git
+   git remote add upstream https://github.com/rahulvijay81/recurb.git
    ```
 
 4. **Install dependencies**
@@ -159,7 +159,7 @@ refactor(api): simplify database queries
 
 ### Before Submitting
 
-- Check existing [issues](https://github.com/rahulvijay81/admin-subscription-tracker/issues)
+- Check existing [issues](https://github.com/rahulvijay81/recurb/issues)
 - Verify the bug in the latest version
 - Collect relevant information
 
@@ -236,12 +236,12 @@ npm run build
 
 ## 🎯 Good First Issues
 
-Look for issues labeled [`good first issue`](https://github.com/rahulvijay81/admin-subscription-tracker/labels/good%20first%20issue) - these are great for newcomers!
+Look for issues labeled [`good first issue`](https://github.com/rahulvijay81/recurb/labels/good%20first%20issue) - these are great for newcomers!
 
 ## 💬 Getting Help
 
 - **Discord**: Join our [Discord server](https://discord.gg/yourinvite)
-- **Issues**: Ask questions in [GitHub Issues](https://github.com/rahulvijay81/admin-subscription-tracker/issues)
+- **Issues**: Ask questions in [GitHub Issues](https://github.com/rahulvijay81/recurb/issues)
 - **Email**: Contact [rahulvijay81@gmail.com](mailto:rahulvijay81@gmail.com)
 
 ## 📄 License

@@ -89,5 +89,5 @@ See [README.md](README.md) for installation instructions.
 - `Fixed` for any bug fixes
 - `Security` in case of vulnerabilities
 
-[Unreleased]: https://github.com/rahulvijay81/admin-subscription-tracker/compare/v1.0.0...HEAD
-[1.0.0]: https://github.com/rahulvijay81/admin-subscription-tracker/releases/tag/v1.0.0
+[Unreleased]: https://github.com/rahulvijay81/recurb/compare/v1.0.0...HEAD
+[1.0.0]: https://github.com/rahulvijay81/recurb/releases/tag/v1.0.0

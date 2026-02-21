@@ -32,6 +32,7 @@ yarn-error.log*
 
 # env files (can opt-in for committing if needed)
 .env*
+!.env.example
 
 # vercel
 .vercel
@@ -39,3 +40,70 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# database
+*.db
+*.sqlite
+*.sqlite3
+/prisma/dev.db*
+/database.sqlite
+/data/
+
+# logs
+logs
+*.log
+pnpm-debug.log*
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+Thumbs.db
+.DS_Store
+
+# temporary files
+*.tmp
+*.temp
+
+# uploads
+/uploads
+/public/uploads
+
+# sensitive files
+*.key
+*.p12
+*.p8
+*.pem
+*.pfx
+*.crt
+*.cer
+*.csr
+*.jks
+*.keystore
+*.truststore
+
+# secrets and credentials
+secrets/
+credentials/
+*.credentials
+*.secret
+*.token
+*.auth
+
+# backup files
+*.backup
+*.bak
+*.old
+*.orig
+
+# configuration with secrets
+config.json
+config.yaml
+config.yml
+settings.json
+!config.example.*
+!settings.example.*
