@@ -1,0 +1,43 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Gradient Background -->
+  <defs>
+    <linearGradient id="bg2" x1="0" y1="0" x2="1200" y2="630" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#7C3AED"/>
+      <stop offset="50%" stop-color="#5B21B6"/>
+      <stop offset="100%" stop-color="#4C1D95"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg2)"/>
+  
+  <!-- Pattern overlay -->
+  <circle cx="200" cy="150" r="100" fill="#FFFFFF" opacity="0.03"/>
+  <circle cx="1000" cy="500" r="150" fill="#FFFFFF" opacity="0.03"/>
+  <circle cx="900" cy="100" r="80" fill="#10B981" opacity="0.1"/>
+  
+  <!-- Logo -->
+  <g transform="translate(80, 200)">
+    <circle cx="65" cy="65" r="60" fill="#FFFFFF" opacity="0.1"/>
+    <path d="M65 25 A40 40 0 1 1 64.96 25" stroke="#E9D5FF" stroke-width="8" stroke-linecap="round" fill="none"/>
+    <path d="M65 25 L55 33 L65 37 Z" fill="#E9D5FF"/>
+    <path d="M65 45 L65 85 M55 51 Q55 45 65 45 Q75 45 75 53 Q75 58 65 58 Q55 58 55 66 Q55 73 65 73 Q75 73 75 66" stroke="#34D399" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  </g>
+  
+  <!-- Title & Content -->
+  <text x="250" y="260" font-family="Arial, sans-serif" font-size="80" font-weight="bold" fill="#FFFFFF">Recurb</text>
+  
+  <text x="250" y="330" font-family="Arial, sans-serif" font-size="32" fill="#E9D5FF" font-weight="300">Track your subscriptions with confidence</text>
+  
+  <!-- Key features -->
+  <g transform="translate(250, 380)">
+    <text y="0" font-family="Arial, sans-serif" font-size="22" fill="#D1FAE5">✓ Self-hosted & private</text>
+    <text y="40" font-family="Arial, sans-serif" font-size="22" fill="#D1FAE5">✓ Multi-database support</text>
+    <text y="80" font-family="Arial, sans-serif" font-size="22" fill="#D1FAE5">✓ Beautiful analytics dashboard</text>
+  </g>
+  
+  <!-- CTA -->
+  <rect x="250" y="520" width="200" height="50" rx="25" fill="#10B981"/>
+  <text x="350" y="552" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#FFFFFF" text-anchor="middle">Get Started →</text>
+  
+  <!-- Footer badge -->
+  <text x="480" y="552" font-family="Arial, sans-serif" font-size="18" fill="#E9D5FF">Open Source • MIT License</text>
+</svg>

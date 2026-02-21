@@ -11,7 +11,7 @@ export async function GET() {
 
     const db = await getDatabase();
     const subscriptions = await db.query(
-      `SELECT name, amount FROM subscriptions WHERE user_id = ?`,
+      `SELECT name, amount FROM subscriptions WHERE user_id = ? LIMIT 1000`,
       [user.id]
     );
 

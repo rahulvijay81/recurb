@@ -1,16 +1,17 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, lazy, Suspense } from "react";
 import { redirect } from "next/navigation";
 import { Subscription } from "@/lib/schemas/subscription";
-import { ExpenseChart } from "@/components/analytics/expense-chart";
-import { TrendsChart } from "@/components/analytics/trends-chart";
-import { ForecastingChart } from "@/components/analytics/forecasting-chart";
-import { VendorSummary } from "@/components/subscriptions/vendor-summary";
-import { EnhancedExport } from "@/components/subscriptions/enhanced-export";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { PieChart, BarChart3, TrendingUp } from "lucide-react";
+
+const ExpenseChart = lazy(() => import("@/components/analytics/expense-chart").then(m => ({ default: m.ExpenseChart })));
+const TrendsChart = lazy(() => import("@/components/analytics/trends-chart").then(m => ({ default: m.TrendsChart })));
+const ForecastingChart = lazy(() => import("@/components/analytics/forecasting-chart").then(m => ({ default: m.ForecastingChart })));
+const VendorSummary = lazy(() => import("@/components/subscriptions/vendor-summary").then(m => ({ default: m.VendorSummary })));
+const EnhancedExport = lazy(() => import("@/components/subscriptions/enhanced-export").then(m => ({ default: m.EnhancedExport })));
 
 export default function AnalyticsPage() {
   const [subscriptions, setSubscriptions] = useState<Subscription[]>([]);
@@ -128,11 +129,17 @@ export default function AnalyticsPage() {
         </TabsList>
         
         <TabsContent value="overview" className="space-y-6">
-          <ForecastingChart subscriptions={subscriptions} />
+          <Suspense fallback={<Card className="h-96 animate-pulse" />}>
+            <ForecastingChart subscriptions={subscriptions} />
+          </Suspense>
           
           <div className="grid md:grid-cols-2 gap-6">
-            <VendorSummary subscriptions={subscriptions} />
-            <EnhancedExport subscriptions={subscriptions} />
+            <Suspense fallback={<Card className="h-64 animate-pulse" />}>
+              <VendorSummary subscriptions={subscriptions} />
+            </Suspense>
+            <Suspense fallback={<Card className="h-64 animate-pulse" />}>
+              <EnhancedExport subscriptions={subscriptions} />
+            </Suspense>
           </div>
         </TabsContent>
         
@@ -153,7 +160,9 @@ export default function AnalyticsPage() {
         </TabsContent>
         
         <TabsContent value="trends">
-          <TrendsChart subscriptions={subscriptions} />
+          <Suspense fallback={<Card className="h-96 animate-pulse" />}>
+            <TrendsChart subscriptions={subscriptions} />
+          </Suspense>
         </TabsContent>
       </Tabs>
     </div>

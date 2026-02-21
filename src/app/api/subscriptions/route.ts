@@ -2,24 +2,40 @@ import { NextRequest, NextResponse } from "next/server";
 import { getDatabase } from "@/lib/db";
 import { requirePermission } from "@/lib/auth";
 import { PERMISSIONS } from "@/lib/auth/permissions";
+import { csrfProtection } from "@/lib/utils/csrf";
 
 export async function GET(request: NextRequest) {
   try {
     const user = await requirePermission(PERMISSIONS.SUBSCRIPTIONS_READ);
+    const { searchParams } = request.nextUrl;
+    const page = parseInt(searchParams.get('page') || '1');
+    const limit = parseInt(searchParams.get('limit') || '50');
+    const offset = (page - 1) * limit;
 
     const db = await getDatabase();
     const subscriptions = await db.query(
-      `SELECT id, name, amount, currency, billing_cycle, category, vendor, tags, next_billing_date, auto_renew, notes, invoice_url, user_id, organization_id, created_at, updated_at FROM subscriptions WHERE user_id = ? ORDER BY created_at DESC`,
+      `SELECT id, name, amount, currency, billing_cycle, category, vendor, tags, next_billing_date, auto_renew, notes, invoice_url, user_id, organization_id, created_at, updated_at FROM subscriptions WHERE user_id = ? ORDER BY created_at DESC LIMIT ? OFFSET ?`,
+      [user.id, limit, offset]
+    );
+
+    const [{ total }] = await db.query(
+      `SELECT COUNT(*) as total FROM subscriptions WHERE user_id = ?`,
       [user.id]
     );
 
-    return NextResponse.json({ data: subscriptions });
+    return NextResponse.json({ 
+      data: subscriptions,
+      pagination: { page, limit, total, pages: Math.ceil(total / limit) }
+    });
   } catch (error) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
   }
 }
 
 export async function POST(request: NextRequest) {
+  const csrfResponse = csrfProtection(request);
+  if (csrfResponse) return csrfResponse;
+
   try {
     const user = await requirePermission(PERMISSIONS.SUBSCRIPTIONS_CREATE);
 

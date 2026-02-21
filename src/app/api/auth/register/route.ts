@@ -2,8 +2,17 @@ import { NextRequest, NextResponse } from "next/server";
 import { getDatabase } from "@/lib/db";
 import { createToken } from "@/lib/auth";
 import { hash } from "bcryptjs";
+import { rateLimit } from "@/lib/utils/rate-limit";
+import { csrfProtection } from "@/lib/utils/csrf";
+
+const limiter = rateLimit(3, 60000);
 
 export async function POST(request: NextRequest) {
+  const rateLimitResponse = limiter(request);
+  if (rateLimitResponse) return rateLimitResponse;
+
+  const csrfResponse = csrfProtection(request);
+  if (csrfResponse) return csrfResponse;
   try {
     const { email, password, name, company, currency } = await request.json();
 

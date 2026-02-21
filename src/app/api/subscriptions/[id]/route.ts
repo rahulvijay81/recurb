@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getDatabase } from "@/lib/db";
 import { requirePermission } from "@/lib/auth";
 import { PERMISSIONS } from "@/lib/auth/permissions";
+import { csrfProtection } from "@/lib/utils/csrf";
 
 export async function GET(
   request: NextRequest,
@@ -31,6 +32,9 @@ export async function PUT(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const csrfResponse = csrfProtection(request);
+  if (csrfResponse) return csrfResponse;
+
   try {
     const user = await requirePermission(PERMISSIONS.SUBSCRIPTIONS_UPDATE);
 
@@ -73,6 +77,9 @@ export async function DELETE(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const csrfResponse = csrfProtection(request);
+  if (csrfResponse) return csrfResponse;
+
   try {
     const user = await requirePermission(PERMISSIONS.SUBSCRIPTIONS_DELETE);
 

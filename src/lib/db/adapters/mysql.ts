@@ -19,6 +19,8 @@ export class MysqlAdapter implements DatabaseAdapter {
       connectionLimit: this.config.poolMax || 10,
       waitForConnections: true,
       queueLimit: 0,
+      enableKeepAlive: true,
+      keepAliveInitialDelay: 0,
     });
   }
 

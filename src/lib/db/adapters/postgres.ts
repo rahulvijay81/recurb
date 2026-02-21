@@ -18,6 +18,8 @@ export class PostgresAdapter implements DatabaseAdapter {
       password: this.config.password,
       min: this.config.poolMin || 2,
       max: this.config.poolMax || 10,
+      idleTimeoutMillis: 30000,
+      connectionTimeoutMillis: 2000,
     });
   }
 

@@ -1,0 +1,49 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Gradient Background -->
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1200" y2="630" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#1F2937"/>
+      <stop offset="100%" stop-color="#111827"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  
+  <!-- Decorative circles -->
+  <circle cx="100" cy="100" r="150" fill="#8B5CF6" opacity="0.05"/>
+  <circle cx="1100" cy="530" r="200" fill="#10B981" opacity="0.05"/>
+  
+  <!-- Logo -->
+  <g transform="translate(100, 180)">
+    <circle cx="80" cy="80" r="75" fill="#8B5CF6" opacity="0.15"/>
+    <path d="M80 30 A50 50 0 1 1 79.95 30" stroke="#A78BFA" stroke-width="10" stroke-linecap="round" fill="none"/>
+    <path d="M80 30 L68 40 L80 44 Z" fill="#A78BFA"/>
+    <path d="M80 55 L80 105 M68 63 Q68 55 80 55 Q92 55 92 65 Q92 72 80 72 Q68 72 68 82 Q68 90 80 90 Q92 90 92 82" stroke="#34D399" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  </g>
+  
+  <!-- Title -->
+  <text x="300" y="280" font-family="Arial, sans-serif" font-size="72" font-weight="bold" fill="#F9FAFB">Recurb</text>
+  
+  <!-- Tagline -->
+  <text x="300" y="340" font-family="Arial, sans-serif" font-size="28" fill="#D1D5DB">Self-hosted subscription tracking that respects your privacy</text>
+  
+  <!-- Feature badges -->
+  <g transform="translate(300, 390)">
+    <!-- Badge 1 -->
+    <rect width="140" height="40" rx="20" fill="#8B5CF6" opacity="0.2"/>
+    <text x="70" y="26" font-family="Arial, sans-serif" font-size="16" fill="#E9D5FF" text-anchor="middle">🔒 Privacy-First</text>
+    
+    <!-- Badge 2 -->
+    <rect x="160" width="150" height="40" rx="20" fill="#10B981" opacity="0.2"/>
+    <text x="235" y="26" font-family="Arial, sans-serif" font-size="16" fill="#D1FAE5" text-anchor="middle">📊 Analytics</text>
+    
+    <!-- Badge 3 -->
+    <rect x="330" width="160" height="40" rx="20" fill="#3B82F6" opacity="0.2"/>
+    <text x="410" y="26" font-family="Arial, sans-serif" font-size="16" fill="#DBEAFE" text-anchor="middle">🚀 Easy Deploy</text>
+  </g>
+  
+  <!-- Footer -->
+  <text x="300" y="520" font-family="Arial, sans-serif" font-size="20" fill="#9CA3AF">Open Source • MIT License • Next.js 15 • TypeScript</text>
+  
+  <!-- GitHub link -->
+  <text x="300" y="560" font-family="Arial, sans-serif" font-size="18" fill="#6B7280">github.com/rahulvijay81/admin-subscription-tracker</text>
+</svg>

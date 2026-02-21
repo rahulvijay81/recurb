@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, lazy, Suspense } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Subscription } from "@/lib/schemas/subscription";
 import { 
@@ -13,8 +13,9 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { FinancialOverview } from "@/components/dashboard/financial-overview";
-import { DuplicateDetector } from "@/components/subscriptions/duplicate-detector";
+
+const FinancialOverview = lazy(() => import("@/components/dashboard/financial-overview").then(m => ({ default: m.FinancialOverview })));
+const DuplicateDetector = lazy(() => import("@/components/subscriptions/duplicate-detector").then(m => ({ default: m.DuplicateDetector })));
 
 export default function DashboardPage() {
   const [isLoading, setIsLoading] = useState(true);
@@ -152,12 +153,16 @@ export default function DashboardPage() {
           </Card>
         </div>
         
-        <FinancialOverview subscriptions={subscriptions} />
+        <Suspense fallback={<Card className="h-64 animate-pulse" />}>
+          <FinancialOverview subscriptions={subscriptions} />
+        </Suspense>
       </div>
       
       {(
         <div className="mb-6">
-          <DuplicateDetector subscriptions={subscriptions} />
+          <Suspense fallback={<Card className="h-32 animate-pulse" />}>
+            <DuplicateDetector subscriptions={subscriptions} />
+          </Suspense>
         </div>
       )}
       

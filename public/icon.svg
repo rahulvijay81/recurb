@@ -1,0 +1,10 @@
+<svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Circular arrow -->
+  <path d="M32 10 A22 22 0 1 1 31.97 10" stroke="#8B5CF6" stroke-width="5" stroke-linecap="round" fill="none"/>
+  
+  <!-- Arrow head -->
+  <path d="M32 10 L27 15 L32 17 Z" fill="#8B5CF6"/>
+  
+  <!-- Dollar sign -->
+  <path d="M32 24 L32 40 M27 27 Q27 24 32 24 Q37 24 37 28 Q37 30 32 30 Q27 30 27 34 Q27 37 32 37 Q37 37 37 34" stroke="#10B981" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+</svg>
