@@ -5,11 +5,20 @@ export async function isSetupComplete(): Promise<boolean> {
   try {
     const db = await getDatabase();
     await db.connect();
-    const result = await db.query<{ value: string }>(
+    
+    const configResult = await db.query<{ value: string }>(
       "SELECT value FROM system_config WHERE key = 'setup_complete'"
     );
-    console.log('isSetupComplete query result:', result);
-    return result.length > 0 && result[0].value === 'true';
+    
+    if (configResult.length === 0 || configResult[0].value !== 'true') {
+      return false;
+    }
+    
+    const userCount = await db.query<{ count: number }>(
+      "SELECT COUNT(*) as count FROM users"
+    );
+    
+    return userCount[0].count > 0;
   } catch (error) {
     console.error('isSetupComplete error:', error);
     return false;
@@ -41,7 +50,7 @@ export async function completeSetup(data: {
     );
 
     await tx.execute(
-      "INSERT INTO system_config (key, value) VALUES ('setup_complete', 'true')"
+      "INSERT OR REPLACE INTO system_config (key, value) VALUES ('setup_complete', 'true')"
     );
   });
 }

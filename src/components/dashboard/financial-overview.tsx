@@ -5,7 +5,6 @@ import { Badge } from "@/components/ui/badge";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { Subscription } from "@/lib/schemas/subscription";
 import { calculateMRR, calculateYRR, getCategorySpend, getUpcomingRenewals } from "@/lib/utils/financial";
-import { useAuthStore } from "@/hooks/store/use-auth-store";
 import { formatDate } from "@/lib/utils/date";
 
 interface FinancialOverviewProps {
@@ -13,44 +12,42 @@ interface FinancialOverviewProps {
 }
 
 export function FinancialOverview({ subscriptions }: FinancialOverviewProps) {
-    const mrr = calculateMRR(subscriptions);
+  const mrr = calculateMRR(subscriptions);
   const yrr = calculateYRR(subscriptions);
   const upcomingRenewals = getUpcomingRenewals(subscriptions);
   const categorySpend = getCategorySpend(subscriptions);
 
   return (
     <div className="grid gap-4 md:grid-cols-2">
-      {(
-        <Card>
-          <CardHeader>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <CardTitle>Category Breakdown</CardTitle>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>Monthly spending by category</p>
-              </TooltipContent>
-            </Tooltip>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-2">
-              {Object.entries(categorySpend).map(([category, amount]) => (
-                <div key={category} className="flex justify-between items-center">
-                  <span className="text-sm">{category}</span>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <Badge variant="secondary">${amount.toFixed(2)}/mo</Badge>
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      <p>Monthly spend in {category}</p>
-                    </TooltipContent>
-                  </Tooltip>
-                </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-      )}
+      <Card>
+        <CardHeader>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <CardTitle>Category Breakdown</CardTitle>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Monthly spending by category</p>
+            </TooltipContent>
+          </Tooltip>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-2">
+            {Object.entries(categorySpend).map(([category, amount]) => (
+              <div key={category} className="flex justify-between items-center">
+                <span className="text-sm">{category}</span>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Badge variant="secondary">${amount.toFixed(2)}/mo</Badge>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>Monthly spend in {category}</p>
+                  </TooltipContent>
+                </Tooltip>
+              </div>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
 
       {upcomingRenewals.length > 0 && (
         <Card>

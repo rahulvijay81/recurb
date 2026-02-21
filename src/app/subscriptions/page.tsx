@@ -1,9 +1,8 @@
 "use client";
 
 import { useState, useEffect, useMemo, useCallback } from "react";
-import { useSubscriptionStore } from "@/hooks/store/use-subscription-store";
-import { useAuthStore } from "@/hooks/store/use-auth-store";
 import { toast } from "@/lib/utils/toast";
+import { Subscription } from "@/lib/schemas/subscription";
 import { ErrorBoundary } from "@/components/common/error-boundary";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -53,130 +52,95 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { EmailInboxScanner } from "@/components/subscriptions/EmailInboxScanner";
-import { SimpleEmailInput } from "@/components/subscriptions/SimpleEmailInput";
+
 
 export default function SubscriptionsPage() {
-  const {
-    subscriptions,
-    isLoading,
-    setSubscriptions,
-    setLoading,
-    setCategoryFilter,
-    setTagFilter,
-    setVendorFilter,
-    setSearchQuery,
-    clearFilters,
-    getFilteredSubscriptions,
-    getCategories,
-    getTags,
-    getVendors,
-    deleteSubscription,
-  } = useSubscriptionStore();
-  
-  const { canEdit, canDelete } = useAuthStore();
+  const [subscriptions, setSubscriptions] = useState<Subscription[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
+  const [categoryFilter, setCategoryFilter] = useState<string | null>(null);
+  const [vendorFilter, setVendorFilter] = useState<string | null>(null);
   const [subscriptionToDelete, setSubscriptionToDelete] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize] = useState(10);
   
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const res = await fetch('/api/subscriptions');
+        if (!res.ok) throw new Error('Failed to fetch');
+        const result = await res.json();
+        const mapped = (result.data || []).map((sub: any) => ({
+          id: sub.id?.toString(),
+          name: sub.name,
+          amount: sub.amount,
+          currency: sub.currency,
+          billingCycle: sub.billing_cycle,
+          category: sub.category,
+          vendor: sub.vendor,
+          tags: sub.tags ? JSON.parse(sub.tags) : [],
+          nextBillingDate: sub.next_billing_date ? new Date(sub.next_billing_date) : new Date(),
+          autoRenew: Boolean(sub.auto_renew),
+          notes: sub.notes,
+          invoiceUrl: sub.invoice_url,
+          userId: sub.user_id?.toString(),
+          organizationId: sub.organization_id,
+          createdAt: new Date(sub.created_at),
+          updatedAt: new Date(sub.updated_at),
+        }));
+        setSubscriptions(mapped);
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchData();
+  }, []);
+  
   const handleSearch = useCallback((e: React.FormEvent) => {
     e.preventDefault();
-    setSearchQuery(searchTerm);
-    setCurrentPage(1); // Reset to first page on search
-  }, [searchTerm, setSearchQuery]);
+    setCurrentPage(1);
+  }, []);
   
-  const filteredSubscriptions = useMemo(() => getFilteredSubscriptions(), [getFilteredSubscriptions]);
-  const categories = useMemo(() => getCategories(), [getCategories]);
-  const vendors = useMemo(() => getVendors(), [getVendors]);
+  const filteredSubscriptions = useMemo(() => {
+    return subscriptions.filter((sub) => {
+      if (categoryFilter && sub.category !== categoryFilter) return false;
+      if (vendorFilter && sub.vendor !== vendorFilter) return false;
+      if (searchTerm) {
+        const query = searchTerm.toLowerCase();
+        return sub.name.toLowerCase().includes(query) ||
+          sub.vendor?.toLowerCase().includes(query) ||
+          sub.notes?.toLowerCase().includes(query);
+      }
+      return true;
+    });
+  }, [subscriptions, categoryFilter, vendorFilter, searchTerm]);
   
-  // Pagination logic
+  const categories = useMemo(() => {
+    return [...new Set(subscriptions.map(s => s.category).filter(Boolean))] as string[];
+  }, [subscriptions]);
+  
+  const vendors = useMemo(() => {
+    return [...new Set(subscriptions.map(s => s.vendor).filter(Boolean))] as string[];
+  }, [subscriptions]);
+  
   const totalPages = Math.ceil(filteredSubscriptions.length / pageSize);
   const paginatedSubscriptions = useMemo(() => {
     const startIndex = (currentPage - 1) * pageSize;
     return filteredSubscriptions.slice(startIndex, startIndex + pageSize);
   }, [filteredSubscriptions, currentPage, pageSize]);
   
-  // Simulate fetching subscriptions
-  useEffect(() => {
-    const fetchSubscriptions = async () => {
-      setLoading(true);
-      try {
-        // In a real app, this would be an API call
-        // For demo purposes, we'll use mock data
-        const mockSubscriptions = [
-          {
-            id: "1",
-            name: "Netflix",
-            amount: 15.99,
-            currency: "USD",
-            billingCycle: "monthly" as "monthly" | "quarterly" | "yearly" | "custom",
-            nextBillingDate: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000), // 5 days from now
-            autoRenew: true,
-            category: "Entertainment",
-            tags: ["streaming", "video"],
-            vendor: "Netflix Inc.",
-          },
-          {
-            id: "2",
-            name: "Spotify",
-            amount: 9.99,
-            currency: "USD",
-            billingCycle: "monthly" as "monthly" | "quarterly" | "yearly" | "custom",
-            nextBillingDate: new Date(Date.now() + 12 * 24 * 60 * 60 * 1000), // 12 days from now
-            autoRenew: true,
-            category: "Entertainment",
-            tags: ["streaming", "music"],
-            vendor: "Spotify AB",
-          },
-          {
-            id: "3",
-            name: "Adobe Creative Cloud",
-            amount: 52.99,
-            currency: "USD",
-            billingCycle: "monthly" as "monthly" | "quarterly" | "yearly" | "custom",
-            nextBillingDate: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000), // 3 days from now
-            autoRenew: true,
-            category: "Software",
-            tags: ["design", "productivity"],
-            vendor: "Adobe Inc.",
-          },
-          {
-            id: "4",
-            name: "AWS",
-            amount: 150.00,
-            currency: "USD",
-            billingCycle: "monthly" as "monthly" | "quarterly" | "yearly" | "custom",
-            nextBillingDate: new Date(Date.now() + 8 * 24 * 60 * 60 * 1000), // 8 days from now
-            autoRenew: true,
-            category: "Cloud Services",
-            tags: ["hosting", "infrastructure"],
-            vendor: "Amazon Web Services",
-          },
-          {
-            id: "5",
-            name: "Microsoft 365",
-            amount: 99.99,
-            currency: "USD",
-            billingCycle: "yearly" as "monthly" | "quarterly" | "yearly" | "custom",
-            nextBillingDate: new Date(Date.now() + 45 * 24 * 60 * 60 * 1000), // 45 days from now
-            autoRenew: true,
-            category: "Software",
-            tags: ["productivity", "office"],
-            vendor: "Microsoft",
-          },
-        ];
-        
-        setSubscriptions(mockSubscriptions);
-      } catch (error) {
-        console.error("Error fetching subscriptions:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    
-    fetchSubscriptions();
-  }, [setLoading, setSubscriptions]);
+  const handleDelete = async (id: string) => {
+    try {
+      const res = await fetch(`/api/subscriptions/${id}`, { method: 'DELETE' });
+      if (!res.ok) throw new Error('Failed to delete');
+      setSubscriptions(prev => prev.filter(s => s.id !== id));
+      toast.success('Subscription deleted');
+    } catch (error) {
+      toast.error('Failed to delete subscription');
+    }
+  };
   
 
   
@@ -264,86 +228,41 @@ export default function SubscriptionsPage() {
               </div>
               
               <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={() => clearFilters()}>
+              <DropdownMenuItem onClick={() => { setCategoryFilter(null); setVendorFilter(null); setSearchTerm(""); }}>
                 Clear filters
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
           
-          {canEdit() && (
-            <Button asChild>
-              <Link href="/subscriptions/new">
-                <Plus className="h-4 w-4 mr-2" />
-                Add New
-              </Link>
-            </Button>
-          )}
+          <Button asChild>
+            <Link href="/subscriptions/new">
+              <Plus className="h-4 w-4 mr-2" />
+              Add New
+            </Link>
+          </Button>
           
-          {(
-            <div className="flex gap-2">
-              <SimpleEmailInput 
-                onSubscriptionsDetected={(detected: any[]) => {
-                  const newSubs = detected.map(d => ({
-                    id: Math.random().toString(36).substr(2, 9),
-                    name: d.name,
-                    amount: d.amount,
-                    currency: "USD",
-                    billingCycle: d.billingCycle as "monthly" | "quarterly" | "yearly" | "custom",
-                    nextBillingDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
-                    autoRenew: true,
-                    category: d.category,
-                    vendor: d.vendor,
-                    tags: [],
-                  }));
-                  setSubscriptions([...subscriptions, ...newSubs]);
-                  toast.success(`Added ${detected.length} subscription${detected.length !== 1 ? 's' : ''}`);
-                }}
-              />
-              <EmailInboxScanner 
-                onSubscriptionsDetected={(detected: any[]) => {
-                  const newSubs = detected.map(d => ({
-                    id: Math.random().toString(36).substr(2, 9),
-                    name: d.name,
-                    amount: d.amount,
-                    currency: "USD",
-                    billingCycle: d.billingCycle as "monthly" | "quarterly" | "yearly" | "custom",
-                    nextBillingDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
-                    autoRenew: true,
-                    category: d.category,
-                    vendor: d.vendor,
-                    tags: [],
-                  }));
-                  setSubscriptions([...subscriptions, ...newSubs]);
-                  toast.success(`Added ${detected.length} subscription${detected.length !== 1 ? 's' : ''}`);
-                }}
-              />
-            </div>
-          )}
-          
-          {(
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="outline">
-                  <CreditCard className="h-4 w-4 mr-2" />
-                  Actions
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuItem asChild>
-                  <Link href="/subscriptions/import">
-                    <Upload className="h-4 w-4 mr-2" />
-                    Import CSV
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Link href="/subscriptions/export">
-                    <Download className="h-4 w-4 mr-2" />
-                    Export CSV
-                  </Link>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          )}
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline">
+                <CreditCard className="h-4 w-4 mr-2" />
+                Actions
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem asChild>
+                <Link href="/subscriptions/import">
+                  <Upload className="h-4 w-4 mr-2" />
+                  Import CSV
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild>
+                <Link href="/subscriptions/export">
+                  <Download className="h-4 w-4 mr-2" />
+                  Export CSV
+                </Link>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </div>
       
@@ -423,24 +342,18 @@ export default function SubscriptionsPage() {
                             View Details
                           </Link>
                         </DropdownMenuItem>
-                        {canEdit() && (
-                          <DropdownMenuItem asChild>
-                            <Link href={`/subscriptions/${subscription.id}/edit`}>
-                              Edit
-                            </Link>
-                          </DropdownMenuItem>
-                        )}
-                        {canDelete() && (
-                          <>
-                            <DropdownMenuSeparator />
-                            <DropdownMenuItem 
-                              className="text-red-600"
-                              onClick={() => setSubscriptionToDelete(subscription.id || null)}
-                            >
-                              Delete
-                            </DropdownMenuItem>
-                          </>
-                        )}
+                        <DropdownMenuItem asChild>
+                          <Link href={`/subscriptions/${subscription.id}/edit`}>
+                            Edit
+                          </Link>
+                        </DropdownMenuItem>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem 
+                          className="text-red-600"
+                          onClick={() => setSubscriptionToDelete(subscription.id)}
+                        >
+                          Delete
+                        </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
                   </TableCell>
@@ -510,9 +423,7 @@ export default function SubscriptionsPage() {
               className="bg-destructive text-white hover:bg-destructive/90"
               onClick={() => {
                 if (subscriptionToDelete) {
-                  const subscription = subscriptions.find(s => s.id === subscriptionToDelete);
-                  deleteSubscription(subscriptionToDelete);
-                  toast.success(`${subscription?.name || 'Subscription'} has been deleted`);
+                  handleDelete(subscriptionToDelete);
                   setSubscriptionToDelete(null);
                 }
               }}

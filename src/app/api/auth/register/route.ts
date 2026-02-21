@@ -18,11 +18,16 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Email already registered" }, { status: 409 });
     }
 
+    const orgResult = await db.execute(
+      `INSERT INTO organizations (name, subscription_plan, currency) VALUES (?, ?, ?)`,
+      [company || 'My Organization', 'free', currency || 'USD']
+    );
+
     const passwordHash = await hash(password, 10);
     
     const result = await db.execute(
       `INSERT INTO users (email, password_hash, name, role, organization_id) VALUES (?, ?, ?, ?, ?)`,
-      [email, passwordHash, name, "user", 1]
+      [email, passwordHash, name, "user", orgResult.insertId]
     );
 
     const token = await createToken({
@@ -50,6 +55,7 @@ export async function POST(request: NextRequest) {
 
     return response;
   } catch (error) {
+    console.error('Registration error:', error);
     return NextResponse.json({ error: "Registration failed" }, { status: 500 });
   }
 }

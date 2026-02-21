@@ -50,38 +50,7 @@ interface SubscriptionState {
 }
 
 export const useSubscriptionStore = create<SubscriptionState>((set, get) => ({
-  subscriptions: [
-    {
-      id: "sub-1",
-      name: "Netflix",
-      amount: 15.99,
-      currency: "USD",
-      billingCycle: "monthly" as const,
-      nextBillingDate: new Date("2024-02-15"),
-      autoRenew: true,
-      category: "Entertainment",
-      tags: ["streaming", "video"],
-      vendor: "Netflix Inc.",
-      createdAt: new Date("2024-01-01"),
-      updatedAt: new Date("2024-01-01"),
-      userId: "user-1",
-    },
-    {
-      id: "sub-2",
-      name: "Slack",
-      amount: 8.00,
-      currency: "USD",
-      billingCycle: "monthly" as const,
-      nextBillingDate: new Date("2024-02-20"),
-      autoRenew: true,
-      category: "Productivity",
-      tags: ["communication", "team"],
-      vendor: "Slack Technologies",
-      createdAt: new Date("2024-01-05"),
-      updatedAt: new Date("2024-01-05"),
-      userId: "user-1",
-    },
-  ],
+  subscriptions: [],
   isLoading: false,
   error: null,
   categoryFilter: null,
@@ -108,10 +77,32 @@ export const useSubscriptionStore = create<SubscriptionState>((set, get) => ({
       }
       
       const result = await response.json();
-      const subscriptions = result.data || [];
+      console.log('Raw API data:', result.data);
+      
+      const subscriptions = (result.data || []).map((sub: any) => ({
+        id: sub.id?.toString(),
+        name: sub.name,
+        amount: sub.amount,
+        currency: sub.currency,
+        billingCycle: sub.billing_cycle,
+        category: sub.category,
+        vendor: sub.vendor,
+        tags: sub.tags ? JSON.parse(sub.tags) : [],
+        nextBillingDate: sub.next_billing_date ? new Date(sub.next_billing_date) : new Date(),
+        autoRenew: Boolean(sub.auto_renew),
+        notes: sub.notes,
+        invoiceUrl: sub.invoice_url,
+        userId: sub.user_id?.toString(),
+        organizationId: sub.organization_id,
+        createdAt: new Date(sub.created_at),
+        updatedAt: new Date(sub.updated_at),
+      }));
+      
+      console.log('Mapped subscriptions:', subscriptions);
       get().setSubscriptions(subscriptions);
       set({ isLoading: false });
     } catch (error) {
+      console.error('Fetch subscriptions error:', error);
       const message = error instanceof Error ? error.message : 'Database connection failed';
       set({ error: message, isLoading: false });
     }

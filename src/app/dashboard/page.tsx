@@ -2,10 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { useSubscriptionStore } from "@/hooks/store/use-subscription-store";
-import { useAuthStore } from "@/hooks/store/use-auth-store";
 import { Subscription } from "@/lib/schemas/subscription";
-import { format } from "date-fns";
 import { 
   CreditCard, 
   DollarSign, 
@@ -17,65 +14,58 @@ import {
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { FinancialOverview } from "@/components/dashboard/financial-overview";
-
 import { DuplicateDetector } from "@/components/subscriptions/duplicate-detector";
 
 export default function DashboardPage() {
-  const { subscriptions, isLoading, setSubscriptions, setLoading } = useSubscriptionStore();
-    const [stats, setStats] = useState({
+  const [isLoading, setIsLoading] = useState(true);
+  const [subscriptions, setSubscriptions] = useState<Subscription[]>([]);
+  const [stats, setStats] = useState({
     totalActive: 0,
     totalMonthly: 0,
     totalYearly: 0,
-    upcomingRenewals: [] as Subscription[],
+    upcomingRenewals: [] as any[],
   });
   
-  // Fetch subscriptions from API
   useEffect(() => {
-    const fetchSubscriptions = async () => {
-      setLoading(true);
+    const fetchDashboard = async () => {
+      setIsLoading(true);
       try {
-        // TODO: Replace with actual API call
-        // const response = await fetch('/api/subscriptions');
-        // const data = await response.json();
-        // setSubscriptions(data.subscriptions || []);
+        const response = await fetch('/api/dashboard');
+        if (!response.ok) throw new Error('Failed to fetch dashboard data');
         
-        // Temporary: Use existing subscriptions from store or empty array
-        const existingSubscriptions = subscriptions.length > 0 ? subscriptions : [];
-        setSubscriptions(existingSubscriptions);
+        const result = await response.json();
+        const { totalActive, totalMonthly, totalYearly, upcomingRenewals, subscriptions: subs } = result.data;
         
-        // Calculate stats
-        const totalMonthly = existingSubscriptions
-          .filter(sub => sub.billingCycle === "monthly")
-          .reduce((sum, sub) => sum + sub.amount, 0);
-          
-        const totalYearly = existingSubscriptions
-          .filter(sub => sub.billingCycle === "yearly")
-          .reduce((sum, sub) => sum + (sub.amount / 12), 0);
-          
-        const upcomingRenewals = existingSubscriptions
-          .filter(sub => {
-            const daysUntilRenewal = Math.ceil(
-              (sub.nextBillingDate.getTime() - Date.now()) / (1000 * 60 * 60 * 24)
-            );
-            return daysUntilRenewal <= 7;
-          })
-          .sort((a, b) => a.nextBillingDate.getTime() - b.nextBillingDate.getTime());
+        const mappedSubs = subs.map((sub: any) => ({
+          id: sub.id?.toString(),
+          name: sub.name,
+          amount: sub.amount,
+          currency: sub.currency,
+          billingCycle: sub.billing_cycle,
+          category: sub.category,
+          vendor: sub.vendor,
+          tags: sub.tags ? JSON.parse(sub.tags) : [],
+          nextBillingDate: sub.next_billing_date ? new Date(sub.next_billing_date) : new Date(),
+          autoRenew: Boolean(sub.auto_renew),
+          notes: sub.notes,
+          invoiceUrl: sub.invoice_url,
+          userId: sub.user_id?.toString(),
+          organizationId: sub.organization_id,
+          createdAt: new Date(sub.created_at),
+          updatedAt: new Date(sub.updated_at),
+        }));
         
-        setStats({
-          totalActive: existingSubscriptions.length,
-          totalMonthly,
-          totalYearly: totalYearly,
-          upcomingRenewals,
-        });
+        setSubscriptions(mappedSubs);
+        setStats({ totalActive, totalMonthly, totalYearly, upcomingRenewals });
       } catch (error) {
-        console.error("Error fetching subscriptions:", error);
+        console.error("Error fetching dashboard:", error);
       } finally {
-        setLoading(false);
+        setIsLoading(false);
       }
     };
     
-    fetchSubscriptions();
-  }, [setLoading, setSubscriptions]);
+    fetchDashboard();
+  }, []);
   
   if (isLoading) {
     return (

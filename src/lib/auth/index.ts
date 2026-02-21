@@ -13,7 +13,7 @@ export async function createToken(user: Partial<User>) {
     id: user.id,
     email: user.email,
     name: user.name,
-    teamId: user.teamId,
+    organizationId: user.organizationId,
     role: user.role,
   })
     .setProtectedHeader({ alg: "HS256" })
@@ -57,7 +57,7 @@ export async function getCurrentUser() {
       id: payload.id as string,
       email: payload.email as string,
       name: payload.name as string,
-      teamId: payload.teamId as string,
+      organizationId: payload.organizationId as number,
       role: payload.role as string,
     };
   } catch (error) {

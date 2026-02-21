@@ -12,6 +12,7 @@ export const createSubscriptionsTable = (dbType: 'sqlite' | 'postgres' | 'mysql'
       currency VARCHAR(3) NOT NULL DEFAULT 'USD',
       billing_cycle VARCHAR(50) NOT NULL,
       category VARCHAR(100),
+      vendor VARCHAR(255),
       tags TEXT,
       next_billing_date ${timestamp},
       auto_renew BOOLEAN DEFAULT true,
@@ -39,6 +40,7 @@ export interface Subscription {
   currency: string;
   billing_cycle: string;
   category?: string;
+  vendor?: string;
   tags?: string;
   next_billing_date?: Date;
   auto_renew: boolean;

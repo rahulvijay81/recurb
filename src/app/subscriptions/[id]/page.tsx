@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { useSubscriptionStore } from "@/hooks/store/use-subscription-store";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -10,28 +9,54 @@ import { ArrowLeft, Edit, Trash2, Calendar, DollarSign, Building, Tag } from "lu
 import Link from "next/link";
 import { format } from "date-fns";
 import { SharedNotes } from "@/components/team/shared-notes";
-import { useAuthStore } from "@/hooks/store/use-auth-store";
 import { formatDate } from "@/lib/utils/date";
 import { Subscription } from "@/lib/schemas/subscription";
 
 export default function SubscriptionDetailsPage() {
   const params = useParams();
   const router = useRouter();
-  const { subscriptions, isLoading } = useSubscriptionStore();
-    const [subscription, setSubscription] = useState<Subscription | null>(null);
+  const [subscription, setSubscription] = useState<Subscription | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   const subscriptionId = params.id as string;
 
   useEffect(() => {
-    if (!isLoading && subscriptions.length > 0) {
-      const found = subscriptions.find(sub => sub.id === subscriptionId);
-      if (found) {
-        setSubscription(found);
-      } else {
+    const fetchData = async () => {
+      try {
+        const res = await fetch(`/api/subscriptions/${subscriptionId}`);
+        if (!res.ok) {
+          router.push("/subscriptions");
+          return;
+        }
+        const result = await res.json();
+        const sub = result.data;
+        setSubscription({
+          id: sub.id?.toString(),
+          name: sub.name,
+          amount: sub.amount,
+          currency: sub.currency,
+          billingCycle: sub.billing_cycle,
+          category: sub.category,
+          vendor: sub.vendor,
+          tags: sub.tags ? JSON.parse(sub.tags) : [],
+          nextBillingDate: sub.next_billing_date ? new Date(sub.next_billing_date) : new Date(),
+          autoRenew: Boolean(sub.auto_renew),
+          notes: sub.notes,
+          invoiceUrl: sub.invoice_url,
+          userId: sub.user_id?.toString(),
+          organizationId: sub.organization_id,
+          createdAt: new Date(sub.created_at),
+          updatedAt: new Date(sub.updated_at),
+        });
+      } catch (error) {
+        console.error(error);
         router.push("/subscriptions");
+      } finally {
+        setIsLoading(false);
       }
-    }
-  }, [subscriptionId, subscriptions, isLoading, router]);
+    };
+    fetchData();
+  }, [subscriptionId, router]);
 
   if (isLoading) {
     return (

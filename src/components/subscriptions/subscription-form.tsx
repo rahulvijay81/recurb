@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { subscriptionFormSchema, type SubscriptionFormValues } from "@/lib/schemas/subscription";
@@ -46,8 +46,24 @@ interface SubscriptionFormProps {
 
 export function SubscriptionForm({ initialData, isEditing = false }: SubscriptionFormProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
-    const { addSubscription, updateSubscription } = useSubscriptionStore();
+  const [categories, setCategories] = useState<Array<{ id: number; name: string }>>([]);
+  const { addSubscription, updateSubscription } = useSubscriptionStore();
   const router = useRouter();
+  
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await fetch('/api/categories');
+        if (response.ok) {
+          const result = await response.json();
+          setCategories(result.data || []);
+        }
+      } catch (error) {
+        console.error('Failed to fetch categories:', error);
+      }
+    };
+    fetchCategories();
+  }, []);
   
   const form = useForm<SubscriptionFormValues>({
     resolver: zodResolver(subscriptionFormSchema),
@@ -69,17 +85,13 @@ export function SubscriptionForm({ initialData, isEditing = false }: Subscriptio
     setIsSubmitting(true);
     
     try {
-      // In a real app, this would be an API call
-      // For demo purposes, we'll just update the store
-      
       const subscription = {
-        id: Math.random().toString(36).substring(2, 9),
         name: data.name,
-        amount: data.amount,
+        amount: parseFloat(data.amount),
         currency: data.currency,
-        billingCycle: data.billingCycle,
-        nextBillingDate: new Date(data.nextBillingDate),
-        autoRenew: data.autoRenew,
+        billing_cycle: data.billingCycle,
+        next_billing_date: data.nextBillingDate,
+        auto_renew: data.autoRenew,
         category: data.category,
         tags: Array.isArray(data.tags) ? data.tags : [],
         notes: data.notes,
@@ -87,10 +99,10 @@ export function SubscriptionForm({ initialData, isEditing = false }: Subscriptio
       };
       
       if (isEditing && initialData?.id) {
-        updateSubscription(initialData.id, subscription);
+        await updateSubscription(initialData.id, subscription);
         toast.success("Subscription updated successfully");
       } else {
-        addSubscription(subscription);
+        await addSubscription(subscription);
         toast.success("Subscription added successfully");
       }
       
@@ -253,12 +265,11 @@ export function SubscriptionForm({ initialData, isEditing = false }: Subscriptio
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    <SelectItem value="Entertainment">Entertainment</SelectItem>
-                    <SelectItem value="Software">Software</SelectItem>
-                    <SelectItem value="Cloud Services">Cloud Services</SelectItem>
-                    <SelectItem value="Utilities">Utilities</SelectItem>
-                    <SelectItem value="Streaming">Streaming</SelectItem>
-                    <SelectItem value="Other">Other</SelectItem>
+                    {categories.map((category) => (
+                      <SelectItem key={category.id} value={category.name}>
+                        {category.name}
+                      </SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
                 <FormMessage />

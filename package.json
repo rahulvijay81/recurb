@@ -9,6 +9,7 @@
     "lint": "next lint",
     "migrate": "tsx scripts/migrate.ts",
     "migrate:rollback": "tsx scripts/rollback.ts",
+    "seed:categories": "tsx scripts/seed-categories.ts",
     "backup": "tsx scripts/backup.ts",
     "backup:service": "tsx scripts/backup-service.ts",
     "restore": "tsx scripts/restore.ts"

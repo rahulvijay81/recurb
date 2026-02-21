@@ -1,91 +1,51 @@
 "use client";
 
 import { CalendarView } from "@/components/subscriptions/calendar-view";
-import { useSubscriptionStore } from "@/hooks/store/use-subscription-store";
-import { useAuthStore } from "@/hooks/store/use-auth-store";
+import { Subscription } from "@/lib/schemas/subscription";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Calendar, TrendingUp, AlertCircle, Plus } from "lucide-react";
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 
 export default function CalendarPage() {
-  const { subscriptions, setSubscriptions, setLoading, loading } = useSubscriptionStore();
-    useEffect(() => {
-    const loadSubscriptions = async () => {
-      setLoading(true);
+  const [subscriptions, setSubscriptions] = useState<Subscription[]>([]);
+  const [loading, setLoading] = useState(true);
+  
+  useEffect(() => {
+    const fetchData = async () => {
       try {
-        const mockSubscriptions = [
-          {
-            id: "1",
-            name: "Netflix",
-            amount: 15.99,
-            currency: "USD",
-            billingCycle: "monthly" as const,
-            nextBillingDate: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000),
-            autoRenew: true,
-            category: "Entertainment",
-            tags: ["streaming", "video"],
-            vendor: "Netflix Inc.",
-          },
-          {
-            id: "2",
-            name: "Spotify",
-            amount: 9.99,
-            currency: "USD",
-            billingCycle: "monthly" as const,
-            nextBillingDate: new Date(Date.now() + 12 * 24 * 60 * 60 * 1000),
-            autoRenew: true,
-            category: "Entertainment",
-            tags: ["streaming", "music"],
-            vendor: "Spotify AB",
-          },
-          {
-            id: "3",
-            name: "Adobe Creative Cloud",
-            amount: 52.99,
-            currency: "USD",
-            billingCycle: "monthly" as const,
-            nextBillingDate: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000),
-            autoRenew: true,
-            category: "Software",
-            tags: ["design", "productivity"],
-            vendor: "Adobe Inc.",
-          },
-          {
-            id: "4",
-            name: "GitHub Pro",
-            amount: 4.00,
-            currency: "USD",
-            billingCycle: "monthly" as const,
-            nextBillingDate: new Date(Date.now() + 15 * 24 * 60 * 60 * 1000),
-            autoRenew: true,
-            category: "Software",
-            tags: ["development", "tools"],
-            vendor: "GitHub Inc.",
-          },
-          {
-            id: "5",
-            name: "Figma Professional",
-            amount: 12.00,
-            currency: "USD",
-            billingCycle: "monthly" as const,
-            nextBillingDate: new Date(Date.now() + 8 * 24 * 60 * 60 * 1000),
-            autoRenew: true,
-            category: "Software",
-            tags: ["design", "collaboration"],
-            vendor: "Figma Inc.",
-          },
-        ];
-        setSubscriptions(mockSubscriptions);
+        const res = await fetch('/api/subscriptions');
+        if (!res.ok) throw new Error('Failed to fetch');
+        const result = await res.json();
+        const mapped = (result.data || []).map((sub: any) => ({
+          id: sub.id?.toString(),
+          name: sub.name,
+          amount: sub.amount,
+          currency: sub.currency,
+          billingCycle: sub.billing_cycle,
+          category: sub.category,
+          vendor: sub.vendor,
+          tags: sub.tags ? JSON.parse(sub.tags) : [],
+          nextBillingDate: sub.next_billing_date ? new Date(sub.next_billing_date) : new Date(),
+          autoRenew: Boolean(sub.auto_renew),
+          notes: sub.notes,
+          invoiceUrl: sub.invoice_url,
+          userId: sub.user_id?.toString(),
+          organizationId: sub.organization_id,
+          createdAt: new Date(sub.created_at),
+          updatedAt: new Date(sub.updated_at),
+        }));
+        setSubscriptions(mapped);
+      } catch (error) {
+        console.error(error);
       } finally {
         setLoading(false);
       }
     };
-    
-    loadSubscriptions();
-  }, [setSubscriptions, setLoading]);
+    fetchData();
+  }, []);
 
   const upcomingRenewals = useMemo(() => {
     const now = new Date();

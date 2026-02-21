@@ -1,6 +1,6 @@
 "use client";
 
-import { User as UserIcon, Repeat, LogOut } from "lucide-react";
+import { User as UserIcon, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
@@ -16,10 +16,9 @@ import Link from "next/link";
 
 interface UserDropdownProps {
   variant?: "header" | "sidebar";
-  showPlan?: boolean;
 }
 
-export function UserDropdown({ variant = "header", showPlan = false }: UserDropdownProps) {
+export function UserDropdown({ variant = "header" }: UserDropdownProps) {
   const { user, logout } = useAuthStore();
 
   const triggerContent = variant === "sidebar" ? (
@@ -62,12 +61,6 @@ export function UserDropdown({ variant = "header", showPlan = false }: UserDropd
           <Link href="/settings/profile" className="cursor-pointer">
             <UserIcon className="mr-2 h-4 w-4" />
             Profile
-          </Link>
-        </DropdownMenuItem>
-        <DropdownMenuItem asChild>
-          <Link href="/settings/plans" className="cursor-pointer">
-            <Repeat className="mr-2 h-4 w-4" />
-            Subscription
           </Link>
         </DropdownMenuItem>
         <DropdownMenuSeparator />

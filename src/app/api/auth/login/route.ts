@@ -33,6 +33,7 @@ export async function POST(request: NextRequest) {
       email: user.email,
       name: user.name,
       role: user.role,
+      organizationId: user.organization_id,
     });
 
     const response = NextResponse.json({
@@ -49,6 +50,7 @@ export async function POST(request: NextRequest) {
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
       maxAge: rememberMe ? 2592000 : 86400,
+      path: "/",
     });
 
     return response;

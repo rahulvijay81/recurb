@@ -120,7 +120,7 @@ export function MainLayout({ children }: MainLayoutProps) {
           </SidebarMenu>
         </SidebarContent>
         <SidebarFooter className="p-3 border-t">
-          <UserDropdown variant="sidebar" showPlan />
+          <UserDropdown variant="sidebar" />
         </SidebarFooter>
       </Sidebar>
       
@@ -190,14 +190,6 @@ export function MainLayout({ children }: MainLayoutProps) {
                   >
                     <UserIcon className="h-4 w-4" />
                     Profile
-                  </Link>
-                  <Link
-                    href="/settings/plans"
-                    className="flex items-center gap-2 rounded-md px-3 py-2 text-sm hover:bg-accent hover:text-accent-foreground"
-                    onClick={() => setIsMobileMenuOpen(false)}
-                  >
-                    <Repeat className="h-4 w-4" />
-                    Subscription
                   </Link>
                   <button
                     onClick={() => {

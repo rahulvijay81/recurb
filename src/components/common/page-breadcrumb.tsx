@@ -33,7 +33,6 @@ const breadcrumbConfig: BreadcrumbConfig = {
   edit: { label: "Edit" },
   import: { label: "Import" },
   profile: { label: "Profile" },
-  plans: { label: "Subscription Plans" },
 };
 
 function formatDynamicSegment(segment: string): string {

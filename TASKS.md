@@ -1,16 +1,4 @@
-# Recurb - Development Tasks
 
-- [ ] **T2.5** Admin Panel
-  - Create `/admin` route group
-  - Pages: System info, database status, user management
-  - Add feature toggles UI
-  - Timeline: 4 days
-  - Depends on: T2.2
-
-- [ ] **T2.6** Health & Monitoring
-  - Endpoint: `/api/health` (DB, disk space)
-  - Endpoint: `/api/metrics` (Prometheus format)
-  - Timeline: 2 days
 
 ## Phase 3: Enterprise Features
 

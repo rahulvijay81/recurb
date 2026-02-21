@@ -20,33 +20,10 @@ interface SharedNotesProps {
 export function SharedNotes({ subscriptionId }: SharedNotesProps) {
   const [newNote, setNewNote] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const { notes, addNote, getNotesBySubscription, setNotes } = useNotesStore();
+  const { notes, addNote, getNotesBySubscription } = useNotesStore();
   const { user } = useAuthStore();
   
   const subscriptionNotes = getNotesBySubscription(subscriptionId);
-  
-  // Mock data initialization
-  useEffect(() => {
-    const mockNotes: Note[] = [
-      {
-        id: "note-1",
-        content: "This subscription needs review next month",
-        authorId: "user-1",
-        authorName: "John Doe",
-        subscriptionId,
-        createdAt: new Date("2024-01-15"),
-      },
-      {
-        id: "note-2", 
-        content: "Price increased by 20% - consider alternatives",
-        authorId: "user-2",
-        authorName: "Jane Smith",
-        subscriptionId,
-        createdAt: new Date("2024-01-20"),
-      },
-    ];
-    setNotes(mockNotes);
-  }, [subscriptionId, setNotes]);
 
   const handleSubmit = async () => {
     if (!newNote.trim() || !user) return;

@@ -1,9 +1,7 @@
 "use client";
 
-import { useEffect } from "react";
-import { useAuthStore } from "@/hooks/store/use-auth-store";
-import { useSubscriptionStore } from "@/hooks/store/use-subscription-store";
-import { redirect } from "next/navigation";
+import { useEffect, useState } from "react";
+import { Subscription } from "@/lib/schemas/subscription";
 import { ExpenseChart } from "@/components/analytics/expense-chart";
 import { TrendsChart } from "@/components/analytics/trends-chart";
 import { ForecastingChart } from "@/components/analytics/forecasting-chart";
@@ -14,91 +12,42 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { PieChart, BarChart3, TrendingUp } from "lucide-react";
 
 export default function AnalyticsPage() {
-    const { subscriptions, isLoading, setSubscriptions, setLoading } = useSubscriptionStore();
+  const [subscriptions, setSubscriptions] = useState<Subscription[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   
-  // Check if user has access to analytics feature
-    // Simulate fetching subscriptions if not already loaded
   useEffect(() => {
-    if (subscriptions.length === 0 && !isLoading) {
-      const fetchSubscriptions = async () => {
-        setLoading(true);
-        try {
-          // In a real app, this would be an API call
-          // For demo purposes, we'll use mock data
-          const mockSubscriptions = [
-            {
-              id: "1",
-              name: "Netflix",
-              amount: 15.99,
-              currency: "USD",
-              billingCycle: "monthly" as const,
-              nextBillingDate: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000), // 5 days from now
-              autoRenew: true,
-              category: "Entertainment",
-              tags: ["streaming", "video"],
-              vendor: "Netflix Inc.",
-            },
-            {
-              id: "2",
-              name: "Spotify",
-              amount: 9.99,
-              currency: "USD",
-              billingCycle: "monthly" as const,
-              nextBillingDate: new Date(Date.now() + 12 * 24 * 60 * 60 * 1000), // 12 days from now
-              autoRenew: true,
-              category: "Entertainment",
-              tags: ["streaming", "music"],
-              vendor: "Spotify AB",
-            },
-            {
-              id: "3",
-              name: "Adobe Creative Cloud",
-              amount: 52.99,
-              currency: "USD",
-              billingCycle: "monthly" as const,
-              nextBillingDate: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000), // 3 days from now
-              autoRenew: true,
-              category: "Software",
-              tags: ["design", "productivity"],
-              vendor: "Adobe Inc.",
-            },
-            {
-              id: "4",
-              name: "AWS",
-              amount: 150.00,
-              currency: "USD",
-              billingCycle: "monthly" as const,
-              nextBillingDate: new Date(Date.now() + 8 * 24 * 60 * 60 * 1000), // 8 days from now
-              autoRenew: true,
-              category: "Cloud Services",
-              tags: ["hosting", "infrastructure"],
-              vendor: "Amazon Web Services",
-            },
-            {
-              id: "5",
-              name: "Microsoft 365",
-              amount: 99.99,
-              currency: "USD",
-              billingCycle: "yearly" as const,
-              nextBillingDate: new Date(Date.now() + 45 * 24 * 60 * 60 * 1000), // 45 days from now
-              autoRenew: true,
-              category: "Software",
-              tags: ["productivity", "office"],
-              vendor: "Microsoft",
-            },
-          ];
-          
-          setSubscriptions(mockSubscriptions);
-        } catch (error) {
-          console.error("Error fetching subscriptions:", error);
-        } finally {
-          setLoading(false);
-        }
-      };
-      
-      fetchSubscriptions();
-    }
-  }, [isLoading, setLoading, setSubscriptions, subscriptions.length]);
+    const fetchData = async () => {
+      try {
+        const res = await fetch('/api/subscriptions');
+        if (!res.ok) throw new Error('Failed to fetch');
+        const result = await res.json();
+        const mapped = (result.data || []).map((sub: any) => ({
+          id: sub.id?.toString(),
+          name: sub.name,
+          amount: sub.amount,
+          currency: sub.currency,
+          billingCycle: sub.billing_cycle,
+          category: sub.category,
+          vendor: sub.vendor,
+          tags: sub.tags ? JSON.parse(sub.tags) : [],
+          nextBillingDate: sub.next_billing_date ? new Date(sub.next_billing_date) : new Date(),
+          autoRenew: Boolean(sub.auto_renew),
+          notes: sub.notes,
+          invoiceUrl: sub.invoice_url,
+          userId: sub.user_id?.toString(),
+          organizationId: sub.organization_id,
+          createdAt: new Date(sub.created_at),
+          updatedAt: new Date(sub.updated_at),
+        }));
+        setSubscriptions(mapped);
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchData();
+  }, []);
   
   // Calculate category distribution
   const categoryData = subscriptions.reduce((acc, sub) => {
