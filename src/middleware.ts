@@ -68,6 +68,6 @@ if (!token) {
 // Apply middleware to all routes except public assets
 export const config = {
   matcher: [
-    "/((?!api/public|api/setup|_next/static|_next/image|favicon.ico|public/|auth/verify).*)",
+    "/((?!api/public|api/setup|api/health|_next/static|_next/image|favicon.ico|public/|auth/verify).*)",
   ],
 };
