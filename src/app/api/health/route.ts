@@ -19,7 +19,7 @@ export async function GET() {
 
     return NextResponse.json(
       {
-        status: 'ok',
+        status: 'unhealthy',
         db: 'error',
         version: packageJson.version,
       },
